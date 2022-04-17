@@ -1,0 +1,58 @@
+ul{
+    height:650px; 
+    width:auto;
+    list-style-type: none;
+    overflow:hidden; 
+    overflow-y:scroll;
+    /* background-color: #e6f5ff; */
+}
+ul::-webkit-scrollbar {
+  display: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+li {
+  padding: 10px;
+}
+
+.liFolder {
+  font-weight: bold;
+}
+
+[class*="liFocused"] {
+  border-radius: 5px;
+  border-width: 2px;
+  border-color: black;
+  border: solid;
+}
+
+/* .liFocused-2 {
+  border-radius: 5px;
+  border-width: 2px;
+  border-color: black;
+  border: solid;
+}
+
+.liFocused-1 {
+  border-radius: 5px;
+  border-width: 2px;
+  border-color: black;
+  border: solid;
+} */
+
+#myColumns{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  overflow:hidden;  
+}
+
+.liClicked {
+  animation: color-change 1s forwards;
+}
+
+@keyframes color-change {
+  0% {color: red; border-width: 5px;}
+  100% {color: black; border-width: 2px;}
+}

@@ -1,0 +1,16 @@
+{
+  "name": "My File Explorer",
+  "productName": "My File Explorer",
+  "description": "My Electron application description",
+  "keywords": [],
+  "main": "./main.js",
+  "version": "1.0.0",
+  "author": "Sean",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "18.0.4"
+  }
+}
