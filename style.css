@@ -77,3 +77,46 @@ div::-webkit-scrollbar {
   0% {color: red; border-width: 5px;}
   100% {color: black; border-width: 2px;}
 }
+
+.Absolute-Center {
+  margin: auto;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}
+
+.messageAnimation {
+  animation: fade-out 1s forwards ease-out;
+}
+
+@keyframes fade-out {
+  0% {
+    color: grey;
+    font-size: 3vw;
+    opacity: 100%;
+    z-index: -1;
+  }
+
+  0% {
+    color: grey;
+    font-size: 3vw;
+    opacity: 100%;
+    z-index: 100;
+  }
+
+  99% {
+    color: grey;
+    font-size: 7vw;
+    opacity: 0%;
+    z-index: 100;
+  }
+
+  100% {
+    color: grey;
+    font-size: 7vw;
+    opacity: 0%;
+    z-index: -1;
+  }
+}

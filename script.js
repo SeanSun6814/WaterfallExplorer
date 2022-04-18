@@ -1,5 +1,6 @@
 let pathArr = [];
 let rootPaths = [];
+let currentElement = null;
 
 function removeColumnByLayerIdx(layerIdx) {
   let myColumns = document.getElementById("myColumns");
@@ -76,10 +77,37 @@ function playClickedAnimation(id) {
   el.style.animation = null;
 }
 
+function playMessage(msg) {
+  let el = document.getElementById("messageText");
+  el.innerHTML = msg;
+  el.classList.add("messageAnimation");
+  el.style.animation = "none";
+  el.offsetHeight; /* trigger reflow */
+  el.style.animation = null;
+}
+
 function removeClassesFromAll(className) {
   let elems = document.getElementsByClassName(className);
   while (elems[0]) {
     elems[0].classList.remove(className);
+  }
+}
+
+function addToRootPaths(str) {
+  str = str.trim();
+  str = str.replaceAll("\\", "/");
+  str = str.replaceAll('"', "");
+  if (rootPaths.includes(str)) {
+    return false;
+  }
+  rootPaths.push(str);
+  return true;
+}
+
+function removeFromRootPaths(str) {
+  let index = rootPaths.indexOf(str);
+  if (index !== -1) {
+    rootPaths.splice(index, 1);
   }
 }
 
@@ -90,10 +118,17 @@ window.onload = function () {
   let arr = results.dirs.concat(results.files);
   let elem = getHTMLList(arr, 1);
   let myColumns = document.getElementById("myColumns");
+  myColumns.innerHTML = "";
   myColumns.appendChild(elem);
 };
 
 function onHover(id, layerIdx, name, isFolder) {
+  currentElement = {
+    id: id,
+    layerIdx: layerIdx,
+    name: name,
+    isFolder: isFolder,
+  };
   setPathArr(layerIdx, name, isFolder);
   let newPath = getFullPath();
   removeClassesFromAll("liFocused" + layerIdx);
@@ -108,9 +143,12 @@ function onHover(id, layerIdx, name, isFolder) {
 }
 
 function onClick(id, layerIdx, name, isFolder) {
+  playMessage("Opening");
   playClickedAnimation(id);
   openFile(getFullPath());
-  window.close();
+  setTimeout(() => {
+    window.close();
+  }, 1000);
 }
 
 function onLeave(id) {
@@ -120,7 +158,32 @@ function onLeave(id) {
 document.addEventListener("keypress", function onPress(event) {
   if (event.key === "c") {
     // alert("c key!!!");
+    // playClickedAnimation("li-1-1");
+    setClipboard(getFullPath());
+    playMessage("Copied");
   } else if (event.key === "v") {
-    // alert("v key!!!");
+    let str = getClipboard();
+    if (addToRootPaths(str)) {
+      writeRootPathConfig();
+      window.onload();
+      playMessage("Added");
+    } else {
+      playMessage("Already added");
+    }
+  } else if (event.key === "d") {
+    let str = getClipboard();
+    if (
+      rootPaths.length > 0 &&
+      pathArr.length > 0 &&
+      currentElement != null &&
+      currentElement.layerIdx == 1
+    ) {
+      removeFromRootPaths(currentElement.name);
+      writeRootPathConfig();
+      window.onload();
+      playMessage("Deleted");
+    } else {
+      playMessage("Nothing selected");
+    }
   }
 });

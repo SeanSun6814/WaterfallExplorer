@@ -1,6 +1,19 @@
 const fs = require("fs");
 const { readdirSync } = fs;
 const childProcess = require("child_process");
+// const clipboardy = require("clipboardy");
+// import clipboard from "clipboardy";
+const { clipboard } = require("electron");
+
+function getClipboard() {
+  return clipboard.readText();
+  // return clipboard.readSync();
+}
+
+function setClipboard(str) {
+  clipboard.writeText(str);
+  // clipboard.writeSync(str);
+}
 
 function getHsl(colIdx, rowIdx) {
   let h = (70.0 + colIdx * 10.0) / 255.0;
@@ -62,7 +75,7 @@ function readRootPathConfig() {
 
 function writeRootPathConfig() {
   let json = JSON.stringify({ paths: rootPaths });
-  fs.writeFile("./rootFolders.json", json);
+  fs.writeFileSync("./rootFolders.json", json);
 }
 
 function getDirAndFiles(source) {
@@ -81,6 +94,6 @@ function getDirAndFiles(source) {
   };
 }
 
-function openFile(path) {
+async function openFile(path) {
   childProcess.exec('start "" "' + path + '"');
 }
