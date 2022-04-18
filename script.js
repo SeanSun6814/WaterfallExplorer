@@ -23,12 +23,15 @@ function removeColumnByLayerIdx(layerIdx) {
         myColumns.removeChild(col);
 }
 
-function setPathArr(layerIdx, name) {
+function setPathArr(layerIdx, name, isFolder) {
     while (pathArr.length > layerIdx) {
         pathArr.pop();
         removeColumnByLayerIdx(pathArr.length + 1);
     }
-    pathArr.push(name + "/");
+    if (isFolder)
+        pathArr.push(name + "/");
+    else
+        pathArr.push(name);
     document.getElementById("fullPathText").innerHTML = reverseStr(getFullPath());
 }
 
@@ -76,8 +79,8 @@ function getHTMLList(array, layerIdx) {
         let id = "li-" + layerIdx + "-" + idx;
         li.innerText = item.name;
         // li.setAttribute("layerIdx", layerIdx);
-        li.setAttribute("onmouseenter", "onHover('" + id + "'," + layerIdx + ", '" + item.name + "', " + item.isFolder + ")");
-        li.setAttribute("onclick", "onClick('" + id + "'," + layerIdx + ", '" + item.name + "', " + item.isFolder + ")");
+        li.setAttribute("onmouseenter", "onHover('" + id + "'," + layerIdx + ", \"" + item.name + "\", " + item.isFolder + ")");
+        li.setAttribute("onclick", "onClick('" + id + "'," + layerIdx + ", \"" + item.name + "\", " + item.isFolder + ")");
         li.setAttribute("isFolder", item.isFolder);
         li.setAttribute("style", "background-color:" + getHsl(layerIdx, idx) + ";");
         li.setAttribute("id", id);
@@ -111,7 +114,7 @@ function removeClassesFromAll(className) {
 }
 
 function onHover(id, layerIdx, name, isFolder) {
-    setPathArr(layerIdx, name);
+    setPathArr(layerIdx, name, isFolder);
     let newPath = getFullPath();
     removeClassesFromAll("liFocused" + layerIdx);
     document.getElementById(id).classList.add("liFocused" + layerIdx);
