@@ -35,24 +35,24 @@ function createWindow() {
 
   const { app, Menu } = require("electron");
 
-  // Menu.setApplicationMenu(
-  //   Menu.buildFromTemplate([
-  //     {
-  //       label: "Quit",
-  //       accelerator: "Q",
-  //       click() {
-  //         app.quit();
-  //       },
-  //     },
-  //     {
-  //       label: "Hide",
-  //       accelerator: "Esc",
-  //       click() {
-  //         win.hide();
-  //       },
-  //     },
-  //   ])
-  // );
+  Menu.setApplicationMenu(
+    Menu.buildFromTemplate([
+      {
+        label: "Quit",
+        accelerator: "Q",
+        click() {
+          app.quit();
+        },
+      },
+      {
+        label: "Hide",
+        accelerator: "Esc",
+        click() {
+          win.hide();
+        },
+      },
+    ])
+  );
 
   win.on("close", (event) => {
     if (app.quitting) {
@@ -85,6 +85,7 @@ app.whenReady().then(() => {
 
   if (!ret) {
     console.log("registration failed");
+    app.quit();
   }
 });
 
