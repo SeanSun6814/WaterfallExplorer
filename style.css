@@ -4,8 +4,8 @@
 
 html {
   overflow: hidden;
-  height:95%;
-  width:95%;
+  height:100%;
+  width:100%;
 }
 
 body {
@@ -15,7 +15,7 @@ body {
 }
 
 ul{
-    height:100%; 
+    height:calc(100% - 100px); 
     width:auto;
     list-style-type: none;
     overflow:hidden; 
