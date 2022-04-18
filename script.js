@@ -1,7 +1,20 @@
-const { readdirSync } = require('fs');
+const fs= require('fs');
+const { readdirSync } = fs;
 const childProcess = require('child_process');
 
 let pathArr = [];
+let rootPaths = [];
+
+function readRootPathConfig() {
+    try {
+        let data = fs.readFileSync("./rootFolders.json", { encoding: "utf8", flag: "r" });
+        data = JSON.parse(data);
+        rootPaths = data.paths;
+    } catch (err) {
+        console.log("Error parsing JSON string:", err);
+    }
+}
+
 
 function removeColumnByLayerIdx(layerIdx) {
     let myColumns = document.getElementById("myColumns");
@@ -27,6 +40,10 @@ function getFullPath() {
 }
 
 function getDirAndFiles(source) {
+    if (source === "") {
+        let arr = rootPaths.map((name) => ({ name: name, isFolder: true }));
+        return { dirs: arr, files: [] };
+    } 
     let arr = readdirSync(source, { withFileTypes: true })
     return {
         dirs: arr.filter(dirent => dirent.isDirectory())
@@ -79,8 +96,9 @@ function getHTMLList(array, layerIdx) {
 }
 
 window.onload = function () {
-    let results = getDirAndFiles("C:/_Data/OneDrive/_CMU/");
-    pathArr.push("C:/_Data/OneDrive/_CMU/");
+    readRootPathConfig();
+    let results = getDirAndFiles("");
+    pathArr.push("");
     let arr = (results.dirs).concat(results.files);
     let elem = getHTMLList(arr, 1);
     let myColumns = document.getElementById("myColumns");
@@ -120,6 +138,7 @@ function playClickedAnimation(id) {
 function onClick(id, layerIdx, name, isFolder) {
     playClickedAnimation(id);
     openFile(getFullPath());
+    window.close();
 }
 
 function onLeave(id) {
@@ -127,7 +146,7 @@ function onLeave(id) {
 }
 
 function getHsl(colIdx, rowIdx) {
-    let h = (100.0 + colIdx * 10.0) / 255.0;
+    let h = (70.0 + colIdx * 10.0) / 255.0;
     let s = 1.0;
     let l = 0.6 + rowIdx * 0.025;
     return hslToRgb(h, s, l);

@@ -48,6 +48,7 @@ function createWindow() {
     }
   })
 
+  // win.setFullScreen(true);
   win.loadFile('index.html')
 }
 
