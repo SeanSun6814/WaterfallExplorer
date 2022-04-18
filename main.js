@@ -1,17 +1,32 @@
+const electron = require('electron')
 const { app, BrowserWindow, globalShortcut, Menu } = require('electron')
 const path = require('path')
 
 let win = null;
 function createWindow() {
+  let screenElectron = electron.screen;
+  let mainScreen = screenElectron.getPrimaryDisplay();
+  let dim = mainScreen.size;
+  let width = Math.floor(Math.max(1000, dim.width * 0.95));
+  let height = Math.floor(Math.max(600, dim.height * 0.7));
+
+  
   if (win != null) {
+    win.setSize(width, height);
+    win.center();
     win.show();
     return;
   }
+  
+
+  console.log(dim);
+  console.log((dim.width * 0.95));
+  console.log(Math.max(800, dim.height * 0.7));
   win = new BrowserWindow({
     devTools: true,
     autoHideMenuBar: true,
-    width: 1600,
-    height: 800,
+    width: width,
+    height: height,
     webPreferences: {
       // preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
@@ -49,6 +64,8 @@ function createWindow() {
   })
 
   // win.setFullScreen(true);
+  win.setSize(width, height);
+  win.center();
   win.loadFile('index.html')
 }
 
