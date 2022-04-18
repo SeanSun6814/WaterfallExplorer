@@ -24,10 +24,8 @@ function removeColumnByLayerIdx(layerIdx) {
 }
 
 function setPathArr(layerIdx, name) {
-    console.log("layerIdx: " + layerIdx);
     while (pathArr.length > layerIdx) {
         pathArr.pop();
-        console.log("removing column" + pathArr.length);
         removeColumnByLayerIdx(pathArr.length + 1);
     }
     pathArr.push(name + "/");
@@ -35,7 +33,7 @@ function setPathArr(layerIdx, name) {
 }
 
 function getFullPath() {
-    console.log(pathArr.join(""));
+    // console.log(pathArr.join(""));
     return pathArr.join("");
 }
 
@@ -78,7 +76,7 @@ function getHTMLList(array, layerIdx) {
         let id = "li-" + layerIdx + "-" + idx;
         li.innerText = item.name;
         // li.setAttribute("layerIdx", layerIdx);
-        li.setAttribute("onmouseover", "onHover('" + id + "'," + layerIdx + ", '" + item.name + "', " + item.isFolder + ")");
+        li.setAttribute("onmouseenter", "onHover('" + id + "'," + layerIdx + ", '" + item.name + "', " + item.isFolder + ")");
         li.setAttribute("onclick", "onClick('" + id + "'," + layerIdx + ", '" + item.name + "', " + item.isFolder + ")");
         li.setAttribute("isFolder", item.isFolder);
         li.setAttribute("style", "background-color:" + getHsl(layerIdx, idx) + ";");
