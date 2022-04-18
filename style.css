@@ -2,8 +2,20 @@
   font-family: sans-serif;
 }
 
+html {
+  overflow: hidden;
+  height:95%;
+  width:95%;
+}
+
+body {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
 ul{
-    height:650px; 
+    height:100%; 
     width:auto;
     list-style-type: none;
     overflow:hidden; 
@@ -36,7 +48,7 @@ li {
 }
 
 #fullPathText {
-    width: 95%;
+    width: 100%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -47,8 +59,8 @@ li {
   }
 
 #myColumns{
-  height: 95%;
-  width: 95%;
+  height: 100%;
+  width: 100%;
   display: flex;
   overflow: scroll; 
 }
