@@ -31,7 +31,7 @@ function setPathArr(layerIdx, name) {
         removeColumnByLayerIdx(pathArr.length + 1);
     }
     pathArr.push(name + "/");
-    document.getElementById("fullPathText").innerHTML = getFullPath();
+    document.getElementById("fullPathText").innerHTML = reverseStr(getFullPath());
 }
 
 function getFullPath() {
@@ -177,4 +177,9 @@ function hslToRgb(h, s, l){
 
     // return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
     return "rgb(" + Math.round(r * 255) + "," + Math.round(g * 255) + "," + Math.round(b * 255) + ")";
+}
+
+
+function reverseStr(s){
+    return s.split("").reverse().join("");
 }
