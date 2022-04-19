@@ -187,11 +187,26 @@ document.addEventListener("keypress", function onPress(event) {
       playMessage("No selection");
     }
   } else if (event.key === "e") {
-    playMessage("VS Code");
-    // playClickedAnimation(id);
-    openWithCode(getFullPath());
-    setTimeout(() => {
-      window.close();
-    }, 1000);
+    if (rootPaths.length > 0 && pathArr.length > 0 && currentElement != null) {
+      playMessage("VS Code");
+      playClickedAnimation(currentElement.id);
+      openWithCode(getFullPath());
+      setTimeout(() => {
+        window.close();
+      }, 1000);
+    } else {
+      playMessage("No selection");
+    }
+  } else if (event.key === "b") {
+    if (rootPaths.length > 0 && pathArr.length > 0 && currentElement != null) {
+      playMessage("Browser");
+      playClickedAnimation(currentElement.id);
+      openWithBrowser(getFullPath());
+      setTimeout(() => {
+        window.close();
+      }, 1000);
+    } else {
+      playMessage("No selection");
+    }
   }
 });

@@ -101,3 +101,7 @@ async function openFile(path) {
 async function openWithCode(path) {
   childProcess.exec('code "' + path + '"');
 }
+
+async function openWithBrowser(path) {
+  childProcess.exec('start chrome "' + path + '"');
+}
