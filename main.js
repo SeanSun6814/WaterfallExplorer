@@ -51,6 +51,13 @@ function createWindow() {
           win.hide();
         },
       },
+      {
+        label: "Hide",
+        accelerator: "H",
+        click() {
+          win.hide();
+        },
+      },
     ])
   );
 

@@ -97,6 +97,7 @@ function addToRootPaths(str) {
   str = str.trim();
   str = str.replaceAll("\\", "/");
   str = str.replaceAll('"', "");
+  str = str.replaceAll(/\/$/g, "");
   if (rootPaths.includes(str)) {
     return false;
   }
