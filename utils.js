@@ -84,13 +84,22 @@ function getDirAndFiles(source) {
     return { dirs: arr, files: [] };
   }
   let arr = readdirSync(source, { withFileTypes: true });
+
+  function MySort(a, b) {
+    a = a.name.replace("_", ".");
+    b = b.name.replace("_", ".");
+    return a.localeCompare(b);
+  }
+
   return {
     dirs: arr
       .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => ({ name: dirent.name, isFolder: true })),
+      .map((dirent) => ({ name: dirent.name, isFolder: true }))
+      .sort(MySort),
     files: arr
       .filter((dirent) => !dirent.isDirectory())
-      .map((dirent) => ({ name: dirent.name, isFolder: false })),
+      .map((dirent) => ({ name: dirent.name, isFolder: false }))
+      .sort(MySort),
   };
 }
 

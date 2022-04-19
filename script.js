@@ -158,11 +158,10 @@ function onLeave(id) {
 
 document.addEventListener("keypress", function onPress(event) {
   if (event.key === "c") {
-    // alert("c key!!!");
     // playClickedAnimation("li-1-1");
     setClipboard(getFullPath());
     playMessage("Copied");
-  } else if (event.key === "v") {
+  } else if (event.key === "a") {
     let str = getClipboard();
     if (addToRootPaths(str)) {
       writeRootPathConfig();
@@ -172,7 +171,6 @@ document.addEventListener("keypress", function onPress(event) {
       playMessage("Already added");
     }
   } else if (event.key === "d") {
-    let str = getClipboard();
     if (
       rootPaths.length > 0 &&
       pathArr.length > 0 &&
