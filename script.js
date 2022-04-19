@@ -184,7 +184,14 @@ document.addEventListener("keypress", function onPress(event) {
       window.onload();
       playMessage("Deleted");
     } else {
-      playMessage("Nothing selected");
+      playMessage("No selection");
     }
+  } else if (event.key === "e") {
+    playMessage("VS Code");
+    // playClickedAnimation(id);
+    openWithCode(getFullPath());
+    setTimeout(() => {
+      window.close();
+    }, 1000);
   }
 });

@@ -97,3 +97,7 @@ function getDirAndFiles(source) {
 async function openFile(path) {
   childProcess.exec('start "" "' + path + '"');
 }
+
+async function openWithCode(path) {
+  childProcess.exec('code "' + path + '"');
+}
