@@ -31,13 +31,24 @@ ul::-webkit-scrollbar {
 
 li {
   padding: 10px;
+  border: solid;
+  border-radius: 5px;
+  border-width: 2px;
+  border-color: transparent;
   margin: 0px;
   max-width: 200px;
   overflow: hidden;
+  user-select: none;
 }
 
 .liFolder {
   font-weight: bold;
+}
+
+.liCount {
+  color: grey;
+  font-size: small;
+  text-align: center;
 }
 
 [class*="liFocused"] {

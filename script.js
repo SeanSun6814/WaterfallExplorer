@@ -27,46 +27,46 @@ function getHTMLList(array, layerIdx) {
   let colUl = document.createElement("ul");
   colUl.setAttribute("id", "column" + layerIdx);
 
+  let numFiles = 0,
+    numFolders = 0;
   array.forEach((item, idx) => {
     let li = document.createElement("li");
     let id = "li-" + layerIdx + "-" + idx;
     li.innerText = item.name;
-    li.setAttribute(
-      "onmouseenter",
-      "onHover('" +
-        id +
-        "'," +
-        layerIdx +
-        ', "' +
-        item.name +
-        '", ' +
-        item.isFolder +
-        ")"
-    );
-    li.setAttribute(
-      "onclick",
-      "onClick('" +
-        id +
-        "'," +
-        layerIdx +
-        ', "' +
-        item.name +
-        '", ' +
-        item.isFolder +
-        ")"
-    );
+    let argStr =
+      "'" + id + "'," + layerIdx + ', "' + item.name + '", ' + item.isFolder;
+    li.setAttribute("onmouseenter", "onHover(" + argStr + ")");
+    li.setAttribute("onclick", "onClick(" + argStr + ")");
     li.setAttribute("isFolder", item.isFolder);
     li.setAttribute("style", "background-color:" + getHsl(layerIdx, idx) + ";");
     li.setAttribute("id", id);
     li.setAttribute("onmouseleave", "onLeave('" + id + "')");
     if (item.isFolder) {
       li.classList.add("liFolder");
+      numFolders++;
     } else {
       li.classList.add("liFile");
+      numFiles++;
     }
     colUl.appendChild(li);
   });
+  let li = document.createElement("li");
+  li.classList.add("liCount");
+  li.innerHTML = generateCountStr(numFiles, numFolders);
+  colUl.appendChild(li);
   return colUl;
+}
+
+function generateCountStr(files, folders) {
+  if (files === 0 && folders === 0) {
+    return "Empty";
+  } else if (files === 0) {
+    return folders + " folder" + (folders === 1 ? "" : "s");
+  } else if (folders === 0) {
+    return files + " file" + (files === 1 ? "" : "s");
+  } else {
+    return generateCountStr(0, folders) + ", " + generateCountStr(files, 0);
+  }
 }
 
 function playClickedAnimation(id) {
