@@ -2,6 +2,8 @@ let pathArr = [];
 let rootPaths = [];
 let currentElement = null;
 let currentLists = [];
+let sortByIdx = 0;
+let sortTypes = ["default", "name", "time", "type", "size"];
 
 function removeColumnByLayerIdx(layerIdx) {
   let myColumns = document.getElementById("myColumns");
@@ -58,6 +60,7 @@ function getHTMLList(array, layerIdx) {
     li.setAttribute("isFolder", item.isFolder);
     li.setAttribute("style", "background-color:" + getHsl(layerIdx, idx) + ";");
     li.setAttribute("id", id);
+    li.setAttribute("idx", idx);
     li.setAttribute("onmouseleave", "onLeave('" + id + "')");
     if (item.isFolder) {
       li.classList.add("liFolder");
@@ -143,9 +146,9 @@ function removeFromRootPaths(str) {
 
 window.onload = function () {
   readRootPathConfig();
-  let results = getDirAndFiles("");
+  let arr = getDirAndFiles("");
+  arr = sortDirBy(arr, sortTypes[sortByIdx]);
   pathArr.push("");
-  let arr = results.dirs.concat(results.files);
   currentLists.push(arr);
   let elem = getHTMLList(arr, 1);
   let myColumns = document.getElementById("myColumns");
@@ -167,14 +170,14 @@ function onHover(id, layerIdx, name, isFolder, idx) {
   document.getElementById(id).classList.add("liFocused" + layerIdx);
 
   if (isFolder) {
-    let results = getDirAndFiles(newPath);
-    let arr = results.dirs.concat(results.files);
+    let arr = getDirAndFiles(newPath);
+    arr = sortDirBy(arr, sortTypes[sortByIdx]);
     setCurrentLists(layerIdx, arr);
     let elem = getHTMLList(arr, layerIdx + 1);
     let myColumns = document.getElementById("myColumns");
     myColumns.appendChild(elem);
   } else {
-    let stats = getFileStats(newPath);
+    let stats = currentLists[layerIdx - 1][idx].stats;
     let str = "Size: " + formatFileSize(stats.size) + "<br>";
     str += "Created: " + formatDate(stats.birthtime) + "<br>";
     str += "Modified: " + formatDate(stats.mtimeMs) + "<br>";
@@ -240,19 +243,12 @@ document.addEventListener("keyup", function onPress(event) {
 function findWithName(targetChar, startIdx) {
   let currentList = currentLists[currentElement.layerIdx - 1];
   targetChar = targetChar.toLowerCase();
-  console.log(
-    "from " + (startIdx + 1) + " to " + (startIdx + currentList.length)
-  );
   for (let i = startIdx + 1; i < startIdx + currentList.length + 1; i++) {
     let idx = i % currentList.length;
-    console.log("idx = " + idx);
     let char = currentList[idx].name.charAt(0);
     if (char.toLowerCase() === targetChar) {
       let elemId = "li-" + currentElement.layerIdx + "-" + idx;
-      console.log("found elem:" + elemId);
-      let top = document.getElementById(elemId).offsetTop;
-      document.getElementById("column" + currentElement.layerIdx).scrollTop =
-        top - 150;
+      scrollToView(currentElement.layerIdx, idx);
       onHover(
         elemId,
         currentElement.layerIdx,
@@ -334,8 +330,81 @@ function handleFunctionKeys(event) {
     } else {
       playMessage("No selection");
     }
+  } else if (event.ctrlKey && event.key === "s") {
+    sortByIdx = (sortByIdx + 1) % sortTypes.length;
+    playMessage("Sort: " + sortTypes[sortByIdx]);
+    reSort();
+  } else if (event.ctrlKey && event.key === "1") {
+    if (sortByIdx !== 0) {
+      sortByIdx = 0;
+      reSort();
+    }
+    playMessage("Sort: " + sortTypes[sortByIdx]);
+  } else if (event.ctrlKey && event.key === "2") {
+    if (sortByIdx !== 1) {
+      sortByIdx = 1;
+      reSort();
+    }
+    playMessage("Sort: " + sortTypes[sortByIdx]);
+  } else if (event.ctrlKey && event.key === "3") {
+    if (sortByIdx !== 2) {
+      sortByIdx = 2;
+      reSort();
+    }
+    playMessage("Sort: " + sortTypes[sortByIdx]);
+  } else if (event.ctrlKey && event.key === "4") {
+    if (sortByIdx !== 3) {
+      sortByIdx = 3;
+      reSort();
+    }
+    playMessage("Sort: " + sortTypes[sortByIdx]);
+  } else if (event.ctrlKey && event.key === "5") {
+    if (sortByIdx !== 4) {
+      sortByIdx = 4;
+      reSort();
+    }
+    playMessage("Sort: " + sortTypes[sortByIdx]);
   } else {
     return false;
   }
   return true;
+}
+
+function reSort() {
+  let layerIdx = currentElement.layerIdx;
+  let parentClass = "liFocused" + (layerIdx - 1);
+  let parentElem = document.getElementsByClassName(parentClass)[0];
+  onHover(
+    parentElem.getAttribute("id"),
+    layerIdx - 1,
+    parentElem.innerText,
+    parentElem.getAttribute("isFolder"),
+    parentElem.getAttribute("idx")
+  );
+  let idx = 0;
+  let elemId = "li-" + layerIdx + "-" + idx;
+  let currentList = currentLists[layerIdx - 1];
+  console.log(currentLists);
+  console.log(currentList);
+  console.log(
+    "onHover:" + elemId,
+    layerIdx,
+    currentList[idx].name,
+    currentList[idx].isFolder,
+    idx
+  );
+  onHover(
+    elemId,
+    layerIdx,
+    currentList[idx].name,
+    currentList[idx].isFolder,
+    idx
+  );
+  scrollToView(layerIdx, idx);
+}
+
+function scrollToView(layerIdx, idx) {
+  let elemId = "li-" + layerIdx + "-" + idx;
+  let top = document.getElementById(elemId).offsetTop;
+  document.getElementById("column" + layerIdx).scrollTop = top - 150;
 }

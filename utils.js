@@ -80,32 +80,87 @@ function writeRootPathConfig() {
 
 function getDirAndFiles(source) {
   if (source === "") {
-    let arr = rootPaths.map((name) => ({ name: name, isFolder: true }));
-    return { dirs: arr, files: [] };
+    return rootPaths.map((name) => ({
+      name: name,
+      isFolder: true,
+      stats: null,
+    }));
   }
-  let arr = readdirSync(source, { withFileTypes: true });
 
-  function MySort(a, b) {
+  try {
+    let arr = readdirSync(source, { withFileTypes: true });
+
+    return arr.map((dirent) => ({
+      name: dirent.name,
+      isFolder: dirent.isDirectory(),
+      stats: getFileStats(source + dirent.name),
+    }));
+  } catch (e) {
+    console.log(e);
+    return [];
+  }
+}
+
+function sortDirBy(arr, method) {
+  let sortFn = null;
+  function cmpName(a, b) {
     a = a.name.replace("_", ".");
     b = b.name.replace("_", ".");
     return a.localeCompare(b);
   }
 
-  return {
-    dirs: arr
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => ({ name: dirent.name, isFolder: true }))
-      .sort(MySort),
-    files: arr
-      .filter((dirent) => !dirent.isDirectory())
-      .map((dirent) => ({ name: dirent.name, isFolder: false }))
-      .sort(MySort),
-  };
+  if (method === "type") {
+    sortFn = function (a, b) {
+      if (a.isFolder && b.isFolder) return 0;
+      else if (!a.isFolder && b.isFolder) return 1; // b on top
+      else if (a.isFolder && !b.isFolder) return -1; // a on top
+
+      let aExt = a.name.match(/\.[0-9a-z]+$/i);
+      let bExt = b.name.match(/\.[0-9a-z]+$/i);
+      aExt = aExt.length > 0 ? aExt[0] : "";
+      bExt = bExt.length > 0 ? bExt[0] : "";
+
+      let cmp = cmpName({ name: aExt }, { name: bExt });
+      if (cmp !== 0) return cmp;
+      return cmpName(a, b);
+    };
+  } else if (method === "size") {
+    sortFn = function (a, b) {
+      if (a.isFolder && b.isFolder) return 0;
+      else if (!a.isFolder && b.isFolder) return 1; // b on top
+      else if (a.isFolder && !b.isFolder) return -1; // a on top
+
+      if (a.stats.size < b.stats.size) return 1; // b on top
+      else if (a.stats.size > b.stats.size) return -1; // a on top
+      return cmpName(a, b);
+    };
+  } else if (method === "time") {
+    sortFn = function (a, b) {
+      if (a.stats.mtimeMs < b.stats.mtimeMs) return 1; // b on top
+      else if (a.stats.mtimeMs > b.stats.mtimeMs) return -1; // a on top
+      return cmpName(a, b);
+    };
+  } else if (method === "name") {
+    sortFn = cmpName;
+  } else {
+    // (method === "folder")
+    sortFn = function (a, b) {
+      if (!a.isFolder && b.isFolder) return 1; // b on top
+      else if (a.isFolder && !b.isFolder) return -1; // a on top
+      return cmpName(a, b);
+    };
+  }
+  return arr.sort(sortFn);
 }
 
 function getFileStats(path) {
-  const stats = fs.statSync(path);
-  return stats;
+  try {
+    const stats = fs.statSync(path);
+    return stats;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
 }
 
 function formatFileSize(bytes) {
