@@ -51,6 +51,13 @@ li {
   text-align: center;
 }
 
+.liStats {
+  color: grey;
+  font-size: small;
+  text-align: left;
+  position: absolute;
+}
+
 [class*="liFocused"] {
   border-radius: 5px;
   border-width: 2px;

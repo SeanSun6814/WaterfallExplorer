@@ -103,6 +103,49 @@ function getDirAndFiles(source) {
   };
 }
 
+function getFileStats(path) {
+  const stats = fs.statSync(path);
+  return stats;
+}
+
+function formatFileSize(bytes) {
+  let fileSize = bytes;
+  let fileSizeKB = round2d(fileSize * 0.001);
+  let fileSizeMB = round2d(fileSizeKB * 0.001);
+  let fileSizeGB = round2d(fileSizeMB * 0.001);
+
+  if (fileSizeGB >= 1) {
+    return fileSizeGB + " GB";
+  } else if (fileSizeMB >= 1) {
+    return fileSizeMB + " MB";
+  } else if (fileSizeKB >= 1) {
+    return fileSizeKB + " KB";
+  } else {
+    return fileSize + " Bytes";
+  }
+}
+
+function round2d(value) {
+  return Math.round(value * 100) / 100;
+}
+
+function formatDate(millis) {
+  var myDate = new Date(millis);
+  return (
+    myDate.getFullYear() +
+    "-" +
+    ("0" + (myDate.getMonth() + 1)).slice(-2) +
+    "-" +
+    ("0" + myDate.getDate()).slice(-2) +
+    " " +
+    myDate.getHours() +
+    ":" +
+    ("0" + myDate.getMinutes()).slice(-2) +
+    ":" +
+    ("0" + myDate.getSeconds()).slice(-2)
+  );
+}
+
 async function openFile(path) {
   childProcess.exec('start "" "' + path + '"');
 }

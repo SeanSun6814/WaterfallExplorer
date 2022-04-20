@@ -36,6 +36,7 @@ function getHTMLList(array, layerIdx) {
     let argStr =
       "'" + id + "'," + layerIdx + ', "' + item.name + '", ' + item.isFolder;
     li.setAttribute("onmouseenter", "onHover(" + argStr + ")");
+    // li.setAttribute("onscroll", "onHover(" + argStr + ")");
     li.setAttribute("onclick", "onClick(" + argStr + ")");
     li.setAttribute("isFolder", item.isFolder);
     li.setAttribute("style", "background-color:" + getHsl(layerIdx, idx) + ";");
@@ -53,6 +54,17 @@ function getHTMLList(array, layerIdx) {
   let li = document.createElement("li");
   li.classList.add("liCount");
   li.innerHTML = generateCountStr(numFiles, numFolders);
+  colUl.appendChild(li);
+  return colUl;
+}
+
+function getHTMLStatsList(str, layerIdx) {
+  let colUl = document.createElement("ul");
+  colUl.setAttribute("id", "column" + layerIdx);
+  let li = document.createElement("li");
+  li.setAttribute("id", "liStats");
+  li.classList.add("liStats");
+  li.innerHTML = "<span>" + str + "</span>";
   colUl.appendChild(li);
   return colUl;
 }
@@ -135,12 +147,33 @@ function onHover(id, layerIdx, name, isFolder) {
   removeClassesFromAll("liFocused" + layerIdx);
   document.getElementById(id).classList.add("liFocused" + layerIdx);
 
-  if (!isFolder) return;
-  let results = getDirAndFiles(newPath);
-  let arr = results.dirs.concat(results.files);
-  let elem = getHTMLList(arr, layerIdx + 1);
-  let myColumns = document.getElementById("myColumns");
-  myColumns.appendChild(elem);
+  if (isFolder) {
+    let results = getDirAndFiles(newPath);
+    let arr = results.dirs.concat(results.files);
+    let elem = getHTMLList(arr, layerIdx + 1);
+    let myColumns = document.getElementById("myColumns");
+    myColumns.appendChild(elem);
+  } else {
+    let stats = getFileStats(newPath);
+    let str = "Size: " + formatFileSize(stats.size) + "<br>";
+    str += "Created: " + formatDate(stats.ctimeMs) + "<br>";
+    str += "Modified: " + formatDate(stats.mtimeMs) + "<br>";
+    str += "Opened: " + formatDate(stats.atimeMs);
+    let elem = getHTMLStatsList(str, layerIdx + 1);
+    let myColumns = document.getElementById("myColumns");
+    myColumns.appendChild(elem);
+    setStatsToPosition();
+  }
+}
+
+function setStatsToPosition() {
+  let elem = document.getElementById(currentElement.id);
+  let statElem = document.getElementById("liStats");
+  let top = elem.getBoundingClientRect().top;
+  top += elem.getBoundingClientRect().height / 2.0;
+  top -= statElem.getBoundingClientRect().height / 2.0;
+  statElem.style.position = "absolute";
+  statElem.style.top = Math.floor(top) + "px";
 }
 
 function onClick(id, layerIdx, name, isFolder) {
