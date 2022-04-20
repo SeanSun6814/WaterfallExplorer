@@ -23,7 +23,6 @@ ul{
     padding: 0px;
     padding-left: 5px;
     margin: 0px;
-    /* background-color: #e6f5ff; */
 }
 ul::-webkit-scrollbar {
   display: none;
@@ -56,6 +55,7 @@ li {
   font-size: small;
   text-align: left;
   position: absolute;
+  min-width: fit-content;
 }
 
 [class*="liFocused"] {
@@ -73,8 +73,15 @@ li {
     direction:rtl;
     text-align: left;
     font-size: xx-large;
-    unicode-bidi:bidi-override;
   }
+
+#fullPathText:after {
+    content: "\200E‎";
+}
+
+#fullPathText:before {
+    content: "\200E‎";
+}
 
 #myColumns{
   height: 100%;

@@ -15,7 +15,7 @@ function setPathArr(layerIdx, name, isFolder) {
   }
   if (isFolder) pathArr.push(name + "/");
   else pathArr.push(name);
-  document.getElementById("fullPathText").innerHTML = reverseStr(getFullPath());
+  document.getElementById("fullPathText").innerHTML = getFullPath();
 }
 
 function getFullPath() {
@@ -64,7 +64,7 @@ function getHTMLStatsList(str, layerIdx) {
   let li = document.createElement("li");
   li.setAttribute("id", "liStats");
   li.classList.add("liStats");
-  li.innerHTML = "<span>" + str + "</span>";
+  li.innerHTML = str;
   colUl.appendChild(li);
   return colUl;
 }
