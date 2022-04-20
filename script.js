@@ -156,7 +156,7 @@ function onHover(id, layerIdx, name, isFolder) {
   } else {
     let stats = getFileStats(newPath);
     let str = "Size: " + formatFileSize(stats.size) + "<br>";
-    str += "Created: " + formatDate(stats.ctimeMs) + "<br>";
+    str += "Created: " + formatDate(stats.birthtime) + "<br>";
     str += "Modified: " + formatDate(stats.mtimeMs) + "<br>";
     str += "Opened: " + formatDate(stats.atimeMs);
     let elem = getHTMLStatsList(str, layerIdx + 1);
