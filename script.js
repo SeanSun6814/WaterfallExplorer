@@ -1,6 +1,7 @@
 let pathArr = [];
 let rootPaths = [];
 let currentElement = null;
+let currentLists = [];
 
 function removeColumnByLayerIdx(layerIdx) {
   let myColumns = document.getElementById("myColumns");
@@ -16,6 +17,13 @@ function setPathArr(layerIdx, name, isFolder) {
   if (isFolder) pathArr.push(name + "/");
   else pathArr.push(name);
   document.getElementById("fullPathText").innerHTML = getFullPath();
+}
+
+function setCurrentLists(layerIdx, list) {
+  while (currentLists.length > layerIdx) {
+    currentLists.pop();
+  }
+  currentLists.push(list);
 }
 
 function getFullPath() {
@@ -34,7 +42,16 @@ function getHTMLList(array, layerIdx) {
     let id = "li-" + layerIdx + "-" + idx;
     li.innerText = item.name;
     let argStr =
-      "'" + id + "'," + layerIdx + ', "' + item.name + '", ' + item.isFolder;
+      "'" +
+      id +
+      "'," +
+      layerIdx +
+      ', "' +
+      item.name +
+      '", ' +
+      item.isFolder +
+      "," +
+      idx;
     li.setAttribute("onmouseenter", "onHover(" + argStr + ")");
     // li.setAttribute("onscroll", "onHover(" + argStr + ")");
     li.setAttribute("onclick", "onClick(" + argStr + ")");
@@ -129,18 +146,20 @@ window.onload = function () {
   let results = getDirAndFiles("");
   pathArr.push("");
   let arr = results.dirs.concat(results.files);
+  currentLists.push(arr);
   let elem = getHTMLList(arr, 1);
   let myColumns = document.getElementById("myColumns");
   myColumns.innerHTML = "";
   myColumns.appendChild(elem);
 };
 
-function onHover(id, layerIdx, name, isFolder) {
+function onHover(id, layerIdx, name, isFolder, idx) {
   currentElement = {
     id: id,
     layerIdx: layerIdx,
     name: name,
     isFolder: isFolder,
+    idx: idx,
   };
   setPathArr(layerIdx, name, isFolder);
   let newPath = getFullPath();
@@ -150,6 +169,7 @@ function onHover(id, layerIdx, name, isFolder) {
   if (isFolder) {
     let results = getDirAndFiles(newPath);
     let arr = results.dirs.concat(results.files);
+    setCurrentLists(layerIdx, arr);
     let elem = getHTMLList(arr, layerIdx + 1);
     let myColumns = document.getElementById("myColumns");
     myColumns.appendChild(elem);
@@ -189,12 +209,60 @@ function onLeave(id) {
   // document.getElementById(id).classList.remove("liFocused");
 }
 
-document.addEventListener("keypress", function onPress(event) {
-  if (event.key === "c") {
+document.addEventListener("keyup", function onPress(event) {
+  // alert(event.key);
+  if (!handleFunctionKeys(event)) {
+    if (
+      event.key === "Control" ||
+      event.key === "Shift" ||
+      event.key === "Tab" ||
+      currentElement == null
+    ) {
+      return;
+    }
+    console.log(event.key);
+    findWithName(event.key, currentElement.idx);
+  }
+});
+
+function findWithName(targetChar, startIdx) {
+  let currentList = currentLists[currentElement.layerIdx - 1];
+  targetChar = targetChar.toLowerCase();
+  console.log(
+    "from " + (startIdx + 1) + " to " + (startIdx + currentList.length)
+  );
+  for (let i = startIdx + 1; i < startIdx + currentList.length + 1; i++) {
+    let idx = i % currentList.length;
+    console.log("idx = " + idx);
+    let char = currentList[idx].name.charAt(0);
+    if (char.toLowerCase() === targetChar) {
+      let elemId = "li-" + currentElement.layerIdx + "-" + idx;
+      console.log("found elem:" + elemId);
+      let top = document.getElementById(elemId).offsetTop;
+      document.getElementById("column" + currentElement.layerIdx).scrollTop =
+        top - 150;
+      onHover(
+        elemId,
+        currentElement.layerIdx,
+        currentList[idx].name,
+        currentList[idx].isFolder,
+        idx
+      );
+      playClickedAnimation(elemId);
+      playMessage("Find '" + targetChar + "'");
+      return;
+    }
+  }
+  playMessage("'" + targetChar + "' not found");
+  // console.log("not found");
+}
+
+function handleFunctionKeys(event) {
+  if (event.ctrlKey && event.key === "c") {
     // playClickedAnimation("li-1-1");
     setClipboard(getFullPath());
     playMessage("Copied");
-  } else if (event.key === "a") {
+  } else if (event.ctrlKey && event.key === "a") {
     let str = getClipboard();
     if (addToRootPaths(str)) {
       writeRootPathConfig();
@@ -203,7 +271,7 @@ document.addEventListener("keypress", function onPress(event) {
     } else {
       playMessage("Already added");
     }
-  } else if (event.key === "d") {
+  } else if (event.key === "Delete") {
     if (
       rootPaths.length > 0 &&
       pathArr.length > 0 &&
@@ -217,7 +285,10 @@ document.addEventListener("keypress", function onPress(event) {
     } else {
       playMessage("No selection");
     }
-  } else if (event.key === "e") {
+  } else if (
+    (event.ctrlKey && event.key === "Enter") ||
+    (event.ctrlKey && event.key === "e")
+  ) {
     if (rootPaths.length > 0 && pathArr.length > 0 && currentElement != null) {
       playMessage("VS Code");
       playClickedAnimation(currentElement.id);
@@ -228,7 +299,7 @@ document.addEventListener("keypress", function onPress(event) {
     } else {
       playMessage("No selection");
     }
-  } else if (event.key === "b") {
+  } else if (event.key === "Enter" || (event.ctrlKey && event.key === "b")) {
     if (rootPaths.length > 0 && pathArr.length > 0 && currentElement != null) {
       playMessage("Browser");
       playClickedAnimation(currentElement.id);
@@ -239,5 +310,20 @@ document.addEventListener("keypress", function onPress(event) {
     } else {
       playMessage("No selection");
     }
+  } else if (event.key === " " || (event.ctrlKey && event.key === "o")) {
+    if (rootPaths.length > 0 && pathArr.length > 0 && currentElement != null) {
+      onClick(
+        currentElement.id,
+        currentElement.layerIdx,
+        currentElement.name,
+        currentElement.isFolder,
+        currentElement.idx
+      );
+    } else {
+      playMessage("No selection");
+    }
+  } else {
+    return false;
   }
-});
+  return true;
+}
