@@ -217,7 +217,7 @@ function onLeave(id) {
 // });
 
 document.addEventListener("keyup", function onPress(event) {
-  if (event.key === "Alt") {
+  if (event.key === "Alt" || event.altKey) {
     event.preventDefault();
     return;
   }
