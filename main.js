@@ -39,7 +39,7 @@ function createWindow() {
     Menu.buildFromTemplate([
       {
         label: "Quit",
-        accelerator: "Q",
+        accelerator: "CmdOrCtrl+Q",
         click() {
           app.quit();
         },
@@ -53,7 +53,7 @@ function createWindow() {
       },
       {
         label: "Hide",
-        accelerator: "H",
+        accelerator: "CmdOrCtrl+H",
         click() {
           win.hide();
         },
@@ -74,6 +74,7 @@ function createWindow() {
   win.setSize(width, height);
   win.center();
   win.loadFile("index.html");
+  win.hide();
 }
 
 app.whenReady().then(() => {

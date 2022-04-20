@@ -209,12 +209,24 @@ function onLeave(id) {
   // document.getElementById(id).classList.remove("liFocused");
 }
 
+// document.addEventListener("keydown", function onPress(event) {
+//   if (event.key === "Alt") {
+//     event.preventDefault();
+//     return;
+//   }
+// });
+
 document.addEventListener("keyup", function onPress(event) {
-  // alert(event.key);
+  if (event.key === "Alt") {
+    event.preventDefault();
+    return;
+  }
   if (!handleFunctionKeys(event)) {
+    // alert(event.key);
     if (
       event.key === "Control" ||
       event.key === "Shift" ||
+      event.key === "Alt" ||
       event.key === "Tab" ||
       currentElement == null
     ) {

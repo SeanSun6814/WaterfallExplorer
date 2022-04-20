@@ -1,0 +1,1 @@
+CreateObject("Wscript.Shell").Run "C:\_Data\_Coding\NodeJS\MyFileExplorer\launch.bat",0,True
