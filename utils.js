@@ -4,6 +4,48 @@ const childProcess = require("child_process");
 // const clipboardy = require("clipboardy");
 // import clipboard from "clipboardy";
 const { clipboard } = require("electron");
+const fse = require("fs-extra");
+var path = require("path");
+
+function makeDir(path, dirName) {
+  fse.ensureDirSync(path + dirName);
+}
+
+function copyFile(sourcePath, destFolder) {
+  try {
+    let fileName = getFileName(sourcePath);
+    fse.copySync(sourcePath, destFolder + fileName);
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+function moveFile(sourcePath, destFolder) {
+  try {
+    let fileName = getFileName(sourcePath);
+    fse.moveSync(sourcePath, destFolder + fileName);
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+function deleteFile(sourcePath) {
+  try {
+    fse.removeSync(sourcePath);
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
+function getFileName(pathStr) {
+  return path.basename(pathStr);
+}
 
 function getClipboard() {
   return clipboard.readText();

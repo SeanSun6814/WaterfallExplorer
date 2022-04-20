@@ -9,7 +9,9 @@
   "scripts": {
     "start": "electron ."
   },
-  "dependencies": {},
+  "dependencies": {
+    "fs-extra": "^10.1.0"
+  },
   "devDependencies": {
     "electron": "18.0.4"
   }
