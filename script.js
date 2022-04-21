@@ -11,20 +11,27 @@ function removeColumnByLayerIdx(layerIdx) {
   if (col != null) myColumns.removeChild(col);
 }
 
-function setPathArr(layerIdx, name, isFolder) {
+function removeExtraPathArrAndColumns(layerIdx) {
   while (pathArr.length > layerIdx) {
     pathArr.pop();
     removeColumnByLayerIdx(pathArr.length + 1);
   }
+}
+function setPathArr(layerIdx, name, isFolder) {
+  removeExtraPathArrAndColumns(layerIdx);
   if (isFolder) pathArr.push(name + "/");
   else pathArr.push(name);
   document.getElementById("fullPathText").innerHTML = getFullPath();
 }
 
-function setCurrentLists(layerIdx, list) {
+function removeExtraCurrentLists(layerIdx) {
   while (currentLists.length > layerIdx) {
     currentLists.pop();
   }
+}
+
+function setCurrentLists(layerIdx, list) {
+  removeExtraCurrentLists(layerIdx);
   currentLists.push(list);
 }
 
@@ -69,7 +76,7 @@ function getHTMLList(array, layerIdx) {
     li.setAttribute("style", "background-color:" + getHsl(layerIdx, idx) + ";");
     li.setAttribute("id", id);
     li.setAttribute("idx", idx);
-    // li.setAttribute("onmouseleave", "onLeave('" + argStr + "')");
+    // li.setAttribute("onmouseleave", "onLeave(" + argStr + ")");
     if (item.isFolder) {
       li.classList.add("liFolder");
       numFolders++;
@@ -81,6 +88,8 @@ function getHTMLList(array, layerIdx) {
   });
   let li = document.createElement("li");
   li.classList.add("liCount" + layerIdx);
+  if (layerIdx === 1)
+    li.setAttribute("onmouseenter", "removeLFocus(" + layerIdx + ")");
   li.innerHTML = generateCountStr(numFiles, numFolders);
   colUl.appendChild(li);
   return colUl;
@@ -217,15 +226,28 @@ function onClick(id, layerIdx, name, isFolder, idx) {
 }
 
 function onLeave(id, layerIdx, name, isFolder, idx) {
-  // document.getElementById(id).classList.remove("liFocused");
+  // document.getElementById(id).classList.remove("liFocused" + layerIdx);
+  // removeExtraPathArrAndColumns(layerIdx);
+  // removeExtraCurrentLists(layerIdx);
 }
 
-// document.addEventListener("keydown", function onPress(event) {
-//   if (event.key === "Alt") {
-//     event.preventDefault();
-//     return;
-//   }
-// });
+function removeLFocus(layerIdx) {
+  if (layerIdx === -1) {
+    if (currentElement == null) return;
+    layerIdx = currentElement.layerIdx;
+    if (layerIdx !== 1) return;
+  }
+  // let elemClass = "liFocused" + layerIdx;
+  // let elem = document.getElementsByClassName(elemClass);
+  // if (elem.length > 0) {
+  //   elem = elem[0];
+  //   if (elem != null) elem.classList.remove(elemClass);
+  // }
+  removeExtraPathArrAndColumns(layerIdx);
+  removeExtraCurrentLists(layerIdx);
+  // currentElement = null;
+  document.getElementById("fullPathText").innerHTML = getFullPath();
+}
 
 document.addEventListener("keyup", function onPress(event) {
   if (event.key === "Alt" || event.altKey) {
