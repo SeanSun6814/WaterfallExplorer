@@ -157,13 +157,15 @@ function sortDirBy(arr, method) {
       else if (!a.isFolder && b.isFolder) return 1; // b on top
       else if (a.isFolder && !b.isFolder) return -1; // a on top
 
-      let aExt = a.name.match(/\.[0-9a-z]+$/i);
-      let bExt = b.name.match(/\.[0-9a-z]+$/i);
-      aExt = aExt.length > 0 ? aExt[0] : "";
-      bExt = bExt.length > 0 ? bExt[0] : "";
+      try {
+        let aExt = a.name.match(/\.[0-9a-z]+$/i);
+        let bExt = b.name.match(/\.[0-9a-z]+$/i);
+        aExt = aExt.length > 0 ? aExt[0] : "";
+        bExt = bExt.length > 0 ? bExt[0] : "";
 
-      let cmp = cmpName({ name: aExt }, { name: bExt });
-      if (cmp !== 0) return cmp;
+        let cmp = cmpName({ name: aExt }, { name: bExt });
+        if (cmp !== 0) return cmp;
+      } catch (e) {}
       return cmpName(a, b);
     };
   } else if (method === "size") {
@@ -172,14 +174,18 @@ function sortDirBy(arr, method) {
       else if (!a.isFolder && b.isFolder) return 1; // b on top
       else if (a.isFolder && !b.isFolder) return -1; // a on top
 
-      if (a.stats.size < b.stats.size) return 1; // b on top
-      else if (a.stats.size > b.stats.size) return -1; // a on top
+      try {
+        if (a.stats.size < b.stats.size) return 1; // b on top
+        else if (a.stats.size > b.stats.size) return -1; // a on top
+      } catch (e) {}
       return cmpName(a, b);
     };
   } else if (method === "time") {
     sortFn = function (a, b) {
-      if (a.stats.mtimeMs < b.stats.mtimeMs) return 1; // b on top
-      else if (a.stats.mtimeMs > b.stats.mtimeMs) return -1; // a on top
+      try {
+        if (a.stats.mtimeMs < b.stats.mtimeMs) return 1; // b on top
+        else if (a.stats.mtimeMs > b.stats.mtimeMs) return -1; // a on top
+      } catch (e) {}
       return cmpName(a, b);
     };
   } else if (method === "name") {
@@ -200,7 +206,7 @@ function getFileStats(path) {
     const stats = fs.statSync(path);
     return stats;
   } catch (e) {
-    console.log(e);
+    // console.log(e);
     return null;
   }
 }

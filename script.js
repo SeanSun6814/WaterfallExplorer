@@ -459,6 +459,7 @@ function modifyFile(operation) {
 function reSort() {
   refreshCurrentParent();
   let idx = 0;
+  let layerIdx = currentElement.layerIdx + 1;
   let elemId = "li-" + layerIdx + "-" + idx;
   let currentList = currentLists[layerIdx - 1];
   onHover(
@@ -481,6 +482,7 @@ function refreshCurrentParent() {
   let layerIdx = currentElement.layerIdx;
   let parentClass = "liFocused" + (layerIdx - 1);
   let parentElem = document.getElementsByClassName(parentClass)[0];
+  if (parentElem == null) return;
   onHover(
     parentElem.getAttribute("id"),
     layerIdx - 1,
