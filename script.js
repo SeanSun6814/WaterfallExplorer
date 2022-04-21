@@ -69,7 +69,7 @@ function getHTMLList(array, layerIdx) {
     li.setAttribute("style", "background-color:" + getHsl(layerIdx, idx) + ";");
     li.setAttribute("id", id);
     li.setAttribute("idx", idx);
-    li.setAttribute("onmouseleave", "onLeave('" + id + "')");
+    // li.setAttribute("onmouseleave", "onLeave('" + argStr + "')");
     if (item.isFolder) {
       li.classList.add("liFolder");
       numFolders++;
@@ -207,7 +207,7 @@ function setStatsToPosition() {
   statElem.style.top = Math.floor(top) + "px";
 }
 
-function onClick(id, layerIdx, name, isFolder) {
+function onClick(id, layerIdx, name, isFolder, idx) {
   playMessage("Opening");
   playClickedAnimation(id);
   openFile(getFullPath());
@@ -216,7 +216,7 @@ function onClick(id, layerIdx, name, isFolder) {
   }, 1000);
 }
 
-function onLeave(id) {
+function onLeave(id, layerIdx, name, isFolder, idx) {
   // document.getElementById(id).classList.remove("liFocused");
 }
 
