@@ -45,7 +45,7 @@ li {
   font-weight: bold;
 }
 
-.liCount {
+[class*="liCount"] {
   color: grey;
   font-size: small;
   text-align: center;

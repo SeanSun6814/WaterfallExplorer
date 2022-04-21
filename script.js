@@ -80,7 +80,7 @@ function getHTMLList(array, layerIdx) {
     colUl.appendChild(li);
   });
   let li = document.createElement("li");
-  li.classList.add("liCount");
+  li.classList.add("liCount" + layerIdx);
   li.innerHTML = generateCountStr(numFiles, numFolders);
   colUl.appendChild(li);
   return colUl;
@@ -398,7 +398,7 @@ function handleMakeDir() {
 }
 
 function modifyFile(operation) {
-  let source = getClipboard();
+  let source = getClipboard().replace(/\/$/, "");
   let dest = getFullPath(true);
   console.log("source: " + source);
   console.log("dest: " + dest);
@@ -420,6 +420,7 @@ function modifyFile(operation) {
     } else {
       refreshCurrentParent();
     }
+    removeFromView(source);
   } else if (operation === "copy") {
     let str = "Copy\n" + source + "\nto\n" + dest;
     if (!confirm(str)) {
@@ -497,4 +498,40 @@ function refreshCurrentElement() {
     currentElement.isFolder,
     currentElement.idx
   );
+}
+
+function removeFromView(targetPath) {
+  targetPath = targetPath.replace(/\/$/, "");
+  let path = "";
+  let layerIdx = -1;
+  let idx = -1;
+  for (let layer = 0; layer < currentLists.length; layer++) {
+    let currentList = currentLists[layer];
+    for (let i = 0; i < currentList.length; i++) {
+      let tmpPath = (path + currentList[i].name).replace(/\/$/, "");
+      if (tmpPath === targetPath) {
+        layerIdx = layer;
+        idx = i;
+        break;
+      }
+    }
+    if (layerIdx != -1) break;
+    path += pathArr[layer + 1];
+  }
+
+  if (layerIdx == -1) return;
+  layerIdx++;
+  let elemId = "li-" + layerIdx + "-" + idx;
+  let elem = document.getElementById(elemId);
+  let isFolder = elem.getAttribute("isFolder");
+  elem.outerHTML = "";
+  let countElemId = "liCount" + layerIdx;
+  let countElem = document.getElementsByClassName(countElemId)[0];
+  let numFiles = isFolder == true ? 0 : -1,
+    numFolders = isFolder == true ? -1 : 0;
+  currentLists[layerIdx - 1].forEach((item) => {
+    if (item.isFolder) numFolders++;
+    else numFiles++;
+  });
+  countElem.innerHTML = generateCountStr(numFiles, numFolders);
 }
