@@ -4,6 +4,7 @@ let currentElement = null;
 let currentLists = [];
 let sortByIdx = 0;
 let sortTypes = ["default", "name", "time", "type", "size"];
+let wasFocusedOnItem = false;
 
 function removeColumnByLayerIdx(layerIdx) {
   let myColumns = document.getElementById("myColumns");
@@ -88,8 +89,7 @@ function getHTMLList(array, layerIdx) {
   });
   let li = document.createElement("li");
   li.classList.add("liCount" + layerIdx);
-  if (layerIdx === 1)
-    li.setAttribute("onmouseenter", "removeLFocus(" + layerIdx + ")");
+  li.setAttribute("onmouseenter", "removeFocus(" + layerIdx + ")");
   li.innerHTML = generateCountStr(numFiles, numFolders);
   colUl.appendChild(li);
   return colUl;
@@ -181,6 +181,7 @@ function onHover(id, layerIdx, name, isFolder, idx) {
     isFolder: isFolder,
     idx: idx,
   };
+  wasFocusedOnItem = true;
   setPathArr(layerIdx, name, isFolder);
   let newPath = getFullPath();
   removeClassesFromAll("liFocused" + layerIdx);
@@ -231,21 +232,36 @@ function onLeave(id, layerIdx, name, isFolder, idx) {
   // removeExtraCurrentLists(layerIdx);
 }
 
-function removeLFocus(layerIdx) {
+function removeFocus(layerIdx) {
   if (layerIdx === -1) {
-    if (currentElement == null) return;
+    if (currentElement == null || !wasFocusedOnItem) return;
     layerIdx = currentElement.layerIdx;
-    if (layerIdx !== 1) return;
+    wasFocusedOnItem = false;
   }
-  // let elemClass = "liFocused" + layerIdx;
-  // let elem = document.getElementsByClassName(elemClass);
-  // if (elem.length > 0) {
-  //   elem = elem[0];
-  //   if (elem != null) elem.classList.remove(elemClass);
-  // }
+  let elemClass = "liFocused" + layerIdx;
+  let elem = document.getElementsByClassName(elemClass);
+  if (elem.length > 0) {
+    elem = elem[0];
+    if (elem != null) elem.classList.remove(elemClass);
+  }
   removeExtraPathArrAndColumns(layerIdx);
   removeExtraCurrentLists(layerIdx);
-  // currentElement = null;
+  if (layerIdx !== 1) {
+    let parentClass = "liFocused" + (layerIdx - 1);
+    let parentElem = document.getElementsByClassName(parentClass);
+    if (parentElem.length > 0) {
+      parentElem = parentElem[0];
+      if (parentElem != null) {
+        currentElement = {
+          id: parentElem.getAttribute("id"),
+          layerIdx: layerIdx - 1,
+          name: parentElem.innerText,
+          isFolder: parentElem.getAttribute("isFolder"),
+          idx: parentElem.getAttribute("idx"),
+        };
+      }
+    }
+  }
   document.getElementById("fullPathText").innerHTML = getFullPath();
 }
 
@@ -309,10 +325,10 @@ function handleFunctionKeys(event) {
     } else {
       playMessage("Already added");
     }
-  } else if (event.key === "Delete") {
+  } else if (!event.ctrlKey && event.key === "Delete") {
     if (
       rootPaths.length > 0 &&
-      pathArr.length > 0 &&
+      pathArr.length > 1 &&
       currentElement != null &&
       currentElement.layerIdx == 1
     ) {
@@ -327,7 +343,7 @@ function handleFunctionKeys(event) {
     (event.ctrlKey && event.key === "Enter") ||
     (event.ctrlKey && event.key === "e")
   ) {
-    if (rootPaths.length > 0 && pathArr.length > 0 && currentElement != null) {
+    if (rootPaths.length > 0 && pathArr.length > 1 && currentElement != null) {
       playMessage("VS Code");
       playClickedAnimation(currentElement.id);
       openWithCode(getFullPath());
@@ -338,7 +354,7 @@ function handleFunctionKeys(event) {
       playMessage("No selection");
     }
   } else if (event.key === "Enter" || (event.ctrlKey && event.key === "b")) {
-    if (rootPaths.length > 0 && pathArr.length > 0 && currentElement != null) {
+    if (rootPaths.length > 0 && pathArr.length > 1 && currentElement != null) {
       playMessage("Browser");
       playClickedAnimation(currentElement.id);
       openWithBrowser(getFullPath());
@@ -349,7 +365,7 @@ function handleFunctionKeys(event) {
       playMessage("No selection");
     }
   } else if (event.key === " " || (event.ctrlKey && event.key === "o")) {
-    if (rootPaths.length > 0 && pathArr.length > 0 && currentElement != null) {
+    if (rootPaths.length > 0 && pathArr.length > 1 && currentElement != null) {
       onClick(
         currentElement.id,
         currentElement.layerIdx,
@@ -399,7 +415,7 @@ function handleFunctionKeys(event) {
   } else if (event.ctrlKey && event.key === "m") {
     event.preventDefault();
     modifyFile("move");
-  } else if (event.ctrlKey && event.key === "d") {
+  } else if (event.ctrlKey && event.key === "Delete") {
     modifyFile("delete");
   } else if (event.ctrlKey && event.key === "n") {
     handleMakeDir();
@@ -420,6 +436,10 @@ function handleMakeDir() {
 }
 
 function modifyFile(operation) {
+  if (pathArr.length <= 1 || currentElement == null) {
+    playMessage("No selection");
+    return;
+  }
   let source = getClipboard().replace(/\/$/, "");
   let dest = getFullPath(true);
   console.log("source: " + source);
@@ -479,6 +499,7 @@ function modifyFile(operation) {
 }
 
 function reSort() {
+  if (pathArr.length <= 1) return;
   refreshCurrentParent();
   let idx = 0;
   let layerIdx = currentElement.layerIdx + 1;
