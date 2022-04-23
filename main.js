@@ -58,6 +58,14 @@ function createWindow() {
           win.hide();
         },
       },
+      {
+        label: "Maximize",
+        accelerator: "CmdOrCtrl+F",
+        click() {
+          if (win.isMaximized()) win.unmaximize();
+          else win.maximize();
+        },
+      },
     ])
   );
 
@@ -68,6 +76,11 @@ function createWindow() {
       event.preventDefault();
       win.hide();
     }
+  });
+
+  win.on("minimize", function (event) {
+    event.preventDefault();
+    win.hide();
   });
 
   // win.setFullScreen(true);
@@ -95,16 +108,16 @@ app.whenReady().then(() => {
     console.log("registration failed");
     app.quit();
   }
-});
 
-app.on("window-all-closed", (e) => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
+  app.on("window-all-closed", (e) => {
+    if (process.platform !== "darwin") {
+      app.quit();
+    }
+  });
 
-app.on("before-quit", () => (app.quitting = true));
+  app.on("before-quit", () => (app.quitting = true));
 
-app.on("will-quit", () => {
-  globalShortcut.unregisterAll();
+  app.on("will-quit", () => {
+    globalShortcut.unregisterAll();
+  });
 });
