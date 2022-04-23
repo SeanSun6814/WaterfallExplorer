@@ -101,7 +101,7 @@ function getHTMLStatsList(str, layerIdx) {
   let li = document.createElement("li");
   li.setAttribute("id", "liStats");
   li.classList.add("liStats");
-  li.setAttribute("onmouseenter", "removeFocus(-1)");
+  // li.setAttribute("onmouseenter", "removeFocus(-1)");
   li.innerHTML = str;
   colUl.appendChild(li);
   return colUl;
@@ -274,6 +274,7 @@ document.addEventListener("keyup", function onPress(event) {
   if (!handleFunctionKeys(event)) {
     // alert(event.key);
     if (
+      (event.key === "f" && event.ctrlKey) ||
       event.key === "Control" ||
       event.key === "Shift" ||
       event.key === "Alt" ||
@@ -501,6 +502,9 @@ function modifyFile(operation) {
 
 function reSort() {
   if (pathArr.length <= 1) return;
+  if (currentElement.isFolder) {
+    refreshCurrentFirstChild();
+  }
   refreshCurrentParent();
   let idx = 0;
   let layerIdx = currentElement.layerIdx + 1;
@@ -514,6 +518,7 @@ function reSort() {
     idx
   );
   scrollToView(layerIdx, idx);
+  removeFocus(-1);
 }
 
 function scrollToView(layerIdx, idx) {
@@ -543,6 +548,21 @@ function refreshCurrentElement() {
     currentElement.name,
     currentElement.isFolder,
     currentElement.idx
+  );
+}
+
+function refreshCurrentFirstChild() {
+  if (currentElement == null) return;
+  let layerIdx = currentElement.layerIdx + 1;
+  let elemId = "li-" + layerIdx + "-" + 0;
+  let elem = document.getElementById(elemId);
+  if (elem == null) return;
+  onHover(
+    elem.getAttribute("id"),
+    layerIdx,
+    elem.innerText,
+    elem.getAttribute("isFolder"),
+    elem.getAttribute("idx")
   );
 }
 
