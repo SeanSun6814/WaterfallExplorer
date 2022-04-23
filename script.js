@@ -101,6 +101,7 @@ function getHTMLStatsList(str, layerIdx) {
   let li = document.createElement("li");
   li.setAttribute("id", "liStats");
   li.classList.add("liStats");
+  li.setAttribute("onmouseenter", "removeFocus(-1)");
   li.innerHTML = str;
   colUl.appendChild(li);
   return colUl;
