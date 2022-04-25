@@ -5,6 +5,9 @@ let currentLists = [];
 let sortByIdx = 0;
 let sortTypes = ["default", "name", "time", "type", "size"];
 let wasFocusedOnItem = false;
+let delayedLaunch = false;
+let delayedLaunchActions = [];
+let delayedLaunchCloseWindowTimer = null;
 
 function removeColumnByLayerIdx(layerIdx) {
   let myColumns = document.getElementById("myColumns");
@@ -218,7 +221,39 @@ function setStatsToPosition() {
   statElem.style.top = Math.floor(top) + "px";
 }
 
+function resetDelayedLaunchCloseWindowTimer() {
+  if (delayedLaunchCloseWindowTimer == null) {
+    delayedLaunchCloseWindowTimer = setTimeout(() => {
+      playMessage(delayedLaunchActions.length + " actions");
+      delayedLaunchActions.forEach((item) => {
+        item();
+      });
+      delayedLaunch = false;
+      delayedLaunchActions = [];
+      delayedLaunchCloseWindowTimer = null;
+      setTimeout(() => {
+        window.close();
+      }, 1000);
+    }, 3000);
+  } else {
+    clearTimeout(delayedLaunchCloseWindowTimer);
+    delayedLaunchCloseWindowTimer = null;
+    resetDelayedLaunchCloseWindowTimer();
+  }
+}
+
+function addDelayedLaunchAction(fn) {
+  delayedLaunchActions.push(fn);
+  resetDelayedLaunchCloseWindowTimer();
+}
+
 function onClick(id, layerIdx, name, isFolder, idx) {
+  if (delayedLaunch) {
+    playClickedAnimation(id);
+    let path = getFullPath();
+    addDelayedLaunchAction(() => openFile(path));
+    return;
+  }
   playMessage("Opening");
   playClickedAnimation(id);
   openFile(getFullPath());
@@ -277,12 +312,10 @@ document.addEventListener("keyup", function onPress(event) {
     return;
   }
   if (!handleFunctionKeys(event)) {
-    // alert(event.key);
     if (
       (event.key === "f" && event.ctrlKey) ||
       event.key === "Control" ||
       event.key === "Shift" ||
-      event.key === "Alt" ||
       event.key === "Tab" ||
       event.key === "Escape" ||
       currentElement == null
@@ -319,7 +352,10 @@ function findWithName(targetChar, startIdx) {
 }
 
 function handleFunctionKeys(event) {
-  if (event.ctrlKey && event.key === "c") {
+  if (event.ctrlKey && event.key === "d") {
+    delayedLaunch = !delayedLaunch;
+    playMessage((delayedLaunch ? "Delayed" : "Normal") + " Launch");
+  } else if (event.ctrlKey && event.key === "c") {
     // playClickedAnimation("li-1-1");
     setClipboard(getFullPath());
     playMessage("Copied");
@@ -351,23 +387,35 @@ function handleFunctionKeys(event) {
     (event.ctrlKey && event.key === "e")
   ) {
     if (rootPaths.length > 0 && pathArr.length > 1 && currentElement != null) {
-      playMessage("VS Code");
-      playClickedAnimation(currentElement.id);
-      openWithCode(getFullPath());
-      setTimeout(() => {
-        window.close();
-      }, 1000);
+      if (delayedLaunch) {
+        playClickedAnimation(currentElement.id);
+        let path = getFullPath();
+        addDelayedLaunchAction(() => openWithCode(path));
+      } else {
+        playMessage("VS Code");
+        playClickedAnimation(currentElement.id);
+        openWithCode(getFullPath());
+        setTimeout(() => {
+          window.close();
+        }, 1000);
+      }
     } else {
       playMessage("No selection");
     }
   } else if (event.key === "Enter" || (event.ctrlKey && event.key === "b")) {
     if (rootPaths.length > 0 && pathArr.length > 1 && currentElement != null) {
-      playMessage("Browser");
-      playClickedAnimation(currentElement.id);
-      openWithBrowser(getFullPath());
-      setTimeout(() => {
-        window.close();
-      }, 1000);
+      if (delayedLaunch) {
+        playClickedAnimation(currentElement.id);
+        let path = getFullPath();
+        addDelayedLaunchAction(() => openWithBrowser(path));
+      } else {
+        playMessage("Browser");
+        playClickedAnimation(currentElement.id);
+        openWithBrowser(getFullPath());
+        setTimeout(() => {
+          window.close();
+        }, 1000);
+      }
     } else {
       playMessage("No selection");
     }

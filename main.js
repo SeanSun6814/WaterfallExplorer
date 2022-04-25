@@ -22,6 +22,7 @@ function createWindow() {
   console.log(Math.max(800, dim.height * 0.7));
   win = new BrowserWindow({
     devTools: true,
+    skipTaskbar: true,
     autoHideMenuBar: true,
     width: width,
     height: height,
