@@ -266,6 +266,11 @@ function removeFocus(layerIdx) {
   document.getElementById("fullPathText").innerHTML = getFullPath();
 }
 
+document.addEventListener("keydown", function onPress(event) {
+  if (event.ctrlKey && event.key === "a") {
+    event.preventDefault();
+  }
+});
 document.addEventListener("keyup", function onPress(event) {
   if (event.key === "Alt" || event.altKey) {
     event.preventDefault();
@@ -415,7 +420,6 @@ function handleFunctionKeys(event) {
   } else if (event.ctrlKey && event.key === "v") {
     modifyFile("copy");
   } else if (event.ctrlKey && event.key === "m") {
-    event.preventDefault();
     modifyFile("move");
   } else if (event.ctrlKey && event.key === "Delete") {
     modifyFile("delete");
@@ -424,6 +428,7 @@ function handleFunctionKeys(event) {
   } else {
     return false;
   }
+  event.preventDefault();
   return true;
 }
 
