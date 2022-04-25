@@ -8,6 +8,7 @@ let wasFocusedOnItem = false;
 let delayedLaunch = false;
 let delayedLaunchActions = [];
 let delayedLaunchCloseWindowTimer = null;
+let ignoreFirstE = false;
 
 function removeColumnByLayerIdx(layerIdx) {
   let myColumns = document.getElementById("myColumns");
@@ -307,7 +308,11 @@ document.addEventListener("keydown", function onPress(event) {
   }
 });
 document.addEventListener("keyup", function onPress(event) {
-  if (event.key === "Alt" || event.altKey) {
+  if (ignoreFirstE && event.key === "e") {
+    ignoreFirstE = false;
+    event.preventDefault();
+    return;
+  } else if (event.key === "Alt" || event.altKey) {
     event.preventDefault();
     return;
   }
@@ -653,4 +658,9 @@ function removeFromView(targetPath) {
     else numFiles++;
   });
   countElem.innerHTML = generateCountStr(numFiles, numFolders);
+}
+
+function onWindowShow() {
+  delayedLaunch = false;
+  ignoreFirstE = true;
 }

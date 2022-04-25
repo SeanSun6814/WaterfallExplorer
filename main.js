@@ -1,5 +1,11 @@
 const electron = require("electron");
-const { app, BrowserWindow, globalShortcut, Menu } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  globalShortcut,
+  Menu,
+  ipcMain,
+} = require("electron");
 const path = require("path");
 
 let win = null;
@@ -13,6 +19,7 @@ function createWindow() {
   if (win != null) {
     win.setSize(width, height);
     win.center();
+    win.webContents.send("onshow", "");
     win.show();
     return;
   }
@@ -116,9 +123,12 @@ app.whenReady().then(() => {
     }
   });
 
-  app.on("before-quit", () => (app.quitting = true));
-
   app.on("will-quit", () => {
     globalShortcut.unregisterAll();
   });
+});
+
+ipcMain.on("log", (event, arg) => {
+  console.log(arg);
+  event.returnValue = "done";
 });

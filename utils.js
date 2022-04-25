@@ -6,6 +6,14 @@ const childProcess = require("child_process");
 const { clipboard } = require("electron");
 const fse = require("fs-extra");
 var path = require("path");
+const { ipcRenderer } = require("electron");
+
+ipcRenderer.on("onshow", (event, arg) => {
+  // console.log("electron onshow");
+  // console.log(arg);
+  onWindowShow();
+  // console.log(ipcRenderer.sendSync("log", "onWindowShow completed!"));
+});
 
 function makeDir(path, dirName) {
   fse.ensureDirSync(path + dirName);
