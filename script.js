@@ -7,7 +7,6 @@ let sortTypes = ["default", "name", "time", "type", "size"];
 let wasFocusedOnItem = false;
 let delayedLaunch = false;
 let delayedLaunchActions = [];
-let delayedLaunchCloseWindowTimer = null;
 let ignoreFirstE = false;
 
 function removeColumnByLayerIdx(layerIdx) {
@@ -222,30 +221,24 @@ function setStatsToPosition() {
   statElem.style.top = Math.floor(top) + "px";
 }
 
-function resetDelayedLaunchCloseWindowTimer() {
-  if (delayedLaunchCloseWindowTimer == null) {
-    delayedLaunchCloseWindowTimer = setTimeout(() => {
-      playMessage(delayedLaunchActions.length + " actions");
-      delayedLaunchActions.forEach((item) => {
-        item();
-      });
-      delayedLaunch = false;
-      delayedLaunchActions = [];
-      delayedLaunchCloseWindowTimer = null;
-      setTimeout(() => {
-        window.close();
-      }, 1000);
-    }, 3000);
-  } else {
-    clearTimeout(delayedLaunchCloseWindowTimer);
-    delayedLaunchCloseWindowTimer = null;
-    resetDelayedLaunchCloseWindowTimer();
-  }
+function launchDelayedLaunch() {
+  playMessage(
+    delayedLaunchActions.length +
+      " action" +
+      (delayedLaunchActions.length === 1 ? "" : "s")
+  );
+  delayedLaunchActions.forEach((item) => {
+    item();
+  });
+  delayedLaunch = false;
+  delayedLaunchActions = [];
+  setTimeout(() => {
+    window.close();
+  }, 1000);
 }
 
 function addDelayedLaunchAction(fn) {
   delayedLaunchActions.push(fn);
-  resetDelayedLaunchCloseWindowTimer();
 }
 
 function onClick(id, layerIdx, name, isFolder, idx) {
@@ -358,8 +351,17 @@ function findWithName(targetChar, startIdx) {
 
 function handleFunctionKeys(event) {
   if (event.ctrlKey && event.key === "d") {
-    delayedLaunch = !delayedLaunch;
-    playMessage((delayedLaunch ? "Delayed" : "Normal") + " Launch");
+    if (delayedLaunch) {
+      delayedLaunch = false;
+      if (delayedLaunchActions.length === 0) {
+        playMessage((delayedLaunch ? "Delayed" : "Normal") + " Launch");
+      } else {
+        launchDelayedLaunch();
+      }
+    } else {
+      delayedLaunch = true;
+      playMessage((delayedLaunch ? "Delayed" : "Normal") + " Launch");
+    }
   } else if (event.ctrlKey && event.key === "c") {
     // playClickedAnimation("li-1-1");
     setClipboard(getFullPath());

@@ -123,6 +123,8 @@ app.whenReady().then(() => {
     }
   });
 
+  app.on("before-quit", () => (app.quitting = true));
+
   app.on("will-quit", () => {
     globalShortcut.unregisterAll();
   });
