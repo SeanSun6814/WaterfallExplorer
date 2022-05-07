@@ -42,41 +42,7 @@ function createWindow() {
     },
   });
 
-  const { app, Menu } = require("electron");
-
-  // Menu.setApplicationMenu(
-  //   Menu.buildFromTemplate([
-  //     {
-  //       label: "Quit",
-  //       accelerator: "CmdOrCtrl+Q",
-  //       click() {
-  //         app.quit();
-  //       },
-  //     },
-  //     {
-  //       label: "Hide",
-  //       accelerator: "Esc",
-  //       click() {
-  //         win.hide();
-  //       },
-  //     },
-  //     {
-  //       label: "Hide",
-  //       accelerator: "CmdOrCtrl+H",
-  //       click() {
-  //         win.hide();
-  //       },
-  //     },
-  //     {
-  //       label: "Maximize",
-  //       accelerator: "CmdOrCtrl+F",
-  //       click() {
-  //         if (win.isMaximized()) win.unmaximize();
-  //         else win.maximize();
-  //       },
-  //     },
-  //   ])
-  // );
+  setupMenu();
 
   win.on("close", (event) => {
     if (app.quitting) {
@@ -95,7 +61,7 @@ function createWindow() {
   // win.setFullScreen(true);
   win.setSize(width, height);
   win.center();
-  win.loadFile("index.html");
+  win.loadFile("./src/index.html");
   win.hide();
 }
 
@@ -150,3 +116,39 @@ ipcMain.on("run", (event, arg) => {
     console.log("main app detected worker thread exiting with code " + code);
   });
 });
+
+function setupMenu() {
+  Menu.setApplicationMenu(
+    Menu.buildFromTemplate([
+      {
+        label: "Quit",
+        accelerator: "CmdOrCtrl+Q",
+        click() {
+          app.quit();
+        },
+      },
+      {
+        label: "Hide",
+        accelerator: "Esc",
+        click() {
+          win.hide();
+        },
+      },
+      {
+        label: "Hide",
+        accelerator: "CmdOrCtrl+H",
+        click() {
+          win.hide();
+        },
+      },
+      {
+        label: "Maximize",
+        accelerator: "CmdOrCtrl+F",
+        click() {
+          if (win.isMaximized()) win.unmaximize();
+          else win.maximize();
+        },
+      },
+    ])
+  );
+}

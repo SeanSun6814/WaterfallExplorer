@@ -1,9 +1,9 @@
 {
   "name": "MyFileExplorer",
-  "productName": "My File Explorer",
+  "productName": "MyFileExplorer",
   "description": "My Electron application description",
   "keywords": [],
-  "main": "./main.js",
+  "main": "./src/main.js",
   "version": "1.0.0",
   "author": "Sean",
   "scripts": {
