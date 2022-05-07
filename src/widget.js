@@ -1,10 +1,11 @@
 class Item {
-  constructor(layerIdx, idx, id, name, isFolder, parentColumn) {
+  constructor(layerIdx, idx, id, name, isFolder, stats, parentColumn) {
     this.layerIdx = layerIdx;
     this.idx = idx;
     this.id = id;
     this.name = name;
     this.isFolder = isFolder;
+    this.stats = stats;
     this.parentColumn = parentColumn;
     this.htmlObj = null;
   }
@@ -34,18 +35,24 @@ class Column {
   #data;
   #focusedIdx;
   #selectedIdx;
+  #sortByIdx;
   #html;
   #onFocusCallback;
   #onSelectCallback;
 
-  constructor(layerIdx, nameArr, onFocusCallback, onSelectCallback) {
+  constructor(layerIdx, nameArr, sortByIdx, onFocusCallback, onSelectCallback) {
     this.#layerIdx = layerIdx;
     this.#onFocusCallback = onFocusCallback;
     this.#onSelectCallback = onSelectCallback;
     this.#focusedIdx = -1;
+    this.#sortByIdx = sortByIdx;
     this.#selectedIdx = new Set();
     this.#data = this.#toItemArr(nameArr);
     this.#html = this.#generateHTML();
+  }
+
+  getSortedByIdx() {
+    return this.#sortByIdx;
   }
 
   getLayerIdx() {
@@ -78,28 +85,29 @@ class Column {
     return null;
   }
 
-  focusItem(idx) {
-    if (!this.#checkIdxBounds(idx)) return;
+  focusItem(idx, sortByIdx) {
+    if (!idxInBounds(idx, this.#data)) return;
     // if (idx === this.#focusedIdx) return console.log("Ignoring same focus");
     unfocusItem();
-    this.#onFocusCallback(this.#data[idx], true);
+    this.#onFocusCallback(this.#data[idx], true, sortByIdx);
     this.#focusedIdx = idx;
   }
 
   unfocusItem() {
+    if (!idxInBounds(this.#focusedIdx, this.#data)) return;
     this.#onFocusCallback(this.#data[this.#focusedIdx], false);
     this.#focusedIdx = -1;
   }
 
   selectItem(idx) {
-    if (!this.#checkIdxBounds(idx)) return;
+    if (!idxInBounds(idx, this.#data)) return;
     if (this.#selectedIdx.has(idx)) return console.log("Ignoring same select");
     this.#onSelectCallback(this.#data[idx], true);
     this.#selectedIdx.add(idx);
   }
 
   deselectItem(idx) {
-    if (!this.#checkIdxBounds(idx)) return;
+    if (!idxInBounds(idx, this.#data)) return;
     if (!this.#selectedIdx.has(idx)) return console.log("Ignoring same deselect");
     this.#onSelectCallback(this.#data[idx], false);
     this.#selectedIdx.delete(idx);
@@ -113,6 +121,7 @@ class Column {
   }
 
   deselectAll() {
+    if (this.#selectedIdx.size === 0) return;
     for (let idx of this.#selectedIdx) {
       this.#onSelectCallback(this.#data[idx], false);
     }
@@ -120,14 +129,6 @@ class Column {
   }
 
   deleteItem(idx) {}
-
-  #checkIdxBounds(idx) {
-    if (idx < 0 || idx >= this.#data.length) {
-      console.trace("Item idx [" + idx + "] out of bounds of [0 - " + (this.#data.length - 1) + "]");
-      return false;
-    }
-    return true;
-  }
 
   focusPrev() {
     if (this.#focusedIdx > 0) this.#focusedIdx--;
@@ -141,7 +142,15 @@ class Column {
     let res = [];
     for (let i = 0; i < nameArr.length; i++) {
       let elemId = "li-" + this.#layerIdx + "-" + idx;
-      let item = new Item(this.#layerIdx, i, elemId, nameArr[i].name, nameArr[i].isFolder, this);
+      let item = new Item(
+        this.#layerIdx,
+        i,
+        elemId,
+        nameArr[i].name,
+        nameArr[i].isFolder,
+        nameArr[i].stats,
+        this
+      );
       item.generateHTML();
       res.push(item);
     }
@@ -184,4 +193,74 @@ class Column {
 
 class Widget {
   #data;
+  #defaultSortByIdx;
+  constructor(defaultSortByIdx) {
+    this.#data = [];
+    this.#defaultSortByIdx = defaultSortByIdx;
+  }
+
+  getFullPath() {
+    let res = "";
+    for (let i = 0; i < this.#data.length; i++) {
+      let focusedIdx = this.#data[i].getFocusedIdx;
+      let item = this.#data[i].getItemByIdx(focusedIdx);
+      res += item.name;
+    }
+    return res;
+  }
+
+  focusItem(layerIdx, idx, sortByIdx) {
+    if (!idxInBounds(layerIdx, this.#data)) return;
+    if (sortByIdx === undefined) sortByIdx = this.#defaultSortByIdx;
+    deleteExtraColumns(layerIdx);
+    this.#data[layerIdx].focusItem(idx, sortByIdx);
+  }
+
+  selectItem(layerIdx, idx) {
+    if (!idxInBounds(layerIdx, this.#data)) return;
+    this.#data[layerIdx].selectItem(idx);
+  }
+
+  deSelectItem(layerIdx, idx) {
+    if (!idxInBounds(layerIdx, this.#data)) return;
+    this.#data[layerIdx].deSelectItem(idx);
+  }
+
+  sortCurrentColumn(method) {
+    let elem = this.getLastFocusedItem();
+    if (elem == null) return;
+    let parentLayerIdx, currentMethod;
+    if (elem.isFolder) {
+      parentLayerIdx = elem.layerIdx;
+      currentMethod = this.#data[parentLayerIdx + 1].getSortedByIdx();
+    } else {
+      parentLayerIdx = elem.layerIdx - 1;
+      currentMethod = this.#data[parentLayerIdx].getSortedByIdx();
+    }
+
+    if (!idxInBounds(method, sortTypes)) {
+      currentMethod = (currentMethod + 1) % sortTypes.length;
+    } else {
+      currentMethod = method;
+    }
+    this.#data[parentLayerIdx].focusItem(idx, currentMethod);
+  }
+
+  getMaxLayerIdx() {
+    return this.#data.length - 1;
+  }
+
+  getLastFocusedItem() {
+    for (let i = this.#data.length - 1; i >= 0; i--) {
+      if (this.#data[i].getFocusedIdx() !== -1)
+        return this.#data[i].getItemByIdx(this.#data[i].getFocusedIdx());
+    }
+    return null;
+  }
+
+  deleteExtraColumns(lastLayerIdxToKeep) {
+    while (this.#data.length - 1 > lastLayerIdxToKeep) {
+      this.#data.pop().deleteHTML();
+    }
+  }
 }

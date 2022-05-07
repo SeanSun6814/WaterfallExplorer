@@ -95,15 +95,7 @@ function hslToRgb(h, s, l) {
   }
 
   // return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-  return (
-    "rgb(" +
-    Math.round(r * 255) +
-    "," +
-    Math.round(g * 255) +
-    "," +
-    Math.round(b * 255) +
-    ")"
-  );
+  return "rgb(" + Math.round(r * 255) + "," + Math.round(g * 255) + "," + Math.round(b * 255) + ")";
 }
 
 function reverseStr(s) {
@@ -277,4 +269,12 @@ async function openWithBrowser(path) {
 function sendCommand(command) {
   console.log("web app sending command" + command);
   ipcRenderer.send("run", command);
+}
+
+function idxInBounds(idx, arr) {
+  if (idx < 0 || idx >= arr.length) {
+    console.trace("Error: Idx [" + idx + "] out of bounds of array length [" + arr.length + "]");
+    return false;
+  }
+  return true;
 }
