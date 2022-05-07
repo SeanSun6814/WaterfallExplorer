@@ -1,68 +1,17 @@
-const fs = require("fs");
-const { readdirSync } = fs;
-// const childProcess = require("child_process");
-// const clipboardy = require("clipboardy");
-// import clipboard from "clipboardy";
 const { clipboard } = require("electron");
-const fse = require("fs-extra");
-var path = require("path");
 const { ipcRenderer } = require("electron");
 
 ipcRenderer.on("onshow", (event, arg) => {
-  // console.log("electron onshow");
-  // console.log(arg);
   onWindowShow();
   // console.log(ipcRenderer.sendSync("log", "onWindowShow completed!"));
 });
 
-function makeDir(path, dirName) {
-  fse.ensureDirSync(path + dirName);
-}
-
-function copyFile(sourcePath, destFolder) {
-  try {
-    let fileName = getFileName(sourcePath);
-    fse.copySync(sourcePath, destFolder + fileName);
-    return true;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-}
-
-function moveFile(sourcePath, destFolder) {
-  try {
-    let fileName = getFileName(sourcePath);
-    fse.moveSync(sourcePath, destFolder + fileName);
-    return true;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-}
-
-function deleteFile(sourcePath) {
-  try {
-    fse.removeSync(sourcePath);
-    return true;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
-}
-
-function getFileName(pathStr) {
-  return path.basename(pathStr);
-}
-
 function getClipboard() {
   return clipboard.readText();
-  // return clipboard.readSync();
 }
 
 function setClipboard(str) {
   clipboard.writeText(str);
-  // clipboard.writeSync(str);
 }
 
 function getHsl(colIdx, rowIdx) {
@@ -102,115 +51,6 @@ function reverseStr(s) {
   return s.split("").reverse().join("");
 }
 
-function readRootPathConfig() {
-  try {
-    let data = fs.readFileSync("./rootFolders.json", {
-      encoding: "utf8",
-      flag: "r",
-    });
-    data = JSON.parse(data);
-    rootPaths = data.paths;
-  } catch (err) {
-    console.log("Error parsing JSON string:", err);
-  }
-}
-
-function writeRootPathConfig() {
-  let json = JSON.stringify({ paths: rootPaths });
-  fs.writeFileSync("./rootFolders.json", json);
-}
-
-function getDirAndFiles(source) {
-  if (source === "") {
-    return rootPaths.map((name) => ({
-      name: name,
-      isFolder: true,
-      stats: null,
-    }));
-  }
-
-  try {
-    let arr = readdirSync(source, { withFileTypes: true });
-
-    return arr.map((dirent) => ({
-      name: dirent.name,
-      isFolder: dirent.isDirectory(),
-      stats: getFileStats(source + dirent.name),
-    }));
-  } catch (e) {
-    console.log(e);
-    return [];
-  }
-}
-
-function sortDirBy(arr, method) {
-  let sortFn = null;
-  function cmpName(a, b) {
-    a = a.name.replace("_", ".");
-    b = b.name.replace("_", ".");
-    return a.localeCompare(b);
-  }
-
-  if (method === "type") {
-    sortFn = function (a, b) {
-      if (a.isFolder && b.isFolder) return 0;
-      else if (!a.isFolder && b.isFolder) return 1; // b on top
-      else if (a.isFolder && !b.isFolder) return -1; // a on top
-
-      try {
-        let aExt = a.name.match(/\.[0-9a-z]+$/i);
-        let bExt = b.name.match(/\.[0-9a-z]+$/i);
-        aExt = aExt.length > 0 ? aExt[0] : "";
-        bExt = bExt.length > 0 ? bExt[0] : "";
-
-        let cmp = cmpName({ name: aExt }, { name: bExt });
-        if (cmp !== 0) return cmp;
-      } catch (e) {}
-      return cmpName(a, b);
-    };
-  } else if (method === "size") {
-    sortFn = function (a, b) {
-      if (a.isFolder && b.isFolder) return 0;
-      else if (!a.isFolder && b.isFolder) return 1; // b on top
-      else if (a.isFolder && !b.isFolder) return -1; // a on top
-
-      try {
-        if (a.stats.size < b.stats.size) return 1; // b on top
-        else if (a.stats.size > b.stats.size) return -1; // a on top
-      } catch (e) {}
-      return cmpName(a, b);
-    };
-  } else if (method === "time") {
-    sortFn = function (a, b) {
-      try {
-        if (a.stats.mtimeMs < b.stats.mtimeMs) return 1; // b on top
-        else if (a.stats.mtimeMs > b.stats.mtimeMs) return -1; // a on top
-      } catch (e) {}
-      return cmpName(a, b);
-    };
-  } else if (method === "name") {
-    sortFn = cmpName;
-  } else {
-    // (method === "folder")
-    sortFn = function (a, b) {
-      if (!a.isFolder && b.isFolder) return 1; // b on top
-      else if (a.isFolder && !b.isFolder) return -1; // a on top
-      return cmpName(a, b);
-    };
-  }
-  return arr.sort(sortFn);
-}
-
-function getFileStats(path) {
-  try {
-    const stats = fs.statSync(path);
-    return stats;
-  } catch (e) {
-    // console.log(e);
-    return null;
-  }
-}
-
 function formatFileSize(bytes) {
   let fileSize = bytes;
   let fileSizeKB = round2d(fileSize * 0.001);
@@ -247,28 +87,6 @@ function formatDate(millis) {
     ":" +
     ("0" + myDate.getSeconds()).slice(-2)
   );
-}
-
-async function openFile(path) {
-  // childProcess.exec('start "" "' + path + '"');
-  console.log("running openFile function");
-  sendCommand('start "" "' + path + '"');
-  console.log("exiting openFile function");
-}
-
-async function openWithCode(path) {
-  // childProcess.exec('code "' + path + '"');
-  sendCommand('code "' + path + '"');
-}
-
-async function openWithBrowser(path) {
-  // childProcess.exec('start chrome "' + path + '"');
-  sendCommand('start chrome "' + path + '"');
-}
-
-function sendCommand(command) {
-  console.log("web app sending command" + command);
-  ipcRenderer.send("run", command);
 }
 
 function idxInBounds(idx, arr) {
