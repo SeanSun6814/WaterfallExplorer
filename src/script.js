@@ -7,19 +7,6 @@ let delayedLaunchActions = [];
 let ignoreFirstE = false;
 let widget;
 
-function getHTMLStatsList(str, layerIdx) {
-  //to fix
-  let colUl = document.createElement("ul");
-  colUl.setAttribute("id", "column" + layerIdx);
-  let li = document.createElement("li");
-  li.setAttribute("id", "liStats");
-  li.classList.add("liStats");
-  // li.setAttribute("onmouseenter", "removeFocus(-1)");
-  li.innerHTML = str;
-  colUl.appendChild(li);
-  return colUl;
-}
-
 window.onload = function () {
   myColumns = document.getElementById("myColumns");
   fullPathText = document.getElementById("fullPathText");

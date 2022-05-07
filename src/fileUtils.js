@@ -153,18 +153,13 @@ function getFileStats(path) {
 }
 
 async function openFile(path) {
-  // childProcess.exec('start "" "' + path + '"');
-  console.log("running openFile function");
   sendCommand('start "" "' + path + '"');
-  console.log("exiting openFile function");
 }
 
 async function openWithCode(path) {
-  // childProcess.exec('code "' + path + '"');
   sendCommand('code "' + path + '"');
 }
 
 async function openWithBrowser(path) {
-  // childProcess.exec('start chrome "' + path + '"');
   sendCommand('start chrome "' + path + '"');
 }
