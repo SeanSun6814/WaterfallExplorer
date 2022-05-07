@@ -154,14 +154,17 @@ class Column {
   }
 
   findWithName(targetChar, startIdx) {
-    if (startIdx === undefined || !idxInBounds(startIdx, this.#data)) startIdx = this.#focusedIdx;
+    if (this.#data.length === 0) return -1;
+    if (startIdx === undefined) startIdx = this.#focusedIdx;
+    // if (!idxInBounds(startIdx, this.#data)) startIdx = -1;
     targetChar = targetChar.toLowerCase();
-    for (let i = startIdx + 1; i < startIdx + currentList.length + 1; i++) {
-      let idx = i % currentList.length;
-      let char = this.#data.name.charAt(0);
+    for (let i = startIdx + 1; i < startIdx + this.#data.length + 1; i++) {
+      let idx = i % this.#data.length;
+      let char = this.#data[idx].name.charAt(0);
       if (char.toLowerCase() === targetChar) {
         return idx;
       }
+      console.log(char.toLowerCase() + " is not equal to " + targetChar);
     }
     return -1;
   }
@@ -314,6 +317,10 @@ class Widget {
 
   getMaxLayerIdx() {
     return this.#data.length - 1;
+  }
+
+  getColumn(layerIdx) {
+    return this.#data[layerIdx];
   }
 
   getLastColumn() {

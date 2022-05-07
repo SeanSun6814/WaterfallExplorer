@@ -116,12 +116,14 @@ li {
 }
 
 @keyframes color-change {
-  0% {color: red; border-width: 5px;}
-  100% {color: black; border-width: 2px;}
+  0% {color: red; }
+  100% {color: black; }
 }
 
 .Absolute-Center {
   margin: auto;
+  width: fit-content;
+  white-space: nowrap;
   position: absolute;
   left: 50%;
   top: 50%;

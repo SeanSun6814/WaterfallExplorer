@@ -97,11 +97,10 @@ function idxInBounds(idx, arr) {
   return true;
 }
 
-function playClickedAnimation(id) {
-  let el = document.getElementById(id);
+function playClickedAnimation(el) {
   el.classList.add("liClicked");
   el.style.animation = "none";
-  el.offsetHeight; /* trigger reflow */
+  el.offsetHeight; // trigger reflow
   el.style.animation = null;
 }
 
@@ -110,7 +109,7 @@ function playMessage(msg) {
   el.innerHTML = msg;
   el.classList.add("messageAnimation");
   el.style.animation = "none";
-  el.offsetHeight; /* trigger reflow */
+  el.offsetHeight; // trigger reflow
   el.style.animation = null;
 }
 
@@ -163,4 +162,9 @@ function createStatElem(item) {
 function sendCommand(command) {
   console.log("web app sending command" + command);
   ipcRenderer.send("run", command);
+}
+
+function isPrintableStr(str) {
+  var ascii_print_rx = /^[ -~]+$/;
+  return ascii_print_rx.test(str);
 }

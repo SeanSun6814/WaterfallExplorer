@@ -68,7 +68,7 @@ function onItemSelect(item, isSelected) {
 
 function onHorizontalScroll() {
   let lastFocusedItem = widget.getLastFocusedItem();
-  if (!lastFocusedItem.isFolder) {
+  if (lastFocusedItem != null && !lastFocusedItem.isFolder) {
     widget.focusItem(lastFocusedItem.layerIdx, lastFocusedItem.idx);
   }
 }
@@ -79,6 +79,8 @@ function onPathScroll(e) {
 }
 
 function onPathHover() {
-  let left = widget.getLastFocusedItem().html.offsetLeft;
-  myColumns.scrollLeft = left - window.innerWidth * 0.5;
+  let item = widget.getLastFocusedItem();
+  if (item != null) {
+    myColumns.scrollLeft = item.html.offsetLeft - window.innerWidth * 0.5;
+  }
 }
