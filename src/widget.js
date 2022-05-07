@@ -186,13 +186,16 @@ class Column {
   }
 
   #generateHTML() {
+    let div = document.createElement("div");
+    div.classList.add("myUl");
     let colUl = document.createElement("ul");
     colUl.setAttribute("id", "column" + this.#layerIdx);
     this.#data.forEach((item) => {
       colUl.appendChild(item.html);
     });
     colUl.appendChild(this.#getCountHTML());
-    return colUl;
+    div.appendChild(colUl);
+    return div;
   }
 
   #getCountHTML() {
@@ -211,10 +214,12 @@ class Column {
 
   addEndPadding() {
     this.#html.classList.add("liEndPadding");
+    // this.#html.style.width = window.innerWidth * 0.9 + "px";
   }
 
   removeEndPadding() {
     this.#html.classList.remove("liEndPadding");
+    // this.#html.style.width = "auto";
   }
 
   deleteHTML() {

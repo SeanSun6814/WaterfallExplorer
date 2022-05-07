@@ -66,6 +66,7 @@ function addItemFocus(item, sortByIdx) {
     column.addEndPadding();
     widget.addColumn(column);
   } else {
+    widget.getLastColumn().addEndPadding();
     createStatElem(item);
   }
 }
