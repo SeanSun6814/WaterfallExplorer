@@ -1,8 +1,7 @@
 const fs = require("fs");
 const { readdirSync } = fs;
 const fse = require("fs-extra");
-var path = require("path");
-const { ipcRenderer } = require("electron");
+const path = require("path");
 
 function makeDir(path, dirName) {
   fse.ensureDirSync(path + dirName);
@@ -44,27 +43,27 @@ function getFileName(pathStr) {
   return path.basename(pathStr);
 }
 
-function readRootPathConfig() {
+function readConfigFile() {
   try {
-    let data = fs.readFileSync("./rootFolders.json", {
+    let data = fs.readFileSync("./config.json", {
       encoding: "utf8",
       flag: "r",
     });
     data = JSON.parse(data);
-    rootPaths = data.paths;
+    return data;
   } catch (err) {
     console.log("Error parsing JSON string:", err);
   }
 }
 
 function writeRootPathConfig() {
-  let json = JSON.stringify({ paths: rootPaths });
-  fs.writeFileSync("./rootFolders.json", json);
+  let json = JSON.stringify(config);
+  fs.writeFileSync("./config.json", json);
 }
 
 function getDirAndFiles(source) {
   if (source === "") {
-    return rootPaths.map((name) => ({
+    return config.paths.map((name) => ({
       name: name,
       isFolder: true,
       stats: null,
@@ -75,7 +74,7 @@ function getDirAndFiles(source) {
     let arr = readdirSync(source, { withFileTypes: true });
 
     return arr.map((dirent) => ({
-      name: dirent.name,
+      name: dirent.name + (dirent.isDirectory() ? "/" : ""),
       isFolder: dirent.isDirectory(),
       stats: getFileStats(source + dirent.name),
     }));
@@ -168,9 +167,4 @@ async function openWithCode(path) {
 async function openWithBrowser(path) {
   // childProcess.exec('start chrome "' + path + '"');
   sendCommand('start chrome "' + path + '"');
-}
-
-function sendCommand(command) {
-  console.log("web app sending command" + command);
-  ipcRenderer.send("run", command);
 }

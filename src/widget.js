@@ -7,26 +7,27 @@ class Item {
     this.isFolder = isFolder;
     this.stats = stats;
     this.parentColumn = parentColumn;
-    this.htmlObj = null;
+    this.html = null;
   }
 
   generateHTML() {
     let li = document.createElement("li");
     li.innerText = this.name;
-    let argStr =
-      "'" + this.id + "'," + this.layerIdx + ', "' + this.name + '", ' + this.isFolder + "," + this.idx;
+    // let argStr =
+    //   "'" + this.id + "'," + this.layerIdx + ', "' + this.name + '", ' + this.isFolder + "," + this.idx;
+    let argStr = "widget.getItemByIdx(" + this.layerIdx + "," + this.idx + ")";
     li.setAttribute("onmouseenter", "onHover(" + argStr + ")");
     li.setAttribute("onclick", "onClick(" + argStr + ")");
-    li.setAttribute("style", "background-color:" + getHsl(layerIdx, idx) + ";");
-    li.setAttribute("id", id);
-    li.setAttribute("idx", idx);
+    li.setAttribute("style", "background-color:" + getHsl(this.layerIdx, this.idx) + ";");
+    li.setAttribute("id", this.id);
+    li.setAttribute("idx", this.idx);
     if (this.isFolder) {
       li.classList.add("liFolder");
     } else {
       li.classList.add("liFile");
     }
-    this.htmlObj = li;
-    return this.htmlObj;
+    this.html = li;
+    return this.html;
   }
 }
 
@@ -49,6 +50,11 @@ class Column {
     this.#selectedIdx = new Set();
     this.#data = this.#toItemArr(nameArr);
     this.#html = this.#generateHTML();
+    myColumns.appendChild(this.#html);
+  }
+
+  getData() {
+    return this.#data;
   }
 
   getSortedByIdx() {
@@ -88,15 +94,16 @@ class Column {
   focusItem(idx, sortByIdx) {
     if (!idxInBounds(idx, this.#data)) return;
     // if (idx === this.#focusedIdx) return console.log("Ignoring same focus");
-    unfocusItem();
-    this.#onFocusCallback(this.#data[idx], true, sortByIdx);
+    this.unfocusItem();
     this.#focusedIdx = idx;
+    this.#onFocusCallback(this.#data[this.#focusedIdx], true, sortByIdx);
   }
 
   unfocusItem() {
     if (!idxInBounds(this.#focusedIdx, this.#data)) return;
-    this.#onFocusCallback(this.#data[this.#focusedIdx], false);
+    let idx = this.#focusedIdx;
     this.#focusedIdx = -1;
+    this.#onFocusCallback(this.#data[idx], false);
   }
 
   selectItem(idx) {
@@ -128,7 +135,9 @@ class Column {
     this.#selectedIdx.clear();
   }
 
-  deleteItem(idx) {}
+  deleteItem(idx) {
+    // todo
+  }
 
   focusPrev() {
     if (this.#focusedIdx > 0) this.#focusedIdx--;
@@ -138,10 +147,29 @@ class Column {
     if (this.#focusedIdx < this.#data.length - 1) this.#focusedIdx++;
   }
 
+  scrollToView(idx) {
+    if (!idxInBounds(idx, this.#data)) return;
+    let top = this.#data[idx].html.offsetTop;
+    this.#html.scrollTop = top - 150;
+  }
+
+  findWithName(targetChar, startIdx) {
+    if (startIdx === undefined || !idxInBounds(startIdx, this.#data)) startIdx = this.#focusedIdx;
+    targetChar = targetChar.toLowerCase();
+    for (let i = startIdx + 1; i < startIdx + currentList.length + 1; i++) {
+      let idx = i % currentList.length;
+      let char = this.#data.name.charAt(0);
+      if (char.toLowerCase() === targetChar) {
+        return idx;
+      }
+    }
+    return -1;
+  }
+
   #toItemArr(nameArr) {
     let res = [];
     for (let i = 0; i < nameArr.length; i++) {
-      let elemId = "li-" + this.#layerIdx + "-" + idx;
+      let elemId = "li-" + this.#layerIdx + "-" + i;
       let item = new Item(
         this.#layerIdx,
         i,
@@ -161,15 +189,22 @@ class Column {
     let colUl = document.createElement("ul");
     colUl.setAttribute("id", "column" + this.#layerIdx);
     this.#data.forEach((item) => {
-      colUl.appendChild(item);
+      colUl.appendChild(item.html);
     });
     colUl.appendChild(this.#getCountHTML());
+    return colUl;
   }
 
   #getCountHTML() {
     let li = document.createElement("li");
+    let numFiles = 0;
+    let numFolders = 0;
+    for (let i = 0; i < this.#data.length; i++) {
+      if (this.#data[i].isFolder) numFolders++;
+      else numFiles++;
+    }
     li.classList.add("liCount" + this.#layerIdx); // todo: handle events better
-    li.setAttribute("onmouseenter", "removeFocus(" + this.#layerIdx + ")");
+    // li.setAttribute("onmouseenter", "removeFocus(" + this.#layerIdx + ")");
     li.innerHTML = this.#generateCountStr(numFiles, numFolders);
     return li;
   }
@@ -193,16 +228,29 @@ class Column {
 
 class Widget {
   #data;
-  #defaultSortByIdx;
-  constructor(defaultSortByIdx) {
-    this.#data = [];
-    this.#defaultSortByIdx = defaultSortByIdx;
+  constructor(baseColumn) {
+    this.#data = [baseColumn];
+  }
+
+  getData() {
+    return this.#data;
+  }
+
+  addColumn(column) {
+    // this.deleteExtraColumns(column.getLayerIdx());
+    this.#data.push(column);
+  }
+
+  getItemByIdx(layerIdx, idx) {
+    if (!idxInBounds(layerIdx, this.#data)) return null;
+    return this.#data[layerIdx].getItemByIdx(idx);
   }
 
   getFullPath() {
     let res = "";
     for (let i = 0; i < this.#data.length; i++) {
-      let focusedIdx = this.#data[i].getFocusedIdx;
+      let focusedIdx = this.#data[i].getFocusedIdx();
+      if (focusedIdx === -1) continue;
       let item = this.#data[i].getItemByIdx(focusedIdx);
       res += item.name;
     }
@@ -211,8 +259,8 @@ class Widget {
 
   focusItem(layerIdx, idx, sortByIdx) {
     if (!idxInBounds(layerIdx, this.#data)) return;
-    if (sortByIdx === undefined) sortByIdx = this.#defaultSortByIdx;
-    deleteExtraColumns(layerIdx);
+    if (sortByIdx === undefined) sortByIdx = config.defaultSortByIdx;
+    this.deleteExtraColumns(layerIdx);
     this.#data[layerIdx].focusItem(idx, sortByIdx);
   }
 
@@ -224,6 +272,11 @@ class Widget {
   deSelectItem(layerIdx, idx) {
     if (!idxInBounds(layerIdx, this.#data)) return;
     this.#data[layerIdx].deSelectItem(idx);
+  }
+
+  scrollToView(layerIdx, idx) {
+    if (!idxInBounds(layerIdx, this.#data)) return;
+    this.#data[layerIdx].scrollToView(idx);
   }
 
   sortCurrentColumn(method) {
@@ -258,8 +311,8 @@ class Widget {
     return null;
   }
 
-  deleteExtraColumns(lastLayerIdxToKeep) {
-    while (this.#data.length - 1 > lastLayerIdxToKeep) {
+  deleteExtraColumns(lastLayerIdxToDelete) {
+    while (this.#data.length - 1 > lastLayerIdxToDelete) {
       this.#data.pop().deleteHTML();
     }
   }

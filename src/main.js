@@ -42,7 +42,7 @@ function createWindow() {
     },
   });
 
-  setupMenu();
+  // setupMenu();
 
   win.on("close", (event) => {
     if (app.quitting) {

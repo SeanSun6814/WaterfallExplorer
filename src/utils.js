@@ -15,7 +15,7 @@ function setClipboard(str) {
 }
 
 function getHsl(colIdx, rowIdx) {
-  let h = (70.0 + colIdx * 10.0) / 255.0;
+  let h = (80.0 + colIdx * 10.0) / 255.0;
   let s = 1.0;
   let l = 0.6 + rowIdx * 0.025;
   return hslToRgb(h, s, l);
@@ -91,8 +91,76 @@ function formatDate(millis) {
 
 function idxInBounds(idx, arr) {
   if (idx < 0 || idx >= arr.length) {
-    console.trace("Error: Idx [" + idx + "] out of bounds of array length [" + arr.length + "]");
+    // console.trace("Error: Idx [" + idx + "] out of bounds of array length [" + arr.length + "]");
     return false;
   }
   return true;
+}
+
+function playClickedAnimation(id) {
+  let el = document.getElementById(id);
+  el.classList.add("liClicked");
+  el.style.animation = "none";
+  el.offsetHeight; /* trigger reflow */
+  el.style.animation = null;
+}
+
+function playMessage(msg) {
+  let el = document.getElementById("messageText");
+  el.innerHTML = msg;
+  el.classList.add("messageAnimation");
+  el.style.animation = "none";
+  el.offsetHeight; /* trigger reflow */
+  el.style.animation = null;
+}
+
+function addToRootPaths(str) {
+  str = str.trim();
+  str = str.replaceAll("\\", "/");
+  str = str.replaceAll('"', "");
+  str = str.replaceAll(/\/$/g, "");
+  if (rootPaths.includes(str)) {
+    return false;
+  }
+  rootPaths.push(str);
+  return true;
+}
+
+function removeFromRootPaths(name) {
+  let index = rootPaths.indexOf(name);
+  if (index !== -1) {
+    rootPaths.splice(index, 1);
+  }
+}
+
+function deleteStatElem() {
+  let statElem = document.getElementById("statElem");
+  if (statElem != null) statElem.outerHTML = "";
+}
+
+function createStatElem(item) {
+  let stats = item.stats;
+  let str = "Size: " + formatFileSize(stats.size) + "<br>";
+  str += "Created: " + formatDate(stats.birthtime) + "<br>";
+  str += "Modified: " + formatDate(stats.mtimeMs) + "<br>";
+  str += "Opened: " + formatDate(stats.atimeMs);
+  let statElem = document.createElement("span");
+  statElem.classList.add("liStats");
+  statElem.setAttribute("id", "statElem");
+  statElem.innerHTML = str;
+  myColumns.appendChild(statElem);
+
+  let elem = item.html;
+  let top = elem.getBoundingClientRect().top;
+  top += elem.getBoundingClientRect().height / 2.0;
+  top -= statElem.getBoundingClientRect().height / 2.0;
+  let left = elem.getBoundingClientRect().left + elem.getBoundingClientRect().width + 10;
+  statElem.style.position = "absolute";
+  statElem.style.top = top + "px";
+  statElem.style.left = left + "px";
+}
+
+function sendCommand(command) {
+  console.log("web app sending command" + command);
+  ipcRenderer.send("run", command);
 }

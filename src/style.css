@@ -58,6 +58,7 @@ li {
   text-align: left;
   position: absolute;
   min-width: fit-content;
+  height: fit-content;
 }
 
 [class*="liFocused"] {
