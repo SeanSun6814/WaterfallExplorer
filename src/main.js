@@ -105,7 +105,7 @@ ipcMain.on("log", (event, arg) => {
 ipcMain.on("run", (event, arg) => {
   console.log("running command: " + arg);
   console.log("main app running worker thread");
-  const worker = new Worker("./backgroundWorker.js", { workerData: arg });
+  const worker = new Worker("./src/backgroundWorker.js", { workerData: arg });
   worker.on("message", (msg) => {
     console.log("main app detected worker thread message" + msg);
   });
