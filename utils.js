@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { readdirSync } = fs;
-const childProcess = require("child_process");
+// const childProcess = require("child_process");
 // const clipboardy = require("clipboardy");
 // import clipboard from "clipboardy";
 const { clipboard } = require("electron");
@@ -258,13 +258,23 @@ function formatDate(millis) {
 }
 
 async function openFile(path) {
-  childProcess.exec('start "" "' + path + '"');
+  // childProcess.exec('start "" "' + path + '"');
+  console.log("running openFile function");
+  sendCommand('start "" "' + path + '"');
+  console.log("exiting openFile function");
 }
 
 async function openWithCode(path) {
-  childProcess.exec('code "' + path + '"');
+  // childProcess.exec('code "' + path + '"');
+  sendCommand('code "' + path + '"');
 }
 
 async function openWithBrowser(path) {
-  childProcess.exec('start chrome "' + path + '"');
+  // childProcess.exec('start chrome "' + path + '"');
+  sendCommand('start chrome "' + path + '"');
+}
+
+function sendCommand(command) {
+  console.log("web app sending command" + command);
+  ipcRenderer.send("run", command);
 }

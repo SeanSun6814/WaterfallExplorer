@@ -7,6 +7,7 @@ const {
   ipcMain,
 } = require("electron");
 const path = require("path");
+const { Worker } = require("node:worker_threads");
 
 let win = null;
 function createWindow() {
@@ -43,39 +44,39 @@ function createWindow() {
 
   const { app, Menu } = require("electron");
 
-  Menu.setApplicationMenu(
-    Menu.buildFromTemplate([
-      {
-        label: "Quit",
-        accelerator: "CmdOrCtrl+Q",
-        click() {
-          app.quit();
-        },
-      },
-      {
-        label: "Hide",
-        accelerator: "Esc",
-        click() {
-          win.hide();
-        },
-      },
-      {
-        label: "Hide",
-        accelerator: "CmdOrCtrl+H",
-        click() {
-          win.hide();
-        },
-      },
-      {
-        label: "Maximize",
-        accelerator: "CmdOrCtrl+F",
-        click() {
-          if (win.isMaximized()) win.unmaximize();
-          else win.maximize();
-        },
-      },
-    ])
-  );
+  // Menu.setApplicationMenu(
+  //   Menu.buildFromTemplate([
+  //     {
+  //       label: "Quit",
+  //       accelerator: "CmdOrCtrl+Q",
+  //       click() {
+  //         app.quit();
+  //       },
+  //     },
+  //     {
+  //       label: "Hide",
+  //       accelerator: "Esc",
+  //       click() {
+  //         win.hide();
+  //       },
+  //     },
+  //     {
+  //       label: "Hide",
+  //       accelerator: "CmdOrCtrl+H",
+  //       click() {
+  //         win.hide();
+  //       },
+  //     },
+  //     {
+  //       label: "Maximize",
+  //       accelerator: "CmdOrCtrl+F",
+  //       click() {
+  //         if (win.isMaximized()) win.unmaximize();
+  //         else win.maximize();
+  //       },
+  //     },
+  //   ])
+  // );
 
   win.on("close", (event) => {
     if (app.quitting) {
@@ -133,4 +134,19 @@ app.whenReady().then(() => {
 ipcMain.on("log", (event, arg) => {
   console.log(arg);
   event.returnValue = "done";
+});
+
+ipcMain.on("run", (event, arg) => {
+  console.log("running command: " + arg);
+  console.log("main app running worker thread");
+  const worker = new Worker("./backgroundWorker.js", { workerData: arg });
+  worker.on("message", (msg) => {
+    console.log("main app detected worker thread message" + msg);
+  });
+  worker.on("error", (err) => {
+    console.log("main app detected worker thread error" + err);
+  });
+  worker.on("exit", (code) => {
+    console.log("main app detected worker thread exiting with code " + code);
+  });
 });
