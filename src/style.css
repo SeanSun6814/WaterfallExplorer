@@ -24,6 +24,7 @@ ul{
     padding: 0px;
     padding-left: 5px;
     margin: 0px;
+    display: inline-block;
 }
 ul::-webkit-scrollbar {
   display: none;
@@ -40,6 +41,7 @@ li {
   overflow: hidden;
   overflow-wrap: break-word;
   user-select: none;
+  white-space: initial;
 }
 
 .liFolder {
@@ -50,6 +52,11 @@ li {
   color: grey;
   font-size: small;
   text-align: center;
+}
+
+.liEndPadding {
+  margin-right: 80%;
+  /* border-right: 80%; */
 }
 
 .liStats {
@@ -88,14 +95,11 @@ li {
 
 #myColumns{
   height: 100%;
-  width: 100%;
-  display: flex;
-  overflow: scroll; 
+  overflow-x: scroll;
+  display: inline-block;
+  white-space: nowrap;
 }
 
-div::-webkit-scrollbar {
-  display: none;
-}
 
 .liClicked {
   animation: color-change 1s forwards;

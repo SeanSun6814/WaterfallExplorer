@@ -209,6 +209,14 @@ class Column {
     return li;
   }
 
+  addEndPadding() {
+    this.#html.classList.add("liEndPadding");
+  }
+
+  removeEndPadding() {
+    this.#html.classList.remove("liEndPadding");
+  }
+
   deleteHTML() {
     this.#html.outerHTML = "";
   }
@@ -301,6 +309,10 @@ class Widget {
 
   getMaxLayerIdx() {
     return this.#data.length - 1;
+  }
+
+  getLastColumn() {
+    return this.#data[this.getMaxLayerIdx()];
   }
 
   getLastFocusedItem() {

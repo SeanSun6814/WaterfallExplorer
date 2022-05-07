@@ -23,6 +23,7 @@ function getHTMLStatsList(str, layerIdx) {
 window.onload = function () {
   myColumns = document.getElementById("myColumns");
   fullPathText = document.getElementById("fullPathText");
+  fullPathText.addEventListener("wheel", onPathScroll);
   config = readConfigFile();
   let rootPaths = getDirAndFiles("");
   let baseColumn = new Column(0, rootPaths, 0, onItemFocus, onItemSelect);
@@ -61,6 +62,8 @@ function addItemFocus(item, sortByIdx) {
     let arr = getDirAndFiles(fullPath);
     arr = sortDirBy(arr, sortTypes[sortByIdx]);
     let column = new Column(item.layerIdx + 1, arr, sortByIdx, onItemFocus, onItemSelect);
+    widget.getLastColumn().removeEndPadding();
+    column.addEndPadding();
     widget.addColumn(column);
   } else {
     createStatElem(item);
@@ -73,4 +76,16 @@ function removeItemFocus(item) {
 
 function onItemSelect(item, isSelected) {
   console.log("item select is called!");
+}
+
+function onHorizontalScroll() {
+  let lastFocusedItem = widget.getLastFocusedItem();
+  if (!lastFocusedItem.isFolder) {
+    widget.focusItem(lastFocusedItem.layerIdx, lastFocusedItem.idx);
+  }
+}
+
+function onPathScroll(e) {
+  let scroll = e.deltaX + e.deltaY;
+  myColumns.scrollLeft += scroll;
 }
