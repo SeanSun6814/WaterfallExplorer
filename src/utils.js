@@ -15,7 +15,7 @@ function setClipboard(str) {
 }
 
 function getHsl(colIdx, rowIdx) {
-  let h = (80.0 + colIdx * 10.0) / 255.0;
+  let h = ((80.0 - colIdx * 10.0) % 255) / 255.0;
   let s = 1.0;
   let l = 0.6 + rowIdx * 0.025;
   return hslToRgb(h, s, l);
