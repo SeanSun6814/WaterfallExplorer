@@ -90,3 +90,8 @@ function onPathScroll(e) {
   let scroll = e.deltaX + e.deltaY;
   myColumns.scrollLeft += scroll;
 }
+
+function onPathHover() {
+  let left = widget.getLastFocusedItem().html.offsetLeft;
+  myColumns.scrollLeft = left - window.innerWidth * 0.5;
+}
