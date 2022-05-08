@@ -162,7 +162,7 @@ function handleFunctionKeys(event) {
     widget.sortCurrentColumn(4);
   } else if (event.ctrlKey && event.key === "v") {
     handleCopyFile();
-  } else if ((event.ctrlKey && event.key === "m") || (event.ctrlKey && event.key === "n")) {
+  } else if (event.ctrlKey && event.key === "m") {
     handleMoveFile();
   } else if (event.ctrlKey && event.key === "Delete") {
     handleDeleteFile();
