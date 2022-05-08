@@ -104,13 +104,33 @@ function playClickedAnimation(el) {
   el.style.animation = null;
 }
 
-function playMessage(msg) {
+function playMessageTraditional(msg) {
   let el = document.getElementById("messageText");
   el.innerHTML = msg;
   el.classList.add("messageAnimation");
   el.style.animation = "none";
   el.offsetHeight; // trigger reflow
   el.style.animation = null;
+}
+
+function playMessage(msg, type) {
+  // types are: "success", "error", "warning", "info", "question"
+  if (type === undefined) type = "info";
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-right",
+    iconColor: "white",
+    customClass: {
+      popup: "colored-toast",
+    },
+    showConfirmButton: false,
+    timer: 2500,
+    timerProgressBar: true,
+  });
+  Toast.fire({
+    icon: type,
+    title: "<big>" + msg + "</big>",
+  });
 }
 
 function addToRootPaths(str) {
@@ -170,7 +190,10 @@ function isPrintableStr(str) {
 }
 
 function launchDelayedLaunch() {
-  playMessage(delayedLaunchActions.length + " action" + (delayedLaunchActions.length === 1 ? "" : "s"));
+  playMessage(
+    delayedLaunchActions.length + " action" + (delayedLaunchActions.length === 1 ? "" : "s"),
+    "success"
+  );
   let cmdStr = "";
   delayedLaunchActions.forEach((item, idx) => {
     cmdStr += item;

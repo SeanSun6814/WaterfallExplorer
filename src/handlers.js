@@ -42,14 +42,13 @@ function findWithName(targetChar) {
   }
   let elemIdx = column.findWithName(targetChar);
   if (elemIdx >= 0) {
-    console.log("found at idx" + elemIdx);
     let item = column.getItemByIdx(elemIdx);
     column.scrollToView(elemIdx);
     playClickedAnimation(item.html);
-    playMessage("Find " + targetChar);
+    playMessage("Search " + targetChar, "success");
     widget.focusItem(item.layerIdx, item.idx);
   } else {
-    playMessage(targetChar + " not found");
+    playMessage(targetChar + " not found", "error");
   }
   return true;
 }
@@ -58,12 +57,12 @@ function addToRootPaths() {
   let str = getClipboard();
   str = sanitizePath(str);
   if (config.paths.includes(str)) {
-    playMessage("Already exists");
+    playMessage("Root path already exists", "error");
   } else {
     config.paths.push(str);
     writeConfig();
     window.onload();
-    playMessage("Added");
+    playMessage("Root path added", "success");
   }
 }
 
@@ -79,13 +78,13 @@ function handleDelayedLaunch() {
   if (delayedLaunch) {
     delayedLaunch = false;
     if (delayedLaunchActions.length === 0) {
-      playMessage((delayedLaunch ? "Delayed" : "Normal") + " Launch");
+      playMessage((delayedLaunch ? "Delayed" : "Normal") + " Opening Mode", "info");
     } else {
       launchDelayedLaunch();
     }
   } else {
     delayedLaunch = true;
-    playMessage((delayedLaunch ? "Delayed" : "Normal") + " Launch");
+    playMessage((delayedLaunch ? "Delayed" : "Normal") + " Opening Mode", "info");
   }
 }
 
@@ -98,9 +97,9 @@ function removeFromRootPaths() {
     }
     writeConfig();
     window.onload();
-    playMessage("Removed");
+    playMessage("Root path removed", "success");
   } else {
-    playMessage("No selection");
+    playMessage("No root path selected", "error");
   }
 }
 
@@ -112,7 +111,7 @@ function handleOpenWith(cmdStrFunction, msg) {
     if (delayedLaunch) {
       addDelayedLaunchAction(cmdStrFunction(path));
     } else {
-      playMessage(msg);
+      playMessage(msg, "success");
       console.log("path is: " + cmdStrFunction(path));
       sendCommand(cmdStrFunction(path));
       setTimeout(() => {
@@ -120,29 +119,9 @@ function handleOpenWith(cmdStrFunction, msg) {
       }, 1000);
     }
   } else {
-    playMessage("No selection");
+    playMessage("No item selected", "error");
   }
 }
-
-// function handleOpenWithBrowser() {
-//   let lastElem = widget.getLastFocusedItem();
-//   if (lastElem != null) {
-//     let path = widget.getFullPath();
-//     if (delayedLaunch) {
-//       playClickedAnimation(lastElem.html);
-//       addDelayedLaunchAction(() => openWithBrowser(path));
-//     } else {
-//       playMessage("Browser");
-//       playClickedAnimation(lastElem.html);
-//       openWithBrowser(path);
-//       setTimeout(() => {
-//         window.close();
-//       }, 1000);
-//     }
-//   } else {
-//     playMessage("No selection");
-//   }
-// }
 
 function handleSort(method) {
   let elem = widget.getLastFocusedItem();
@@ -157,16 +136,16 @@ function handleFunctionKeys(event) {
     handleDelayedLaunch();
   } else if (event.ctrlKey && event.key === "c") {
     setClipboard(widget.getFullPath());
-    playMessage("Copied");
+    playMessage("Path copied to clipboard", "success");
   } else if (event.ctrlKey && event.key === "a") {
     addToRootPaths();
   } else if (!event.ctrlKey && event.key === "Delete") {
     removeFromRootPaths();
-  } else if ((event.ctrlKey && event.key === "Enter") || (event.ctrlKey && event.key === "e")) {
+  } else if (event.ctrlKey && event.key === "Enter") {
     handleOpenWith(openWithCodeCommandStr, "VS Code");
-  } else if (event.key === "Enter" || (event.ctrlKey && event.key === "b")) {
+  } else if (event.key === "Enter") {
     handleOpenWith(openWithBrowserCommandStr, "Browser");
-  } else if (event.key === " " || (event.ctrlKey && event.key === "o")) {
+  } else if (event.key === " ") {
     handleOpenWith(openFileCommandStr, "Opening");
   } else if (event.ctrlKey && event.key === "s") {
     widget.sortCurrentColumn(-1);
@@ -191,7 +170,11 @@ function handleFunctionKeys(event) {
   } else if (event.ctrlKey && event.key === "h") {
     // alert("Help!");
     alertBlockKeyPress = true;
-    Swal.fire("Good job!", "You clicked the button!", "success").then((result) => {
+    Swal.fire(
+      "Help",
+      "<b>Help:</b> Ctrl + h<br><b>Open:</b> Click, Space<br><b>Open in Chrome:</b> Enter<br><b>Open in VS Code:</b> Ctrl + Enter<br><b>Sort:</b> Ctrl + [s, 1, 2, 3, 4, 5]\n",
+      "question"
+    ).then((result) => {
       alertBlockKeyPress = false;
     });
   } else {

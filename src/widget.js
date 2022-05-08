@@ -296,7 +296,7 @@ class Widget {
 
   sortCurrentColumn(method) {
     let elem = this.getLastFocusedItem();
-    if (elem == null || elem.layerIdx === 0) return playMessage("No selection");
+    if (elem == null || elem.layerIdx === 0) return playMessage("No column to sort", "error");
     let parentLayerIdx, currentMethod;
     parentLayerIdx = elem.layerIdx - 1;
     currentMethod = this.#data[elem.layerIdx].getSortedByIdx();
@@ -308,7 +308,7 @@ class Widget {
     }
     this.focusItem(parentLayerIdx, this.#data[parentLayerIdx].getFocusedIdx(), currentMethod);
     this.focusItem(elem.layerIdx, 0);
-    playMessage("Sort: " + sortTypes[currentMethod]);
+    playMessage("Sorting by " + sortTypes[currentMethod], "info");
   }
 
   getMaxLayerIdx() {
