@@ -172,11 +172,18 @@ function handleFunctionKeys(event) {
     openHelpDialogue();
   } else if (event.ctrlKey && event.key === "r") {
     handleRunOnStartUp();
+  } else if (event.ctrlKey && event.key === ",") {
+    handleSettings();
   } else {
     return false;
   }
   event.preventDefault();
   return true;
+}
+
+function handleSettings() {
+  playMessage("Opening settings file ", "success");
+  sendCommand(openFileCommandStr("./config.json"));
 }
 
 function handleRunOnStartUp() {
@@ -314,7 +321,9 @@ function openHelpDialogue() {
       "<b>Add to root paths:</b> Ctrl + c then Ctrl + a<br>" +
       "<b>Remove from root paths:</b> delete<br>" +
       "<b>Goto:</b> [any char]<br>" +
-      "<b>Auto scroll:</b> mouse hover over path",
+      "<b>Auto scroll:</b> mouse hover over path<br>" +
+      "<b>Settings:</b> Ctrl + ,<br>" +
+      "<b>Run on startup:</b> Ctrl + r",
     "question"
   ).then((result) => {
     alertBlockKeyPress = false;
