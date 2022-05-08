@@ -14,20 +14,51 @@ function setClipboard(str) {
   clipboard.writeText(str);
 }
 
-function getHsl(colIdx, rowIdx) {
-  let h = ((80.0 - colIdx * 10.0) % 255) / 255.0;
-  let s = 1.0;
-  let l = 0.6 + rowIdx * 0.025;
-  return hslToRgb(h, s, l);
+function createDefaultConfig() {
+  return {
+    paths: ["C:/"],
+    autoLaunch: true,
+    colorTheme: "light",
+    defaultSortByIdx: 0,
+  };
 }
 
-function hslToRgb(h, s, l) {
-  var r, g, b;
+function changeTheme() {
+  if (config.colorTheme === "dark") {
+    document.getElementById("colorTheme").innerHTML =
+      "body {background-color: #3c4042;}" +
+      "li {color: lightgrey;}" +
+      "#fullPathText {background-color: #3c4042;color: lightgrey;}" +
+      "[class*='liCount'] {color: lightgrey;}" +
+      ".liStats {color: lightgrey;}";
+  } else if (config.colorTheme === "light") {
+    document.getElementById("colorTheme").innerHTML = "";
+  }
+}
 
+function getRgb(colIdx, rowIdx) {
+  let h, s, l, a;
+  if (config.colorTheme === "dark") {
+    h = ((80.0 - colIdx * 10.0) % 255) / 255.0;
+    l = 0.4;
+    s = 0.5;
+    a = 1 - rowIdx * 0.05;
+  } else {
+    // (config.colorTheme === "light")
+    h = ((80.0 - colIdx * 10.0) % 255) / 255.0;
+    s = 0.75;
+    l = 0.6;
+    a = 1 - rowIdx * 0.05;
+  }
+  return hslToRgb(h, s, l, a);
+}
+
+function hslToRgb(h, s, l, a) {
+  let r, g, b;
   if (s == 0) {
     r = g = b = l;
   } else {
-    var hue2rgb = function hue2rgb(p, q, t) {
+    let hue2rgb = function hue2rgb(p, q, t) {
       if (t < 0) t += 1;
       if (t > 1) t -= 1;
       if (t < 1 / 6) return p + (q - p) * 6 * t;
@@ -35,16 +66,15 @@ function hslToRgb(h, s, l) {
       if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
       return p;
     };
-
-    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    var p = 2 * l - q;
+    let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    let p = 2 * l - q;
     r = hue2rgb(p, q, h + 1 / 3);
     g = hue2rgb(p, q, h);
     b = hue2rgb(p, q, h - 1 / 3);
   }
-
-  // return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-  return "rgb(" + Math.round(r * 255) + "," + Math.round(g * 255) + "," + Math.round(b * 255) + ")";
+  return (
+    "rgba(" + Math.round(r * 255) + "," + Math.round(g * 255) + "," + Math.round(b * 255) + "," + a + ")"
+  );
 }
 
 function reverseStr(s) {

@@ -172,6 +172,8 @@ function handleFunctionKeys(event) {
     openHelpDialogue();
   } else if (event.ctrlKey && event.key === "r") {
     handleRunOnStartUp();
+  } else if (event.ctrlKey && event.key === "t") {
+    handleColorTheme();
   } else if (event.ctrlKey && event.key === ",") {
     handleSettings();
   } else {
@@ -179,6 +181,16 @@ function handleFunctionKeys(event) {
   }
   event.preventDefault();
   return true;
+}
+
+function handleColorTheme() {
+  if (config.colorTheme === "light") {
+    config.colorTheme = "dark";
+  } else {
+    config.colorTheme = "light";
+  }
+  writeConfig();
+  window.onload();
 }
 
 function handleSettings() {
@@ -338,6 +350,7 @@ function openHelpDialogue() {
       "<b>Goto:</b> [any char]<br>" +
       "<b>Auto scroll:</b> mouse hover over path<br>" +
       "<b>Settings:</b> Ctrl + ,<br>" +
+      "<b>Change color theme:</b> Ctrl + t<br>" +
       "<b>Run on startup:</b> Ctrl + r",
     "question"
   ).then((result) => {

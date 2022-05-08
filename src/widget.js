@@ -17,7 +17,7 @@ class Item {
     let argStr = "widget.getItemByIdx(" + this.layerIdx + "," + this.idx + ")";
     li.setAttribute("onmouseenter", "onHover(" + argStr + ")");
     li.setAttribute("onclick", "onClick(" + argStr + ")");
-    li.setAttribute("style", "background-color:" + getHsl(this.layerIdx, this.idx) + ";");
+    li.setAttribute("style", "background-color:" + getRgb(this.layerIdx, this.idx) + ";");
     li.setAttribute("id", this.id);
     li.setAttribute("idx", this.idx);
     if (this.isFolder) {
@@ -33,7 +33,7 @@ class Item {
     let argStr = "widget.getItemByIdx(" + this.layerIdx + "," + this.idx + ")";
     li.setAttribute("onmouseenter", "onHover(" + argStr + ")");
     li.setAttribute("onclick", "onClick(" + argStr + ")");
-    li.setAttribute("style", "background-color:" + getHsl(this.layerIdx, this.idx) + ";");
+    li.setAttribute("style", "background-color:" + getRgb(this.layerIdx, this.idx) + ";");
     li.setAttribute("id", this.id);
     li.setAttribute("idx", this.idx);
     if (this.isFolder) {

@@ -16,7 +16,7 @@ window.onload = function () {
   fullPathText.addEventListener("wheel", onPathScroll);
   config = readConfigFile();
   if (config === false) {
-    config = { paths: ["C:/"], defaultSortByIdx: 0, autoLaunch: true };
+    config = createDefaultConfig();
     writeConfig();
     window.onload();
     showWindow();
@@ -25,6 +25,7 @@ window.onload = function () {
     });
     return;
   }
+  changeTheme();
   setAutoLaunch(config.autoLaunch);
   let rootPaths = getDirAndFiles("");
   let baseColumn = new Column(0, rootPaths, 0, onItemFocus, onItemSelect);
