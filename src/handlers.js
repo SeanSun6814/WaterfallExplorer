@@ -50,134 +50,141 @@ function findWithName(targetChar) {
   return true;
 }
 
-function handleFunctionKeys(event) {
-  return false;
-  if (event.ctrlKey && event.key === "d") {
-    if (delayedLaunch) {
-      delayedLaunch = false;
-      if (delayedLaunchActions.length === 0) {
-        playMessage((delayedLaunch ? "Delayed" : "Normal") + " Launch");
-      } else {
-        launchDelayedLaunch();
-      }
-    } else {
-      delayedLaunch = true;
+function addToRootPaths() {
+  let str = getClipboard();
+  str = sanitizePath(str);
+  if (config.paths.includes(str)) {
+    playMessage("Already exists");
+  } else {
+    config.paths.push(str);
+    writeConfig();
+    window.onload();
+    playMessage("Added");
+  }
+}
+
+function sanitizePath(str) {
+  str = str.trim();
+  str = str.replaceAll("\\", "/");
+  str = str.replaceAll('"', "");
+  // str = str.replaceAll(/\/$/g, "");
+  return str;
+}
+
+function handleDelayedLaunch() {
+  if (delayedLaunch) {
+    delayedLaunch = false;
+    if (delayedLaunchActions.length === 0) {
       playMessage((delayedLaunch ? "Delayed" : "Normal") + " Launch");
+    } else {
+      launchDelayedLaunch();
     }
+  } else {
+    delayedLaunch = true;
+    playMessage((delayedLaunch ? "Delayed" : "Normal") + " Launch");
+  }
+}
+
+function removeFromRootPaths() {
+  let lastElem = widget.getLastFocusedItem();
+  if (lastElem != null && lastElem.layerIdx === 0) {
+    let index = config.paths.indexOf(lastElem.name);
+    if (index !== -1) {
+      config.paths.splice(index, 1);
+    }
+    writeConfig();
+    window.onload();
+    playMessage("Removed");
+  } else {
+    playMessage("No selection");
+  }
+}
+
+function handleOpenWith(openFunction, msg) {
+  let lastElem = widget.getLastFocusedItem();
+  if (lastElem != null) {
+    let path = widget.getFullPath();
+    playClickedAnimation(lastElem.html);
+    if (delayedLaunch) {
+      addDelayedLaunchAction(() => openFunction(path));
+    } else {
+      playMessage(msg);
+      openFunction(path);
+      setTimeout(() => {
+        window.close();
+      }, 1000);
+    }
+  } else {
+    playMessage("No selection");
+  }
+}
+
+// function handleOpenWithBrowser() {
+//   let lastElem = widget.getLastFocusedItem();
+//   if (lastElem != null) {
+//     let path = widget.getFullPath();
+//     if (delayedLaunch) {
+//       playClickedAnimation(lastElem.html);
+//       addDelayedLaunchAction(() => openWithBrowser(path));
+//     } else {
+//       playMessage("Browser");
+//       playClickedAnimation(lastElem.html);
+//       openWithBrowser(path);
+//       setTimeout(() => {
+//         window.close();
+//       }, 1000);
+//     }
+//   } else {
+//     playMessage("No selection");
+//   }
+// }
+
+function handleSort(method) {
+  let elem = widget.getLastFocusedItem();
+  if (elem != null) {
+    let column = elem.parentColumn;
+    let lastElem = column;
+  }
+}
+
+function handleFunctionKeys(event) {
+  if (event.ctrlKey && event.key === "d") {
+    handleDelayedLaunch();
   } else if (event.ctrlKey && event.key === "c") {
-    setClipboard(getFullPath());
+    setClipboard(widget.getFullPath());
     playMessage("Copied");
   } else if (event.ctrlKey && event.key === "a") {
-    let str = getClipboard();
-    if (addToRootPaths(str)) {
-      writeRootPathConfig();
-      window.onload();
-      playMessage("Added");
-    } else {
-      playMessage("Already added");
-    }
+    addToRootPaths();
   } else if (!event.ctrlKey && event.key === "Delete") {
-    if (
-      rootPaths.length > 0 &&
-      pathArr.length > 1 &&
-      currentElement != null &&
-      currentElement.layerIdx == 1
-    ) {
-      removeFromRootPaths(currentElement.name);
-      writeRootPathConfig();
-      window.onload();
-      playMessage("Removed");
-    } else {
-      playMessage("No selection");
-    }
+    removeFromRootPaths();
   } else if ((event.ctrlKey && event.key === "Enter") || (event.ctrlKey && event.key === "e")) {
-    if (rootPaths.length > 0 && pathArr.length > 1 && currentElement != null) {
-      if (delayedLaunch) {
-        playClickedAnimation(currentElement.id);
-        let path = getFullPath();
-        addDelayedLaunchAction(() => openWithCode(path));
-      } else {
-        playMessage("VS Code");
-        playClickedAnimation(currentElement.id);
-        openWithCode(getFullPath());
-        setTimeout(() => {
-          window.close();
-        }, 1000);
-      }
-    } else {
-      playMessage("No selection");
-    }
+    handleOpenWith(openWithCode, "VS Code");
   } else if (event.key === "Enter" || (event.ctrlKey && event.key === "b")) {
-    if (rootPaths.length > 0 && pathArr.length > 1 && currentElement != null) {
-      if (delayedLaunch) {
-        playClickedAnimation(currentElement.id);
-        let path = getFullPath();
-        addDelayedLaunchAction(() => openWithBrowser(path));
-      } else {
-        playMessage("Browser");
-        playClickedAnimation(currentElement.id);
-        openWithBrowser(getFullPath());
-        setTimeout(() => {
-          window.close();
-        }, 1000);
-      }
-    } else {
-      playMessage("No selection");
-    }
+    handleOpenWith(openWithBrowser, "Browser");
   } else if (event.key === " " || (event.ctrlKey && event.key === "o")) {
-    if (rootPaths.length > 0 && pathArr.length > 1 && currentElement != null) {
-      onClick(
-        currentElement.id,
-        currentElement.layerIdx,
-        currentElement.name,
-        currentElement.isFolder,
-        currentElement.idx
-      );
-    } else {
-      playMessage("No selection");
-    }
+    handleOpenWith(openFile, "Opening");
   } else if (event.ctrlKey && event.key === "s") {
-    sortByIdx = (sortByIdx + 1) % sortTypes.length;
-    playMessage("Sort: " + sortTypes[sortByIdx]);
-    reSort();
+    widget.sortCurrentColumn(-1);
   } else if (event.ctrlKey && event.key === "1") {
-    if (sortByIdx !== 0) {
-      sortByIdx = 0;
-      reSort();
-    }
-    playMessage("Sort: " + sortTypes[sortByIdx]);
+    widget.sortCurrentColumn(0);
   } else if (event.ctrlKey && event.key === "2") {
-    if (sortByIdx !== 1) {
-      sortByIdx = 1;
-      reSort();
-    }
-    playMessage("Sort: " + sortTypes[sortByIdx]);
+    widget.sortCurrentColumn(1);
   } else if (event.ctrlKey && event.key === "3") {
-    if (sortByIdx !== 2) {
-      sortByIdx = 2;
-      reSort();
-    }
-    playMessage("Sort: " + sortTypes[sortByIdx]);
+    widget.sortCurrentColumn(2);
   } else if (event.ctrlKey && event.key === "4") {
-    if (sortByIdx !== 3) {
-      sortByIdx = 3;
-      reSort();
-    }
-    playMessage("Sort: " + sortTypes[sortByIdx]);
+    widget.sortCurrentColumn(3);
   } else if (event.ctrlKey && event.key === "5") {
-    if (sortByIdx !== 4) {
-      sortByIdx = 4;
-      reSort();
-    }
-    playMessage("Sort: " + sortTypes[sortByIdx]);
-  } else if (event.ctrlKey && event.key === "v") {
-    modifyFile("copy");
-  } else if (event.ctrlKey && event.key === "m") {
-    modifyFile("move");
-  } else if (event.ctrlKey && event.key === "Delete") {
-    modifyFile("delete");
-  } else if (event.ctrlKey && event.key === "n") {
-    handleMakeDir();
+    widget.sortCurrentColumn(4);
+    // } else if (event.ctrlKey && event.key === "v") {
+    //   modifyFile("copy");
+    // } else if (event.ctrlKey && event.key === "m") {
+    //   modifyFile("move");
+    // } else if (event.ctrlKey && event.key === "Delete") {
+    //   modifyFile("delete");
+    // } else if (event.ctrlKey && event.key === "n") {
+    //   handleMakeDir();
+  } else if (event.ctrlKey && event.key === "h") {
+    alert("Help!");
   } else {
     return false;
   }

@@ -164,7 +164,6 @@ class Column {
       if (char.toLowerCase() === targetChar) {
         return idx;
       }
-      console.log(char.toLowerCase() + " is not equal to " + targetChar);
     }
     return -1;
   }
@@ -297,22 +296,19 @@ class Widget {
 
   sortCurrentColumn(method) {
     let elem = this.getLastFocusedItem();
-    if (elem == null) return;
+    if (elem == null || elem.layerIdx === 0) return playMessage("No selection");
     let parentLayerIdx, currentMethod;
-    if (elem.isFolder) {
-      parentLayerIdx = elem.layerIdx;
-      currentMethod = this.#data[parentLayerIdx + 1].getSortedByIdx();
-    } else {
-      parentLayerIdx = elem.layerIdx - 1;
-      currentMethod = this.#data[parentLayerIdx].getSortedByIdx();
-    }
+    parentLayerIdx = elem.layerIdx - 1;
+    currentMethod = this.#data[elem.layerIdx].getSortedByIdx();
 
     if (!idxInBounds(method, sortTypes)) {
       currentMethod = (currentMethod + 1) % sortTypes.length;
     } else {
       currentMethod = method;
     }
-    this.#data[parentLayerIdx].focusItem(idx, currentMethod);
+    this.focusItem(parentLayerIdx, this.#data[parentLayerIdx].getFocusedIdx(), currentMethod);
+    this.focusItem(elem.layerIdx, 0);
+    playMessage("Sort: " + sortTypes[currentMethod]);
   }
 
   getMaxLayerIdx() {

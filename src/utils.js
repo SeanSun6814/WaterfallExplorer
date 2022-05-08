@@ -168,3 +168,19 @@ function isPrintableStr(str) {
   var ascii_print_rx = /^[ -~]+$/;
   return ascii_print_rx.test(str);
 }
+
+function launchDelayedLaunch() {
+  playMessage(delayedLaunchActions.length + " action" + (delayedLaunchActions.length === 1 ? "" : "s"));
+  delayedLaunchActions.forEach((item) => {
+    item();
+  });
+  delayedLaunch = false;
+  delayedLaunchActions = [];
+  setTimeout(() => {
+    window.close();
+  }, 1000);
+}
+
+function addDelayedLaunchAction(fn) {
+  delayedLaunchActions.push(fn);
+}

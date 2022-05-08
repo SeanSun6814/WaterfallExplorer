@@ -138,14 +138,14 @@ li {
 
 @keyframes fade-out {
   0% {
-    color: grey;
+    color: #4d4d4d;
     font-size: 3vw;
     opacity: 100%;
     z-index: -1;
   }
 
   0% {
-    color: grey;
+    color: #4d4d4d;
     font-size: 3vw;
     opacity: 100%;
     z-index: 100;

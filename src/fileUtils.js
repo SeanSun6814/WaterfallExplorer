@@ -56,7 +56,7 @@ function readConfigFile() {
   }
 }
 
-function writeRootPathConfig() {
+function writeConfig() {
   let json = JSON.stringify(config);
   fs.writeFileSync("./config.json", json);
 }

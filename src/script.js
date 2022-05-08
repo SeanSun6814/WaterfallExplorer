@@ -10,6 +10,7 @@ let widget;
 window.onload = function () {
   myColumns = document.getElementById("myColumns");
   fullPathText = document.getElementById("fullPathText");
+  myColumns.innerHTML = "";
   fullPathText.addEventListener("wheel", onPathScroll);
   config = readConfigFile();
   let rootPaths = getDirAndFiles("");
@@ -22,17 +23,13 @@ function onHover(item) {
 }
 
 function onClick(item) {
-  playMessage("Opening");
-  playClickedAnimation(item.id);
-  openFile(widget.getFullPath());
-  setTimeout(() => {
-    window.close();
-  }, 1000);
+  handleOpenWith(openFile, "Opening");
 }
 
 function onWindowShow() {
-  delayedLaunch = false;
   ignoreFirstE = true;
+  delayedLaunch = false;
+  delayedLaunchActions = [];
 }
 
 function onItemFocus(item, isFocused, sortByIdx) {
