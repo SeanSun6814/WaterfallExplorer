@@ -96,6 +96,12 @@ ipcMain.on("log", (event, arg) => {
   event.returnValue = "done";
 });
 
+ipcMain.on("showwindow", (event, arg) => {
+  console.log("showing window");
+  createWindow();
+  event.returnValue = "done";
+});
+
 ipcMain.on("autolaunch", (event, arg) => {
   console.log("Setting autolaunch to: " + arg);
   let autoLaunch = new AutoLaunch({
@@ -112,15 +118,6 @@ ipcMain.on("autolaunch", (event, arg) => {
 ipcMain.on("run", (event, arg) => {
   console.log("running command: " + arg);
   const worker = new Worker("./src/backgroundWorker.js", { workerData: arg });
-  worker.on("message", (msg) => {
-    console.log("main app detected worker thread message" + msg);
-  });
-  worker.on("error", (err) => {
-    console.log("main app detected worker thread error" + err);
-  });
-  worker.on("exit", (code) => {
-    console.log("main app detected worker thread exiting with code " + code);
-  });
 });
 
 function setupMenu() {
@@ -140,13 +137,6 @@ function setupMenu() {
           win.hide();
         },
       },
-      // {
-      //   label: "Hide",
-      //   accelerator: "CmdOrCtrl+H",
-      //   click() {
-      //     win.hide();
-      //   },
-      // },
       {
         label: "Maximize",
         accelerator: "CmdOrCtrl+F",

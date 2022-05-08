@@ -18,7 +18,9 @@ window.onload = function () {
   if (config === false) {
     config = { paths: ["C:/"], defaultSortByIdx: 0, autoLaunch: true };
     writeConfig();
-    return window.onload();
+    window.onload();
+    showWindow();
+    return;
   }
   setAutoLaunch(config.autoLaunch);
   let rootPaths = getDirAndFiles("");
