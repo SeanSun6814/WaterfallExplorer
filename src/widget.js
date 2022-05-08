@@ -10,11 +10,26 @@ class Item {
     this.html = null;
   }
 
+  updateSettings() {
+    if (this.html == null) return;
+    let li = this.html;
+    li.innerText = this.name;
+    let argStr = "widget.getItemByIdx(" + this.layerIdx + "," + this.idx + ")";
+    li.setAttribute("onmouseenter", "onHover(" + argStr + ")");
+    li.setAttribute("onclick", "onClick(" + argStr + ")");
+    li.setAttribute("style", "background-color:" + getHsl(this.layerIdx, this.idx) + ";");
+    li.setAttribute("id", this.id);
+    li.setAttribute("idx", this.idx);
+    if (this.isFolder) {
+      li.classList.add("liFolder");
+    } else {
+      li.classList.add("liFile");
+    }
+  }
+
   generateHTML() {
     let li = document.createElement("li");
     li.innerText = this.name;
-    // let argStr =
-    //   "'" + this.id + "'," + this.layerIdx + ', "' + this.name + '", ' + this.isFolder + "," + this.idx;
     let argStr = "widget.getItemByIdx(" + this.layerIdx + "," + this.idx + ")";
     li.setAttribute("onmouseenter", "onHover(" + argStr + ")");
     li.setAttribute("onclick", "onClick(" + argStr + ")");
@@ -135,7 +150,18 @@ class Column {
   }
 
   deleteItem(idx) {
-    // todo
+    if (!idxInBounds(idx, this.#data)) return;
+    this.#data[idx].html.outerHTML = "";
+    this.#data.splice(idx, 1);
+    this.#selectedIdx = new Set(Array.from(this.#selectedIdx).map((i) => (i > idx ? i - 1 : i)));
+    if (this.#focusedIdx > idx) this.#focusedIdx--;
+    for (let i = idx; i < this.#data.length; i++) {
+      this.#data[i].idx--;
+      this.#data[i].id = "li-" + this.#layerIdx + "-" + this.#data[i].idx;
+      this.#data[i].updateSettings();
+    }
+    let liCount = document.getElementById("liCount-" + this.#layerIdx);
+    liCount.innerHTML = this.#generateCountStr();
   }
 
   focusPrev() {
@@ -202,18 +228,12 @@ class Column {
 
   #getCountHTML() {
     let li = document.createElement("li");
-    let numFiles = 0;
-    let numFolders = 0;
-    for (let i = 0; i < this.#data.length; i++) {
-      if (this.#data[i].isFolder) numFolders++;
-      else numFiles++;
-    }
-    li.classList.add("liCount" + this.#layerIdx); // todo: handle events better
-    // li.setAttribute("onmouseenter", "removeFocus(" + this.#layerIdx + ")");
-    li.innerHTML = this.#generateCountStr(numFiles, numFolders);
+
+    li.setAttribute("id", "liCount-" + this.#layerIdx);
+    li.classList.add("liCount"); // todo: handle events better
+    li.innerHTML = this.#generateCountStr();
     return li;
   }
-
   addEndPadding() {
     this.#html.classList.add("liEndPadding");
     // this.#html.style.width = window.innerWidth * 0.9 + "px";
@@ -228,7 +248,17 @@ class Column {
     this.#html.outerHTML = "";
   }
 
-  #generateCountStr(files, folders) {
+  #generateCountStr() {
+    let numFiles = 0;
+    let numFolders = 0;
+    for (let i = 0; i < this.#data.length; i++) {
+      if (this.#data[i].isFolder) numFolders++;
+      else numFiles++;
+    }
+    return this.#generateCountStrHelper(numFiles, numFolders);
+  }
+
+  #generateCountStrHelper(files, folders) {
     if (files === 0 && folders === 0) {
       return "Empty";
     } else if (files === 0) {
@@ -236,7 +266,7 @@ class Column {
     } else if (folders === 0) {
       return files + " file" + (files === 1 ? "" : "s");
     } else {
-      return this.#generateCountStr(0, folders) + ", " + this.#generateCountStr(files, 0);
+      return this.#generateCountStrHelper(0, folders) + ", " + this.#generateCountStrHelper(files, 0);
     }
   }
 }
@@ -267,6 +297,18 @@ class Widget {
       let focusedIdx = this.#data[i].getFocusedIdx();
       if (focusedIdx === -1) continue;
       let item = this.#data[i].getItemByIdx(focusedIdx);
+      res += item.name;
+    }
+    return res;
+  }
+
+  getFullDirectory() {
+    let res = "";
+    for (let i = 0; i < this.#data.length; i++) {
+      let focusedIdx = this.#data[i].getFocusedIdx();
+      if (focusedIdx === -1) continue;
+      let item = this.#data[i].getItemByIdx(focusedIdx);
+      if (!item.isFolder) break;
       res += item.name;
     }
     return res;
@@ -335,5 +377,28 @@ class Widget {
     while (this.#data.length - 1 > lastLayerIdxToDelete) {
       this.#data.pop().deleteHTML();
     }
+  }
+
+  removeItemByPath(targetPath) {
+    targetPath = targetPath.trim();
+    let path = "";
+    let layerIdx = -1;
+    let idx = -1;
+    for (let layer = 0; layer < this.#data.length; layer++) {
+      let column = this.#data[layer].getData();
+      for (let i = 0; i < column.length; i++) {
+        let tmpPath = (path + column[i].name).trim();
+        if (tmpPath === targetPath) {
+          layerIdx = layer;
+          idx = i;
+          break;
+        }
+      }
+      if (layerIdx != -1 || this.#data[layer].getFocusedIdx() === -1) break;
+      path += column[this.#data[layer].getFocusedIdx()].name;
+    }
+
+    if (layerIdx === -1) return;
+    this.#data[layerIdx].deleteItem(idx);
   }
 }

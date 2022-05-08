@@ -70,7 +70,8 @@ function sanitizePath(str) {
   str = str.trim();
   str = str.replaceAll("\\", "/");
   str = str.replaceAll('"', "");
-  // str = str.replaceAll(/\/$/g, "");
+  str = str.replaceAll(/\/$/g, "");
+  str += "/";
   return str;
 }
 
@@ -161,25 +162,147 @@ function handleFunctionKeys(event) {
     widget.sortCurrentColumn(4);
     // } else if (event.ctrlKey && event.key === "v") {
     //   modifyFile("copy");
-    // } else if (event.ctrlKey && event.key === "m") {
-    //   modifyFile("move");
+  } else if ((event.ctrlKey && event.key === "m") || (event.ctrlKey && event.key === "n")) {
+    handleMoveFile();
     // } else if (event.ctrlKey && event.key === "Delete") {
     //   modifyFile("delete");
     // } else if (event.ctrlKey && event.key === "n") {
     //   handleMakeDir();
   } else if (event.ctrlKey && event.key === "h") {
-    // alert("Help!");
-    alertBlockKeyPress = true;
-    Swal.fire(
-      "Help",
-      "<b>Help:</b> Ctrl + h<br><b>Open:</b> Click, Space<br><b>Open in Chrome:</b> Enter<br><b>Open in VS Code:</b> Ctrl + Enter<br><b>Sort:</b> Ctrl + [s, 1, 2, 3, 4, 5]\n",
-      "question"
-    ).then((result) => {
-      alertBlockKeyPress = false;
-    });
+    openHelpDialogue();
   } else {
     return false;
   }
   event.preventDefault();
   return true;
+}
+
+function handleMoveFile() {
+  let source = sanitizePath(getClipboard()).replace(/\/$/, "");
+  let dest = widget.getFullDirectory();
+  let lastElem = widget.getLastFocusedItem();
+  let str = source + "<br>-><br>" + dest;
+
+  alertBlockKeyPress = true;
+  Swal.fire({
+    title: "Move item?",
+    html: str,
+    icon: "warning",
+    showCancelButton: true,
+    showDenyButton: true,
+    showConfirmButton: false,
+    reverseButtons: true,
+    focusDeny: true,
+    denyButtonText: "Move",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    alertBlockKeyPress = false;
+    if (result.isDenied) {
+      moveFile(source, dest);
+      if (lastElem.isFolder) {
+        widget.focusItem(lastElem.layerIdx, lastElem.idx);
+      } else {
+        let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
+        let parentElemIdx = parentColumn.getFocusedIdx();
+        widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+      }
+      widget.removeItemByPath(source);
+      playMessage("Item moved", "success");
+    } else {
+      playMessage("Cancelled", "error");
+    }
+  });
+}
+
+function handleCopyFile() {
+  let source = getClipboard().replace(/\/$/, "");
+  let dest = getFullPath(true);
+  let str = "Copy\n" + source + "\nto\n" + dest;
+  if (!confirm(str)) {
+    playMessage("Canceled");
+    return;
+  }
+  if (copyFile(source, dest)) {
+    playMessage("Copied");
+  } else {
+    playMessage("Failed");
+    return;
+  }
+  if (currentElement.isFolder) {
+    refreshCurrentElement();
+  } else {
+    refreshCurrentParent();
+  }
+}
+
+function handleDeleteFile(operation) {
+  let source = getClipboard().replace(/\/$/, "");
+  let dest = getFullPath(true);
+  let path = getFullPath();
+  let str = "Delete\n" + path;
+  path = path.replace(/\/$/, "");
+  if (!confirm(str)) {
+    playMessage("Canceled");
+    return;
+  }
+  if (deleteFile(path)) {
+    playMessage("Deleted");
+  } else {
+    playMessage("Failed");
+    return;
+  }
+  refreshCurrentParent();
+
+  const swal = Swal.mixin({
+    customClass: {
+      confirmButton: "btn btn-success",
+      denyButton: "btn btn-danger",
+      cancelButton: "btn",
+    },
+    buttonsStyling: false,
+  });
+
+  swal
+    .fire({
+      title: "Delete item?",
+      text: "C:/_Data/",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Move to trash",
+      cancelButtonText: "Cancel",
+      denyButtonText: "Delete permanently",
+      showDenyButton: true,
+      reverseButtons: true,
+    })
+    .then((result) => {
+      if (result.isConfirmed) {
+        swal.fire("Move to trash!", "Your file has been deleted.", "success");
+      } else if (result.isDenied) {
+        swal.fire("Deleted permanently", "Your file has been deleted.", "success");
+      } else {
+        swal.fire("Cancelled!", "ab.", "success");
+      }
+    });
+}
+
+function openHelpDialogue() {
+  alertBlockKeyPress = true;
+  Swal.fire(
+    "Help",
+    "<b>Help:</b> Ctrl + h<br>" +
+      "<b>Show app:</b> Alt + e<br>" +
+      "<b>Hide app:</b> Esc<br>" +
+      "<b>Quit app:</b> Ctrl + q<br>" +
+      "<b>Open:</b> Click, Space<br>" +
+      "<b>Open in Chrome:</b> Enter<br>" +
+      "<b>Open in VS Code:</b> Ctrl + Enter<br>" +
+      "<b>Copy path:</b> Ctrl + c<br>" +
+      "<b>Sort:</b> Ctrl + [s, 1, 2, 3, 4, 5]<br>" +
+      "<b>Add to root paths:</b> Ctrl + c then Ctrl + a<br>" +
+      "<b>Remove from root paths:</b> delete<br>" +
+      "<b>Goto:</b> [any char]",
+    "question"
+  ).then((result) => {
+    alertBlockKeyPress = false;
+  });
 }

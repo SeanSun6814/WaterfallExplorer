@@ -1,11 +1,5 @@
 const electron = require("electron");
-const {
-  app,
-  BrowserWindow,
-  globalShortcut,
-  Menu,
-  ipcMain,
-} = require("electron");
+const { app, BrowserWindow, globalShortcut, Menu, ipcMain } = require("electron");
 const path = require("path");
 const { Worker } = require("node:worker_threads");
 
@@ -42,7 +36,7 @@ function createWindow() {
     },
   });
 
-  setupMenu();
+  // setupMenu();
 
   win.on("close", (event) => {
     if (app.quitting) {
@@ -134,13 +128,13 @@ function setupMenu() {
           win.hide();
         },
       },
-      {
-        label: "Hide",
-        accelerator: "CmdOrCtrl+H",
-        click() {
-          win.hide();
-        },
-      },
+      // {
+      //   label: "Hide",
+      //   accelerator: "CmdOrCtrl+H",
+      //   click() {
+      //     win.hide();
+      //   },
+      // },
       {
         label: "Maximize",
         accelerator: "CmdOrCtrl+F",
