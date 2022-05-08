@@ -168,8 +168,10 @@ function createStatElem(item) {
   statElem.setAttribute("id", "statElem");
   statElem.innerHTML = str;
   myColumns.appendChild(statElem);
+  updateStatElemPos(item.html, statElem);
+}
 
-  let elem = item.html;
+function updateStatElemPos(elem, statElem) {
   let top = elem.getBoundingClientRect().top;
   top += elem.getBoundingClientRect().height / 2.0;
   top -= statElem.getBoundingClientRect().height / 2.0;

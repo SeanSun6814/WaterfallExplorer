@@ -65,10 +65,19 @@ function onItemSelect(item, isSelected) {
   console.log("item select is called!");
 }
 
+function onScroll() {
+  refreshStatsElemLocation();
+}
+
 function onHorizontalScroll() {
+  refreshStatsElemLocation();
+}
+
+function refreshStatsElemLocation() {
+  let statElem = document.getElementById("statElem");
   let lastFocusedItem = widget.getLastFocusedItem();
-  if (lastFocusedItem != null && !lastFocusedItem.isFolder) {
-    widget.focusItem(lastFocusedItem.layerIdx, lastFocusedItem.idx);
+  if (statElem != null && lastFocusedItem != null && !lastFocusedItem.isFolder) {
+    updateStatElemPos(lastFocusedItem.html, statElem);
   }
 }
 

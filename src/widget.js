@@ -93,7 +93,6 @@ class Column {
 
   focusItem(idx, sortByIdx) {
     if (!idxInBounds(idx, this.#data)) return;
-    // if (idx === this.#focusedIdx) return console.log("Ignoring same focus");
     this.unfocusItem();
     this.#focusedIdx = idx;
     this.#onFocusCallback(this.#data[this.#focusedIdx], true, sortByIdx);
@@ -189,6 +188,7 @@ class Column {
 
   #generateHTML() {
     let div = document.createElement("div");
+    div.setAttribute("onscroll", "onScroll()");
     div.classList.add("myUl");
     let colUl = document.createElement("ul");
     colUl.setAttribute("id", "column" + this.#layerIdx);
