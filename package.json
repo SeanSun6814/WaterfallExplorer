@@ -23,6 +23,15 @@
     "appId": "org.seansun.myfileexplorer",
     "productName": "My File Explorer",
     "target": "NSIS",
-    "nsis": {}
+    "nsis": {},
+    "extraFiles": [
+      {
+        "from": "./src/backgroundWorker.js",
+        "to": "./src/backgroundWorker.js",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
   }
 }
