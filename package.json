@@ -1,6 +1,6 @@
 {
-  "name": "MyFileExplorer",
-  "productName": "MyFileExplorer",
+  "name": "WaterfallExplorer",
+  "productName": "Waterfall Explorer",
   "description": "My Electron application description",
   "keywords": [],
   "main": "./src/main.js",
@@ -20,8 +20,8 @@
     "electron-builder": "^23.0.3"
   },
   "build": {
-    "appId": "org.seansun.myfileexplorer",
-    "productName": "My File Explorer",
+    "appId": "org.seansun.waterfallexplorer",
+    "productName": "Waterfall Explorer",
     "target": "NSIS",
     "nsis": {},
     "extraFiles": [

@@ -13,7 +13,7 @@ window.onload = function () {
   myColumns = document.getElementById("myColumns");
   fullPathText = document.getElementById("fullPathText");
   myColumns.innerHTML = "";
-  fullPathText.innerHTML = "";
+  fullPathText.innerHTML = "Waterfall Explorer";
   fullPathText.addEventListener("wheel", onPathScroll);
   config = readConfigFile();
   if (config === false) {

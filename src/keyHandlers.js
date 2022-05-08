@@ -321,8 +321,8 @@ function openWelcomeDialogue(callback) {
   alertBlockKeyPress = true;
   Swal.fire(
     "<big>Welcome</big>",
-    "<big>My File Explorer has been successfully installed and is set to autorun on system startup.</big><br><br>" +
-      "<big>At My File Explorer, we strive to make finding files an easy and enjoyable experience.</big><br><br>" +
+    "<big>Waterfall Explorer has been successfully installed and is set to autorun on system startup.</big><br><br>" +
+      "<big>At Waterfall Explorer, we strive to make finding files an easy and enjoyable experience.</big><br><br>" +
       "<big>Here's a few hints to get you started...</big>",
     "success"
   ).then((result) => {

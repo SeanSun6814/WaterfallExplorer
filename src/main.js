@@ -105,7 +105,7 @@ ipcMain.on("showwindow", (event, arg) => {
 ipcMain.on("autolaunch", (event, arg) => {
   console.log("Setting autolaunch to: " + arg);
   let autoLaunch = new AutoLaunch({
-    name: "MyFileExplorer",
+    name: "WaterfallExplorer",
     path: app.getPath("exe"),
   });
   autoLaunch.isEnabled().then((isEnabled) => {
