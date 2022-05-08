@@ -10,7 +10,8 @@
     "start": "electron ."
   },
   "dependencies": {
-    "fs-extra": "^10.1.0"
+    "fs-extra": "^10.1.0",
+    "sweetalert2": "^11.4.10"
   },
   "devDependencies": {
     "electron": "18.0.4"

@@ -1,11 +1,15 @@
 document.addEventListener("keydown", function onPress(event) {
-  if (event.ctrlKey && event.key === "a") {
+  if (alertBlockKeyPress) {
+    return;
+  } else if (event.ctrlKey && event.key === "a") {
     event.preventDefault();
   }
 });
 
 document.addEventListener("keyup", function onPress(event) {
-  if (ignoreFirstE && event.key === "e") {
+  if (alertBlockKeyPress) {
+    return;
+  } else if (ignoreFirstE && event.key === "e") {
     ignoreFirstE = false;
     event.preventDefault();
     return;
@@ -185,7 +189,11 @@ function handleFunctionKeys(event) {
     // } else if (event.ctrlKey && event.key === "n") {
     //   handleMakeDir();
   } else if (event.ctrlKey && event.key === "h") {
-    alert("Help!");
+    // alert("Help!");
+    alertBlockKeyPress = true;
+    Swal.fire("Good job!", "You clicked the button!", "success").then((result) => {
+      alertBlockKeyPress = false;
+    });
   } else {
     return false;
   }

@@ -1,3 +1,4 @@
+const Swal = require("sweetalert2");
 let config;
 let fullPathText;
 let myColumns;
@@ -5,6 +6,7 @@ let sortTypes = ["default", "name", "time", "type", "size"];
 let delayedLaunch = false;
 let delayedLaunchActions = [];
 let ignoreFirstE = false;
+let alertBlockKeyPress = false;
 let widget;
 
 window.onload = function () {
