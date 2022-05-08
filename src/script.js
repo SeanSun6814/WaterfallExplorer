@@ -15,6 +15,10 @@ window.onload = function () {
   myColumns.innerHTML = "";
   fullPathText.addEventListener("wheel", onPathScroll);
   config = readConfigFile();
+  if (config === false) {
+    config = { paths: ["C:/"], defaultSortByIdx: 0 };
+    writeConfig();
+  }
   let rootPaths = getDirAndFiles("");
   let baseColumn = new Column(0, rootPaths, 0, onItemFocus, onItemSelect);
   widget = new Widget(baseColumn);

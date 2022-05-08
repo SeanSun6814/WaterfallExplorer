@@ -44,15 +44,23 @@ function getFileName(pathStr) {
 }
 
 function readConfigFile() {
+  let data;
   try {
-    let data = fs.readFileSync("./config.json", {
+    data = fs.readFileSync("./config.json", {
       encoding: "utf8",
       flag: "r",
     });
+  } catch (err) {
+    console.log("Error reading file:", err);
+    return false;
+  }
+  try {
     data = JSON.parse(data);
     return data;
   } catch (err) {
     console.log("Error parsing JSON string:", err);
+    playMessage("Error reading config: " + err, "error");
+    return true;
   }
 }
 

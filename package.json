@@ -7,14 +7,21 @@
   "version": "1.0.0",
   "author": "Sean",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "electron-builder"
   },
   "dependencies": {
     "fs-extra": "^10.1.0",
-    "sweetalert2": "^11.4.10",
-    "trash": "^8.1.0"
+    "sweetalert2": "^11.4.10"
   },
   "devDependencies": {
-    "electron": "18.0.4"
+    "electron": "18.0.4",
+    "electron-builder": "^23.0.3"
+  },
+  "build": {
+    "appId": "org.seansun.myfileexplorer",
+    "productName": "My File Explorer",
+    "target": "NSIS",
+    "nsis": {}
   }
 }

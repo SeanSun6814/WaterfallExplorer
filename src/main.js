@@ -29,12 +29,12 @@ function createWindow() {
     width: width,
     height: height,
     webPreferences: {
-      // preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
     },
   });
+  win.hide();
 
   setupMenu();
 
@@ -56,7 +56,6 @@ function createWindow() {
   win.setSize(width, height);
   win.center();
   win.loadFile("./src/index.html");
-  win.hide();
 }
 
 app.whenReady().then(() => {
@@ -98,7 +97,6 @@ ipcMain.on("log", (event, arg) => {
 
 ipcMain.on("run", (event, arg) => {
   console.log("running command: " + arg);
-  console.log("main app running worker thread");
   const worker = new Worker("./src/backgroundWorker.js", { workerData: arg });
   worker.on("message", (msg) => {
     console.log("main app detected worker thread message" + msg);
