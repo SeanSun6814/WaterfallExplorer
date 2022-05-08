@@ -20,6 +20,9 @@ window.onload = function () {
     writeConfig();
     window.onload();
     showWindow();
+    openWelcomeDialogue(() => {
+      openHelpDialogue();
+    });
     return;
   }
   setAutoLaunch(config.autoLaunch);

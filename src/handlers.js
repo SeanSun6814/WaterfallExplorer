@@ -305,14 +305,29 @@ function handleDeleteFile(operation) {
   });
 }
 
+function openWelcomeDialogue(callback) {
+  alertBlockKeyPress = true;
+  Swal.fire(
+    "<big>Welcome</big>",
+    "<big>My File Explorer has been successfully installed and is set to autorun on system startup.</big><br><br>" +
+      "<big>At My File Explorer, we strive to make finding files an easy and enjoyable experience.</big><br><br>" +
+      "<big>Here's a few hints to get you started...</big>",
+    "success"
+  ).then((result) => {
+    alertBlockKeyPress = false;
+    callback();
+  });
+}
+
 function openHelpDialogue() {
   alertBlockKeyPress = true;
   Swal.fire(
     "Help",
-    "<b>Help:</b> Ctrl + h<br>" +
+    "<b>Show this page:</b> Ctrl + h<br>" +
       "<b>Show app:</b> Alt + e<br>" +
       "<b>Hide app:</b> Esc<br>" +
       "<b>Quit app:</b> Ctrl + q<br>" +
+      "<b>Fullscreen:</b> Ctrl + f<br>" +
       "<b>Open:</b> Click, Space<br>" +
       "<b>Open in Chrome:</b> Enter<br>" +
       "<b>Open in VS Code:</b> Ctrl + Enter<br>" +
