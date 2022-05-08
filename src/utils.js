@@ -189,6 +189,11 @@ function refreshStatsElemLocation() {
   }
 }
 
+function setAutoLaunch(enabled) {
+  console.log("web app sending autolaunch enabled: " + enabled);
+  ipcRenderer.send("autolaunch", enabled);
+}
+
 function sendCommand(command) {
   console.log("web app sending command: " + command);
   ipcRenderer.send("run", command);

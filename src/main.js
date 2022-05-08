@@ -2,6 +2,7 @@ const electron = require("electron");
 const { app, BrowserWindow, globalShortcut, Menu, ipcMain } = require("electron");
 const path = require("path");
 const { Worker } = require("node:worker_threads");
+const AutoLaunch = require("auto-launch");
 
 let win = null;
 function createWindow() {
@@ -92,6 +93,19 @@ app.whenReady().then(() => {
 
 ipcMain.on("log", (event, arg) => {
   console.log(arg);
+  event.returnValue = "done";
+});
+
+ipcMain.on("autolaunch", (event, arg) => {
+  console.log("Setting autolaunch to: " + arg);
+  let autoLaunch = new AutoLaunch({
+    name: "MyFileExplorer",
+    path: app.getPath("exe"),
+  });
+  autoLaunch.isEnabled().then((isEnabled) => {
+    if (!isEnabled && arg) autoLaunch.enable();
+    else if (isEnabled && !arg) autoLaunch.disable();
+  });
   event.returnValue = "done";
 });
 

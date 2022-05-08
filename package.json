@@ -11,6 +11,7 @@
     "dist": "electron-builder"
   },
   "dependencies": {
+    "auto-launch": "^5.0.5",
     "fs-extra": "^10.1.0",
     "sweetalert2": "^11.4.10"
   },

@@ -170,11 +170,20 @@ function handleFunctionKeys(event) {
     //   handleMakeDir();
   } else if (event.ctrlKey && event.key === "h") {
     openHelpDialogue();
+  } else if (event.ctrlKey && event.key === "r") {
+    handleRunOnStartUp();
   } else {
     return false;
   }
   event.preventDefault();
   return true;
+}
+
+function handleRunOnStartUp() {
+  config.autoLaunch = !config.autoLaunch;
+  setAutoLaunch(config.autoLaunch);
+  writeConfig();
+  playMessage("Run on startup: " + (config.autoLaunch ? "enabled" : "disabled"), "success");
 }
 
 function handleMoveFile() {

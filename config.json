@@ -7,5 +7,6 @@
         "F:/",
         "C:/_Data/OneDrive/_CMU/_Links/"
     ],
-    "defaultSortByIdx": 0
+    "defaultSortByIdx": 0,
+    "autoLaunch": true
 }
