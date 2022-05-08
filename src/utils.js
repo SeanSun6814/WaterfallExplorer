@@ -190,7 +190,7 @@ function refreshStatsElemLocation() {
 }
 
 function sendCommand(command) {
-  console.log("web app sending command" + command);
+  console.log("web app sending command: " + command);
   ipcRenderer.send("run", command);
 }
 

@@ -160,12 +160,12 @@ function handleFunctionKeys(event) {
     widget.sortCurrentColumn(3);
   } else if (event.ctrlKey && event.key === "5") {
     widget.sortCurrentColumn(4);
-    // } else if (event.ctrlKey && event.key === "v") {
-    //   modifyFile("copy");
+  } else if (event.ctrlKey && event.key === "v") {
+    handleCopyFile();
   } else if ((event.ctrlKey && event.key === "m") || (event.ctrlKey && event.key === "n")) {
     handleMoveFile();
-    // } else if (event.ctrlKey && event.key === "Delete") {
-    //   modifyFile("delete");
+  } else if (event.ctrlKey && event.key === "Delete") {
+    handleDeleteFile();
     // } else if (event.ctrlKey && event.key === "n") {
     //   handleMakeDir();
   } else if (event.ctrlKey && event.key === "h") {
@@ -198,91 +198,95 @@ function handleMoveFile() {
   }).then((result) => {
     alertBlockKeyPress = false;
     if (result.isDenied) {
-      moveFile(source, dest);
-      if (lastElem.isFolder) {
-        widget.focusItem(lastElem.layerIdx, lastElem.idx);
+      if (moveFile(source, dest)) {
+        if (lastElem.isFolder) {
+          widget.focusItem(lastElem.layerIdx, lastElem.idx);
+        } else {
+          let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
+          let parentElemIdx = parentColumn.getFocusedIdx();
+          widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+        }
+        widget.removeItemByPath(source);
+        playMessage("Item moved", "success");
       } else {
-        let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
-        let parentElemIdx = parentColumn.getFocusedIdx();
-        widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+        playMessage("Move failed", "error");
       }
-      widget.removeItemByPath(source);
-      playMessage("Item moved", "success");
     } else {
-      playMessage("Cancelled", "error");
+      playMessage("Move cancelled", "info");
     }
   });
 }
 
 function handleCopyFile() {
-  let source = getClipboard().replace(/\/$/, "");
-  let dest = getFullPath(true);
-  let str = "Copy\n" + source + "\nto\n" + dest;
-  if (!confirm(str)) {
-    playMessage("Canceled");
-    return;
-  }
-  if (copyFile(source, dest)) {
-    playMessage("Copied");
-  } else {
-    playMessage("Failed");
-    return;
-  }
-  if (currentElement.isFolder) {
-    refreshCurrentElement();
-  } else {
-    refreshCurrentParent();
-  }
+  let source = sanitizePath(getClipboard()).replace(/\/$/, "");
+  let dest = widget.getFullDirectory();
+  let lastElem = widget.getLastFocusedItem();
+  let str = source + "<br>-><br>" + dest;
+
+  alertBlockKeyPress = true;
+  Swal.fire({
+    title: "Copy item?",
+    html: str,
+    icon: "warning",
+    showCancelButton: true,
+    showDenyButton: true,
+    showConfirmButton: false,
+    reverseButtons: true,
+    focusDeny: true,
+    denyButtonText: "Copy",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    alertBlockKeyPress = false;
+    if (result.isDenied) {
+      if (copyFile(source, dest)) {
+        if (lastElem.isFolder) {
+          widget.focusItem(lastElem.layerIdx, lastElem.idx);
+        } else {
+          let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
+          let parentElemIdx = parentColumn.getFocusedIdx();
+          widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+        }
+        playMessage("Item copied", "success");
+      } else {
+        playMessage("Copy failed", "error");
+      }
+    } else {
+      playMessage("Copy cancelled", "info");
+    }
+  });
 }
 
 function handleDeleteFile(operation) {
-  let source = getClipboard().replace(/\/$/, "");
-  let dest = getFullPath(true);
-  let path = getFullPath();
-  let str = "Delete\n" + path;
-  path = path.replace(/\/$/, "");
-  if (!confirm(str)) {
-    playMessage("Canceled");
-    return;
-  }
-  if (deleteFile(path)) {
-    playMessage("Deleted");
-  } else {
-    playMessage("Failed");
-    return;
-  }
-  refreshCurrentParent();
+  let path = widget.getFullPath().replace(/\/$/, "");
+  let lastElem = widget.getLastFocusedItem();
 
-  const swal = Swal.mixin({
-    customClass: {
-      confirmButton: "btn btn-success",
-      denyButton: "btn btn-danger",
-      cancelButton: "btn",
-    },
-    buttonsStyling: false,
-  });
-
-  swal
-    .fire({
-      title: "Delete item?",
-      text: "C:/_Data/",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Move to trash",
-      cancelButtonText: "Cancel",
-      denyButtonText: "Delete permanently",
-      showDenyButton: true,
-      reverseButtons: true,
-    })
-    .then((result) => {
-      if (result.isConfirmed) {
-        swal.fire("Move to trash!", "Your file has been deleted.", "success");
-      } else if (result.isDenied) {
-        swal.fire("Deleted permanently", "Your file has been deleted.", "success");
+  alertBlockKeyPress = true;
+  Swal.fire({
+    title: "Delete item?",
+    html: path,
+    icon: "warning",
+    showCancelButton: true,
+    showDenyButton: true,
+    showConfirmButton: false,
+    reverseButtons: true,
+    focusDeny: true,
+    denyButtonText: "Delete permanently",
+    cancelButtonText: "Cancel",
+  }).then((result) => {
+    alertBlockKeyPress = false;
+    if (result.isDenied) {
+      if (deleteFile(path)) {
+        let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
+        let parentElemIdx = parentColumn.getFocusedIdx();
+        widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+        playMessage("Item deleted", "success");
       } else {
-        swal.fire("Cancelled!", "ab.", "success");
+        playMessage("Delete failed", "error");
       }
-    });
+    } else {
+      playMessage("Delete cancelled", "info");
+    }
+  });
 }
 
 function openHelpDialogue() {
@@ -300,7 +304,8 @@ function openHelpDialogue() {
       "<b>Sort:</b> Ctrl + [s, 1, 2, 3, 4, 5]<br>" +
       "<b>Add to root paths:</b> Ctrl + c then Ctrl + a<br>" +
       "<b>Remove from root paths:</b> delete<br>" +
-      "<b>Goto:</b> [any char]",
+      "<b>Goto:</b> [any char]<br>" +
+      "<b>Auto scroll:</b> mouse hover over path",
     "question"
   ).then((result) => {
     alertBlockKeyPress = false;
