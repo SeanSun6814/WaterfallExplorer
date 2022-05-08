@@ -181,6 +181,14 @@ function updateStatElemPos(elem, statElem) {
   statElem.style.left = left + "px";
 }
 
+function refreshStatsElemLocation() {
+  let statElem = document.getElementById("statElem");
+  let lastFocusedItem = widget.getLastFocusedItem();
+  if (statElem != null && lastFocusedItem != null && !lastFocusedItem.isFolder) {
+    updateStatElemPos(lastFocusedItem.html, statElem);
+  }
+}
+
 function sendCommand(command) {
   console.log("web app sending command" + command);
   ipcRenderer.send("run", command);

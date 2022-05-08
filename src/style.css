@@ -173,11 +173,11 @@ body.swal2-shown>[aria-hidden="true"] {
 
 
 .colored-toast.swal2-icon-success {
-  background-color: #a5dc86 !important;
+  background-color: #18a00a !important;
 }
 
 .colored-toast.swal2-icon-error {
-  background-color: #f27474 !important;
+  background-color: #ec4345 !important;
 }
 
 .colored-toast.swal2-icon-warning {

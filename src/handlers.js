@@ -34,7 +34,7 @@ document.addEventListener("keyup", function onPress(event) {
 });
 
 function findWithName(targetChar) {
-  if (!isPrintableStr(targetChar)) return false;
+  if (!isPrintableStr(targetChar) || targetChar.length > 1) return false;
   let column = widget.getLastColumn();
   let lastElem = widget.getLastFocusedItem();
   if (lastElem != null) {

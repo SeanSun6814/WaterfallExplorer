@@ -296,7 +296,7 @@ class Widget {
 
   sortCurrentColumn(method) {
     let elem = this.getLastFocusedItem();
-    if (elem == null || elem.layerIdx === 0) return playMessage("No column to sort", "error");
+    if (elem == null || elem.layerIdx === 0) return playMessage("Nothing to sort", "error");
     let parentLayerIdx, currentMethod;
     parentLayerIdx = elem.layerIdx - 1;
     currentMethod = this.#data[elem.layerIdx].getSortedByIdx();

@@ -73,14 +73,6 @@ function onHorizontalScroll() {
   refreshStatsElemLocation();
 }
 
-function refreshStatsElemLocation() {
-  let statElem = document.getElementById("statElem");
-  let lastFocusedItem = widget.getLastFocusedItem();
-  if (statElem != null && lastFocusedItem != null && !lastFocusedItem.isFolder) {
-    updateStatElemPos(lastFocusedItem.html, statElem);
-  }
-}
-
 function onPathScroll(e) {
   let scroll = e.deltaX + e.deltaY;
   myColumns.scrollLeft += scroll;
