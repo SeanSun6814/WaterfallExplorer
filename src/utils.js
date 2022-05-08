@@ -30,7 +30,8 @@ function changeTheme() {
       "li {color: lightgrey;}" +
       "#fullPathText {background-color: #3c4042;color: lightgrey;}" +
       "[class*='liCount'] {color: lightgrey;}" +
-      ".liStats {color: lightgrey;}";
+      ".liStats {color: lightgrey;}" +
+      "@keyframes color-change { 0% {color: red; } 100% {color: lightgrey; }}";
   } else if (config.colorTheme === "light") {
     document.getElementById("colorTheme").innerHTML = "";
   }
