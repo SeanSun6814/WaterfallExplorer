@@ -100,16 +100,17 @@ function removeFromRootPaths() {
   }
 }
 
-function handleOpenWith(openFunction, msg) {
+function handleOpenWith(cmdStrFunction, msg) {
   let lastElem = widget.getLastFocusedItem();
   if (lastElem != null) {
     let path = widget.getFullPath();
     playClickedAnimation(lastElem.html);
     if (delayedLaunch) {
-      addDelayedLaunchAction(() => openFunction(path));
+      addDelayedLaunchAction(cmdStrFunction(path));
     } else {
       playMessage(msg);
-      openFunction(path);
+      console.log("path is: " + cmdStrFunction(path));
+      sendCommand(cmdStrFunction(path));
       setTimeout(() => {
         window.close();
       }, 1000);
@@ -158,11 +159,11 @@ function handleFunctionKeys(event) {
   } else if (!event.ctrlKey && event.key === "Delete") {
     removeFromRootPaths();
   } else if ((event.ctrlKey && event.key === "Enter") || (event.ctrlKey && event.key === "e")) {
-    handleOpenWith(openWithCode, "VS Code");
+    handleOpenWith(openWithCodeCommandStr, "VS Code");
   } else if (event.key === "Enter" || (event.ctrlKey && event.key === "b")) {
-    handleOpenWith(openWithBrowser, "Browser");
+    handleOpenWith(openWithBrowserCommandStr, "Browser");
   } else if (event.key === " " || (event.ctrlKey && event.key === "o")) {
-    handleOpenWith(openFile, "Opening");
+    handleOpenWith(openFileCommandStr, "Opening");
   } else if (event.ctrlKey && event.key === "s") {
     widget.sortCurrentColumn(-1);
   } else if (event.ctrlKey && event.key === "1") {

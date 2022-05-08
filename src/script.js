@@ -23,7 +23,7 @@ function onHover(item) {
 }
 
 function onClick(item) {
-  handleOpenWith(openFile, "Opening");
+  handleOpenWith(openFileCommandStr, "Opening");
 }
 
 function onWindowShow() {

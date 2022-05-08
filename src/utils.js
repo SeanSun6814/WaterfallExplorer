@@ -171,9 +171,12 @@ function isPrintableStr(str) {
 
 function launchDelayedLaunch() {
   playMessage(delayedLaunchActions.length + " action" + (delayedLaunchActions.length === 1 ? "" : "s"));
-  delayedLaunchActions.forEach((item) => {
-    item();
+  let cmdStr = "";
+  delayedLaunchActions.forEach((item, idx) => {
+    cmdStr += item;
+    if (idx != delayedLaunchActions.length - 1) cmdStr += " & ";
   });
+  sendCommand(cmdStr);
   delayedLaunch = false;
   delayedLaunchActions = [];
   setTimeout(() => {

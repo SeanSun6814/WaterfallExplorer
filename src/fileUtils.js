@@ -152,14 +152,14 @@ function getFileStats(path) {
   }
 }
 
-async function openFile(path) {
-  sendCommand('start "" "' + path + '"');
+function openFileCommandStr(path) {
+  return 'start "" "' + path + '"';
 }
 
-async function openWithCode(path) {
-  sendCommand('code "' + path + '"');
+function openWithCodeCommandStr(path) {
+  return 'code "' + path + '"';
 }
 
-async function openWithBrowser(path) {
-  sendCommand('start chrome "' + path + '"');
+function openWithBrowserCommandStr(path) {
+  return 'start chrome "' + path + '"';
 }
