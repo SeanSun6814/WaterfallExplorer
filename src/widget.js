@@ -61,6 +61,10 @@ class Column {
     return this.#data;
   }
 
+  getHtml() {
+    return this.#html;
+  }
+
   getSortedByIdx() {
     return this.#sortByIdx;
   }
@@ -204,6 +208,7 @@ class Column {
   #generateHTML() {
     let div = document.createElement("div");
     div.setAttribute("onscroll", "onScroll()");
+    div.setAttribute("onmouseenter", "onHoverWhiteSpace(" + this.#layerIdx + ")");
     div.classList.add("myUlDiv");
     let colUl = document.createElement("ul");
     colUl.classList.add("myUl");

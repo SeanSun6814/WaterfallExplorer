@@ -361,3 +361,201 @@ function openHelpDialogue() {
     alertBlockKeyPress = false;
   });
 }
+
+function attachContextMenu(html, isFile, isFolder, isRootColumn) {
+  if (myMenu != null) myMenu.delete();
+
+  let menuItems = [
+    {
+      content: "Open",
+      events: {
+        click: (e) => {
+          handleOpenWith(openFileCommandStr, "Opening");
+        },
+      },
+    },
+    {
+      content: "Open in Chrome",
+      events: {
+        click: (e) => {
+          handleOpenWith(openWithBrowserCommandStr, "Browser");
+        },
+      },
+    },
+    {
+      content: "Open in VS Code",
+      events: {
+        click: (e) => {
+          handleOpenWith(openWithCodeCommandStr, "VS Code");
+        },
+      },
+    },
+    {
+      content: "Copy",
+      divider: "top",
+      events: {
+        click: (e) => {
+          setClipboard(widget.getFullPath());
+          playMessage("Path copied to clipboard", "success");
+        },
+      },
+    },
+    {
+      content: "Paste here",
+      events: {
+        click: (e) => {
+          handleCopyFile();
+        },
+      },
+    },
+    {
+      content: "Move here",
+      events: {
+        click: (e) => {
+          handleMoveFile();
+        },
+      },
+    },
+    {
+      content: "Delete",
+      events: {
+        click: (e) => {
+          handleDeleteFile();
+        },
+      },
+    },
+  ];
+
+  if (isFile || isFolder) {
+    menuItems.push(
+      {
+        content: "Sort by default",
+        divider: "top",
+        events: {
+          click: (e) => {
+            widget.sortCurrentColumn(0);
+          },
+        },
+      },
+      {
+        content: "Sort by name",
+        events: {
+          click: (e) => {
+            widget.sortCurrentColumn(1);
+          },
+        },
+      },
+      {
+        content: "Sort by time",
+        events: {
+          click: (e) => {
+            widget.sortCurrentColumn(2);
+          },
+        },
+      },
+      {
+        content: "Sort by type",
+        events: {
+          click: (e) => {
+            widget.sortCurrentColumn(3);
+          },
+        },
+      },
+      {
+        content: "Sort by size",
+        events: {
+          click: (e) => {
+            widget.sortCurrentColumn(4);
+          },
+        },
+      }
+    );
+  }
+
+  if (isFolder) {
+    menuItems.push({
+      content: "Add to root paths",
+      divider: "top",
+      events: {
+        click: (e) => {
+          setClipboard(widget.getFullPath());
+          addToRootPaths();
+        },
+      },
+    });
+  }
+
+  if (isRootColumn) {
+    menuItems.push({
+      content: "Remove from root paths",
+      divider: "top",
+      events: {
+        click: (e) => {
+          removeFromRootPaths();
+        },
+      },
+    });
+  }
+
+  let menu = new ContextMenu({
+    targetNode: html,
+    mode: config.colorTheme,
+    menuItems,
+  });
+  console.log("attaching item menu");
+
+
+  menu.init();
+  myMenu = menu;
+  return menu;
+}
+
+function attachGeneralContextMenu(html) {
+  if (myMenu != null) myMenu.delete();
+
+  let menuItems = [
+    {
+      content: "Help",
+      events: {
+        click: (e) => {
+          openHelpDialogue();
+        },
+      },
+    },
+    {
+      content: "Settings",
+      divider: "top",
+      events: {
+        click: (e) => {
+          handleSettings();
+        },
+      },
+    },
+    {
+      content: "Change color theme",
+      events: {
+        click: (e) => {
+          handleColorTheme();
+        },
+      },
+    },
+    {
+      content: "Change run on startup",
+      events: {
+        click: (e) => {
+          handleRunOnStartUp();
+        },
+      },
+    },
+  ];
+
+  let menu = new ContextMenu({
+    targetNode: html,
+    mode: config.colorTheme,
+    menuItems,
+  });
+  console.log("attaching general menu");
+  menu.init();
+  myMenu = menu;
+  return menu;
+}
