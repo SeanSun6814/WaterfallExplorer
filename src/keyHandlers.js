@@ -195,7 +195,7 @@ function handleColorTheme() {
 
 function handleSettings() {
   playMessage("Opening settings file ", "success");
-  sendCommand(openFileCommandStr("./config.json"));
+  sendCommand(openFileCommandStr(appPath + "config.json"));
 }
 
 function handleRunOnStartUp() {

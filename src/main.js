@@ -4,6 +4,10 @@ const path = require("path");
 const { Worker } = require("node:worker_threads");
 const AutoLaunch = require("auto-launch");
 
+let appPath = sanitizePath(__dirname);
+appPath = appPath.substring(0, appPath.length - 4);
+console.log("App path: " + appPath);
+
 let win = null;
 function createWindow() {
   let screenElectron = electron.screen;
@@ -117,7 +121,7 @@ ipcMain.on("autolaunch", (event, arg) => {
 
 ipcMain.on("run", (event, arg) => {
   console.log("running command: " + arg);
-  const worker = new Worker("./src/backgroundWorker.js", { workerData: arg });
+  const worker = new Worker("src/backgroundWorker.js", { workerData: arg });
 });
 
 function setupMenu() {
@@ -147,4 +151,13 @@ function setupMenu() {
       },
     ])
   );
+}
+
+function sanitizePath(str) {
+  str = str.trim();
+  str = str.replaceAll("\\", "/");
+  str = str.replaceAll('"', "");
+  str = str.replaceAll(/\/$/g, "");
+  str += "/";
+  return str;
 }

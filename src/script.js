@@ -8,8 +8,11 @@ let delayedLaunchActions = [];
 let ignoreFirstE = false;
 let alertBlockKeyPress = false;
 let widget;
+let appPath;
 
 window.onload = function () {
+  appPath = sanitizePath(__dirname);
+  appPath = appPath.substring(0, appPath.length - 4);
   myColumns = document.getElementById("myColumns");
   fullPathText = document.getElementById("fullPathText");
   myColumns.innerHTML = "";

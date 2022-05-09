@@ -46,7 +46,7 @@ function getFileName(pathStr) {
 function readConfigFile() {
   let data;
   try {
-    data = fs.readFileSync("./config.json", {
+    data = fs.readFileSync(appPath + "config.json", {
       encoding: "utf8",
       flag: "r",
     });
@@ -66,7 +66,7 @@ function readConfigFile() {
 
 function writeConfig() {
   let json = JSON.stringify(config);
-  fs.writeFileSync("./config.json", json);
+  fs.writeFileSync(appPath + "config.json", json);
 }
 
 function getDirAndFiles(source) {
