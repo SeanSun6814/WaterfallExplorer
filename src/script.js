@@ -12,8 +12,7 @@ let appPath;
 let myMenu;
 
 window.onload = function () {
-  appPath = sanitizePath(__dirname);
-  appPath = appPath.substring(0, appPath.length - 4);
+  initAppPath();
   myColumns = document.getElementById("myColumns");
   fullPathText = document.getElementById("fullPathText");
   myColumns.innerHTML = "";
@@ -112,4 +111,14 @@ function onPathHover() {
 function onHoverWhiteSpace(layerIdx) {
   let html = widget.getColumn(layerIdx).getHtml();
   attachGeneralContextMenu(html);
+}
+
+function initAppPath() {
+  appPath = sanitizePath(__dirname);
+  let idx = appPath.lastIndexOf("app.asar");
+  if (idx !== -1) {
+    appPath = appPath.substring(0, idx);
+  } else {
+    appPath = appPath.substring(0, appPath.length - 4);
+  }
 }
