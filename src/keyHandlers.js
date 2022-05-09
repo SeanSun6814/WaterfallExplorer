@@ -347,6 +347,9 @@ function openHelpDialogue() {
       "<b>Sort:</b> Ctrl + [s, 1, 2, 3, 4, 5]<br>" +
       "<b>Add to root paths:</b> Ctrl + c then Ctrl + a<br>" +
       "<b>Remove from root paths:</b> delete<br>" +
+      "<b>Copy file:</b> Ctrl + c then Ctrl + v<br>" +
+      "<b>Move file:</b> Ctrl + c then Ctrl + m<br>" +
+      "<b>Delete file:</b> Ctrl + delete <br>" +
       "<b>Goto:</b> [any char]<br>" +
       "<b>Auto scroll:</b> mouse hover over path<br>" +
       "<b>Settings:</b> Ctrl + ,<br>" +
