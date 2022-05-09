@@ -351,6 +351,7 @@ function openHelpDialogue() {
       "<b>Move file:</b> Ctrl + c then Ctrl + m<br>" +
       "<b>Delete file:</b> Ctrl + delete <br>" +
       "<b>Goto:</b> [any char]<br>" +
+      "<b>Delayed open mode:</b> Ctrl + d<br>" +
       "<b>Auto scroll:</b> mouse hover over path<br>" +
       "<b>Settings:</b> Ctrl + ,<br>" +
       "<b>Change color theme:</b> Ctrl + t<br>" +
