@@ -1,12 +1,18 @@
 <h1 align="center">Waterfall Explorer: <i>hover to navigate</i></h1>
 
-<a align="center" href="https://imgur.com/bDFPcEM"><img src="https://i.imgur.com/bDFPcEM.gif" title="source: imgur.com" /></a>
-
 **Waterfall Explorer** is a tree-style file management system that is _designed_ to navigate all your large and deep folders systems.
 
 Just hover your mouse over the folders, and you'll flow down the file tree with ease.
 
 Once you found the file you want, click to open, right click for more options, or use hotkeys for extra functionalities.
+
+<a href="https://imgur.com/FP0ROfk"><img src="https://i.imgur.com/FP0ROfk.gif" title="source: imgur.com" /></a>
+
+<a href="https://imgur.com/n8pFq9v"><img src="https://i.imgur.com/n8pFq9v.gif" title="source: imgur.com" /></a>
+
+<a href="https://imgur.com/sPE6YIE"><img src="https://i.imgur.com/sPE6YIE.gif" title="source: imgur.com" /></a>
+
+<a href="https://imgur.com/sGXeYkN"><img src="https://i.imgur.com/sGXeYkN.gif" title="source: imgur.com" /></a>
 
 # Quick start
 
