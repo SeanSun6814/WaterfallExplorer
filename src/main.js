@@ -121,7 +121,7 @@ ipcMain.on("autolaunch", (event, arg) => {
 
 ipcMain.on("run", (event, arg) => {
   console.log("running command: " + arg);
-  const worker = new Worker("src/backgroundWorker.js", { workerData: arg });
+  const worker = new Worker(appPath + "src/backgroundWorker.js", { workerData: arg });
 });
 
 function setupMenu() {

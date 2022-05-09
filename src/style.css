@@ -16,7 +16,7 @@ body {
   width: 100%;
 }
 
-.myUl{
+.myUlDiv{
   height:calc(100% - 100px); 
   width:auto;
   overflow:hidden; 
@@ -26,7 +26,7 @@ body {
   display: inline-block;
 }
 
-ul {
+.myUl {
   list-style-type: none;
   width: fit-content;
   height:fit-content;
@@ -39,7 +39,7 @@ div::-webkit-scrollbar {
   display: none;
 }
 
-li {
+.myLi {
   padding: 10px;
   border: solid;
   border-radius: 5px;

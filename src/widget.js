@@ -28,20 +28,9 @@ class Item {
   }
 
   generateHTML() {
-    let li = document.createElement("li");
-    li.innerText = this.name;
-    let argStr = "widget.getItemByIdx(" + this.layerIdx + "," + this.idx + ")";
-    li.setAttribute("onmouseenter", "onHover(" + argStr + ")");
-    li.setAttribute("onclick", "onClick(" + argStr + ")");
-    li.setAttribute("style", "background-color:" + getRgb(this.layerIdx, this.idx) + ";");
-    li.setAttribute("id", this.id);
-    li.setAttribute("idx", this.idx);
-    if (this.isFolder) {
-      li.classList.add("liFolder");
-    } else {
-      li.classList.add("liFile");
-    }
-    this.html = li;
+    this.html = document.createElement("li");
+    this.html.classList.add("myLi");
+    this.updateSettings();
     return this.html;
   }
 }
@@ -215,8 +204,9 @@ class Column {
   #generateHTML() {
     let div = document.createElement("div");
     div.setAttribute("onscroll", "onScroll()");
-    div.classList.add("myUl");
+    div.classList.add("myUlDiv");
     let colUl = document.createElement("ul");
+    colUl.classList.add("myUl");
     colUl.setAttribute("id", "column" + this.#layerIdx);
     this.#data.forEach((item) => {
       colUl.appendChild(item.html);
@@ -228,7 +218,7 @@ class Column {
 
   #getCountHTML() {
     let li = document.createElement("li");
-
+    li.classList.add("myLi");
     li.setAttribute("id", "liCount-" + this.#layerIdx);
     li.classList.add("liCount"); // todo: handle events better
     li.innerHTML = this.#generateCountStr();
