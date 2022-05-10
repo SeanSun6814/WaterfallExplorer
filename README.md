@@ -20,7 +20,9 @@ This app is designed with Electron. It currently only supports `Windows`, but pl
 
 To get started, [download lastest installer here](https://github.com/SeanSun6814/WaterfallExplorer/tree/main/builds). Run the installer. Enjoy!
 
-The app is normally hidden in the background. Use the global hotkey [`Alt + E`] to bring it up!
+_The app is normally hidden in the background. Use the global hotkey [`Alt + E`] to bring it up!_
+
+To add a folder to the leftmost "shortcuts column", first copy the path to clipboard. Then hit `Ctrl + A` to add. See below for more details.
 
 For help, hit `Ctrl + H`. Alternatively, use the context menu by right clicking on empty space.
 
