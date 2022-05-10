@@ -6,6 +6,7 @@ let sortTypes = ["default", "name", "time", "type", "size"];
 let delayedLaunch = false;
 let delayedLaunchActions = [];
 let ignoreFirstE = false;
+let ignoreFirstEnter = false;
 let alertBlockKeyPress = false;
 let widget;
 let appPath;

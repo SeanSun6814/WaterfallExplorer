@@ -3,6 +3,9 @@ document.addEventListener("keydown", function onPress(event) {
     return;
   } else if (event.ctrlKey && event.key === "a") {
     event.preventDefault();
+  } else if (event.ctrlKey && event.key === "r") {
+    event.preventDefault();
+    event.stopPropagation();
   }
 });
 
@@ -13,9 +16,16 @@ document.addEventListener("keyup", function onPress(event) {
     ignoreFirstE = false;
     event.preventDefault();
     return;
+  } else if (ignoreFirstEnter && event.key === "Enter") {
+    ignoreFirstEnter = false;
+    event.preventDefault();
+    return;
   } else if (event.key === "Alt" || event.altKey) {
     event.preventDefault();
     return;
+  } else if (event.ctrlKey && event.key === "r") {
+    event.preventDefault();
+    event.stopPropagation();
   }
   if (!handleFunctionKeys(event)) {
     if (
@@ -143,11 +153,11 @@ function handleFunctionKeys(event) {
   } else if (!event.ctrlKey && event.key === "Delete") {
     removeFromRootPaths();
   } else if (event.ctrlKey && event.key === "Enter") {
-    handleOpenWith(openWithCodeCommandStr, "VS Code");
+    handleOpenWith(openWithCodeCommandStr, "Open in VS Code");
   } else if (event.key === "Enter") {
-    handleOpenWith(openWithBrowserCommandStr, "Browser");
+    handleOpenWith(openWithBrowserCommandStr, "Open in Chrome");
   } else if (event.key === " ") {
-    handleOpenWith(openFileCommandStr, "Opening");
+    handleOpenWith(openFileCommandStr, "Open item");
   } else if (event.ctrlKey && event.key === "s") {
     widget.sortCurrentColumn(-1);
   } else if (event.ctrlKey && event.key === "1") {
@@ -168,9 +178,11 @@ function handleFunctionKeys(event) {
     handleDeleteFile();
     // } else if (event.ctrlKey && event.key === "n") {
     //   handleMakeDir();
+  } else if (event.ctrlKey && event.key === "r") {
+    handleRenameFile();
   } else if (event.ctrlKey && event.key === "h") {
     openHelpDialogue();
-  } else if (event.ctrlKey && event.key === "r") {
+  } else if (event.ctrlKey && event.key === "l") {
     handleRunOnStartUp();
   } else if (event.ctrlKey && event.key === "t") {
     handleColorTheme();
@@ -205,6 +217,54 @@ function handleRunOnStartUp() {
   playMessage("Run on startup: " + (config.autoLaunch ? "enabled" : "disabled"), "success");
 }
 
+function handleRenameFile() {
+  let lastElem = widget.getLastFocusedItem();
+  let parentPath = widget.getFullPathUpTo(lastElem.layerIdx - 1);
+
+  alertBlockKeyPress = true;
+  Swal.fire({
+    title: "Rename item?",
+    input: "text",
+    icon: "warning",
+    inputLabel: parentPath + lastElem.name,
+    inputValue: lastElem.name,
+    showCancelButton: true,
+    reverseButtons: true,
+    confirmButtonText: "Rename",
+    confirmButtonColor: "#c6323b",
+    didOpen: (swalElem) => {
+      swalSetIgnoreEnter(swalElem);
+      let input = document.getElementById("swal2-input");
+      input.focus();
+      if (lastElem.isFolder) {
+        input.setSelectionRange(0, lastElem.name.lastIndexOf("/"));
+      } else {
+        input.setSelectionRange(0, lastElem.name.lastIndexOf("."));
+      }
+    },
+    preConfirm: (value) => {
+      if (value && value !== "") {
+        if (renameFile(parentPath + lastElem.name, parentPath + value)) {
+          let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
+          let parentElemIdx = parentColumn.getFocusedIdx();
+          widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+          playMessage("Item renamed", "success");
+        } else {
+          playMessage("Rename failed", "error");
+        }
+      } else {
+        playMessage("Rename cancelled", "info");
+      }
+    },
+  }).then((result) => {
+    alertBlockKeyPress = false;
+    if (!result.isConfirmed) {
+      playMessage("Rename cancelled", "info");
+    }
+  });
+  fixSweetAlertAlignmentBug();
+}
+
 function handleMoveFile() {
   let source = sanitizePath(getClipboard()).replace(/\/$/, "");
   let dest = widget.getFullDirectory();
@@ -223,6 +283,7 @@ function handleMoveFile() {
     focusDeny: true,
     denyButtonText: "Move",
     cancelButtonText: "Cancel",
+    didOpen: swalSetIgnoreEnter,
   }).then((result) => {
     alertBlockKeyPress = false;
     if (result.isDenied) {
@@ -243,6 +304,7 @@ function handleMoveFile() {
       playMessage("Move cancelled", "info");
     }
   });
+  fixSweetAlertAlignmentBug();
 }
 
 function handleCopyFile() {
@@ -263,6 +325,7 @@ function handleCopyFile() {
     focusDeny: true,
     denyButtonText: "Copy",
     cancelButtonText: "Cancel",
+    didOpen: swalSetIgnoreEnter,
   }).then((result) => {
     alertBlockKeyPress = false;
     if (result.isDenied) {
@@ -282,6 +345,7 @@ function handleCopyFile() {
       playMessage("Copy cancelled", "info");
     }
   });
+  fixSweetAlertAlignmentBug();
 }
 
 function handleDeleteFile(operation) {
@@ -300,6 +364,7 @@ function handleDeleteFile(operation) {
     focusDeny: true,
     denyButtonText: "Delete permanently",
     cancelButtonText: "Cancel",
+    didOpen: swalSetIgnoreEnter,
   }).then((result) => {
     alertBlockKeyPress = false;
     if (result.isDenied) {
@@ -315,6 +380,7 @@ function handleDeleteFile(operation) {
       playMessage("Delete cancelled", "info");
     }
   });
+  fixSweetAlertAlignmentBug();
 }
 
 function openWelcomeDialogue(callback) {
@@ -329,37 +395,40 @@ function openWelcomeDialogue(callback) {
     alertBlockKeyPress = false;
     callback();
   });
+  fixSweetAlertAlignmentBug();
 }
 
 function openHelpDialogue() {
   alertBlockKeyPress = true;
   Swal.fire(
     "Help",
-    "<b>Show this page:</b> Ctrl + h<br>" +
-      "<b>Show app:</b> Alt + e<br>" +
+    "<b>Show this page:</b> Ctrl + H<br>" +
+      "<b>Show app:</b> Alt + E<br>" +
       "<b>Hide app:</b> Esc<br>" +
-      "<b>Quit app:</b> Ctrl + q<br>" +
-      "<b>Fullscreen:</b> Ctrl + f<br>" +
+      "<b>Quit app:</b> Ctrl + Q<br>" +
+      "<b>Fullscreen:</b> Ctrl + F<br>" +
       "<b>Open:</b> Click, Space<br>" +
       "<b>Open in Chrome:</b> Enter<br>" +
       "<b>Open in VS Code:</b> Ctrl + Enter<br>" +
-      "<b>Copy path:</b> Ctrl + c<br>" +
-      "<b>Sort:</b> Ctrl + [s, 1, 2, 3, 4, 5]<br>" +
-      "<b>Add to root paths:</b> Ctrl + c then Ctrl + a<br>" +
-      "<b>Remove from root paths:</b> delete<br>" +
-      "<b>Copy file:</b> Ctrl + c then Ctrl + v<br>" +
-      "<b>Move file:</b> Ctrl + c then Ctrl + m<br>" +
-      "<b>Delete file:</b> Ctrl + delete <br>" +
+      "<b>Copy path:</b> Ctrl + C<br>" +
+      "<b>Sort:</b> Ctrl + [S, 1, 2, 3, 4, 5]<br>" +
+      "<b>Add to root paths:</b> Ctrl + C then Ctrl + A<br>" +
+      "<b>Remove from root paths:</b> Delete<br>" +
+      "<b>Copy file:</b> Ctrl + C then Ctrl + V<br>" +
+      "<b>Move file:</b> Ctrl + C then Ctrl + M<br>" +
+      "<b>Rename file:</b> Ctrl + R<br>" +
+      "<b>Delete file:</b> Ctrl + Delete <br>" +
       "<b>Goto:</b> [any char]<br>" +
-      "<b>Delayed open mode:</b> Ctrl + d<br>" +
+      "<b>Delayed open mode:</b> Ctrl + D<br>" +
       "<b>Auto scroll:</b> mouse hover over path<br>" +
       "<b>Settings:</b> Ctrl + ,<br>" +
-      "<b>Change color theme:</b> Ctrl + t<br>" +
-      "<b>Run on startup:</b> Ctrl + r",
+      "<b>Change color theme:</b> Ctrl + T<br>" +
+      "<b>Run on startup:</b> Ctrl + L",
     "question"
   ).then((result) => {
     alertBlockKeyPress = false;
   });
+  fixSweetAlertAlignmentBug();
 }
 
 function attachContextMenu(html, isFile, isFolder, isRootColumn) {
@@ -416,18 +485,26 @@ function attachContextMenu(html, isFile, isFolder, isRootColumn) {
         },
       },
     },
-    {
-      content: "Delete",
-      events: {
-        click: (e) => {
-          handleDeleteFile();
-        },
-      },
-    },
   ];
 
   if (isFile || isFolder) {
     menuItems.push(
+      {
+        content: "Rename",
+        events: {
+          click: (e) => {
+            handleRenameFile();
+          },
+        },
+      },
+      {
+        content: "Delete",
+        events: {
+          click: (e) => {
+            handleDeleteFile();
+          },
+        },
+      },
       {
         content: "Sort by default",
         divider: "top",
@@ -502,7 +579,6 @@ function attachContextMenu(html, isFile, isFolder, isRootColumn) {
     mode: config.colorTheme,
     menuItems,
   });
-  console.log("attaching item menu");
 
   menu.init();
   myMenu = menu;
@@ -553,8 +629,19 @@ function attachGeneralContextMenu(html) {
     mode: config.colorTheme,
     menuItems,
   });
-  console.log("attaching general menu");
   menu.init();
   myMenu = menu;
   return menu;
 }
+
+function fixSweetAlertAlignmentBug() {
+  document.body.classList.remove("swal2-height-auto");
+}
+
+let swalSetIgnoreEnter = (swalElem) => {
+  swalElem.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      ignoreFirstEnter = true;
+    }
+  });
+};

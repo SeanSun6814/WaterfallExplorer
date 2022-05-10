@@ -287,8 +287,12 @@ class Widget {
   }
 
   getFullPath() {
+    return this.getFullPathUpTo(this.#data.length - 1);
+  }
+
+  getFullPathUpTo(layerIdx) {
     let res = "";
-    for (let i = 0; i < this.#data.length; i++) {
+    for (let i = 0; i <= layerIdx; i++) {
       let focusedIdx = this.#data[i].getFocusedIdx();
       if (focusedIdx === -1) continue;
       let item = this.#data[i].getItemByIdx(focusedIdx);

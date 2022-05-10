@@ -3,6 +3,15 @@ const { readdirSync } = fs;
 const fse = require("fs-extra");
 const path = require("path");
 
+function renameFile(oldPath, newPath) {
+  try {
+    fs.renameSync(oldPath, newPath);
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
 function makeDir(path, dirName) {
   fse.ensureDirSync(path + dirName);
 }
