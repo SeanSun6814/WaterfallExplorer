@@ -18,7 +18,7 @@ Once you found the file you want, click to open, right click for more options, o
 
 This app is designed with Electron. It currently only supports `Windows`, but plans to add support for `Mac` and `Linux`.
 
-To get started, download lastest installer here. Run the installer. Enjoy!
+To get started, [download lastest installer here](https://github.com/SeanSun6814/WaterfallExplorer/tree/main/builds). Run the installer. Enjoy!
 
 The app is normally hidden in the background. Use the global hotkey [`Alt + E`] to bring it up!
 
