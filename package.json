@@ -4,11 +4,12 @@
   "description": "My Electron application description",
   "keywords": [],
   "main": "./src/main.js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "Sean",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "dist:linux": "electron-builder --linux"
   },
   "dependencies": {
     "auto-launch": "^5.0.5",
@@ -22,8 +23,9 @@
   "build": {
     "appId": "org.seansun.waterfallexplorer",
     "productName": "Waterfall Explorer",
-    "target": "NSIS",
-    "nsis": {},
+    "target": [
+      "deb"
+    ],
     "extraFiles": [
       {
         "from": "./src/backgroundWorker.js",

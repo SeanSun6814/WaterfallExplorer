@@ -169,8 +169,16 @@ function getFileStats(path) {
   }
 }
 
-function openFileCommandStr(path) {
-  return 'start "" "' + path + '"';
+function openFileCommandStr(path, isFolder) {
+  if (platform === "linux") {
+    if (isFolder) {
+      return 'cd "' + path + '" && gnome-terminal';
+    } else {
+      return 'xdg-open "' + path + '"';
+    }
+  } else {
+    return 'start "" "' + path + '"';
+  }
 }
 
 function openWithCodeCommandStr(path) {
@@ -178,5 +186,9 @@ function openWithCodeCommandStr(path) {
 }
 
 function openWithBrowserCommandStr(path) {
-  return 'start chrome "' + path + '"';
+  if (platform === "linux") {
+    return 'google-chrome "' + path + '"';
+  } else {
+    return 'start chrome "' + path + '"';
+  }
 }

@@ -124,7 +124,7 @@ function handleOpenWith(cmdStrFunction, msg) {
     } else {
       playMessage(msg, "success");
       console.log("path is: " + cmdStrFunction(path));
-      sendCommand(cmdStrFunction(path));
+      sendCommand(cmdStrFunction(path, lastElem.isFolder));
       setTimeout(() => {
         window.close();
       }, 1000);
@@ -207,7 +207,7 @@ function handleColorTheme() {
 
 function handleSettings() {
   playMessage("Opening settings file ", "success");
-  sendCommand(openFileCommandStr(appPath + "config.json"));
+  sendCommand(openFileCommandStr(appPath + "config.json", false));
 }
 
 function handleRunOnStartUp() {

@@ -15,12 +15,21 @@ function setClipboard(str) {
 }
 
 function createDefaultConfig() {
-  return {
-    paths: ["C:/"],
-    autoLaunch: true,
-    colorTheme: "light",
-    defaultSortByIdx: 0,
-  };
+  if (platform === "linux") {
+    return {
+      paths: ["/"],
+      autoLaunch: true,
+      colorTheme: "light",
+      defaultSortByIdx: 0,
+    };
+  } else {
+    return {
+      paths: ["C:/"],
+      autoLaunch: true,
+      colorTheme: "light",
+      defaultSortByIdx: 0,
+    };
+  }
 }
 
 function changeTheme() {
@@ -233,6 +242,14 @@ function setAutoLaunch(enabled) {
 function sendCommand(command) {
   console.log("web app sending command: " + command);
   ipcRenderer.send("run", command);
+}
+
+function sendLog(msg) {
+  return ipcRenderer.sendSync("log", msg);
+}
+
+function getPlatform() {
+  return ipcRenderer.sendSync("platform", "");
 }
 
 function isPrintableStr(str) {

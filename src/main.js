@@ -3,6 +3,7 @@ const { app, BrowserWindow, globalShortcut, Menu, ipcMain } = require("electron"
 const path = require("path");
 const { Worker } = require("node:worker_threads");
 const AutoLaunch = require("auto-launch");
+const os = require("os");
 
 if (!app.requestSingleInstanceLock()) {
   console.log("There is already an existing instance of app, exiting...");
@@ -11,6 +12,9 @@ if (!app.requestSingleInstanceLock()) {
   let appPath = sanitizePath(__dirname);
   appPath = appPath.substring(0, appPath.length - 4);
   console.log("App path: " + appPath);
+
+  let platform = os.platform();
+  console.log(platform);
 
   let win = null;
   function createWindow() {
@@ -44,7 +48,7 @@ if (!app.requestSingleInstanceLock()) {
         enableRemoteModule: true,
       },
     });
-    win.hide();
+    if (platform !== "linux") win.hide();
 
     setupMenu();
 
@@ -66,6 +70,7 @@ if (!app.requestSingleInstanceLock()) {
     win.setSize(width, height);
     win.center();
     win.loadFile("./src/index.html");
+    // win.webContents.openDevTools();
   }
 
   app.whenReady().then(() => {
@@ -106,7 +111,7 @@ if (!app.requestSingleInstanceLock()) {
   });
 
   ipcMain.on("log", (event, arg) => {
-    console.log(arg);
+    console.log("INFO: " + arg);
     event.returnValue = "done";
   });
 
@@ -132,6 +137,10 @@ if (!app.requestSingleInstanceLock()) {
   ipcMain.on("run", (event, arg) => {
     console.log("running command: " + arg);
     const worker = new Worker(appPath + "src/backgroundWorker.js", { workerData: arg });
+  });
+
+  ipcMain.on("platform", (event, arg) => {
+    event.returnValue = platform;
   });
 
   function setupMenu() {

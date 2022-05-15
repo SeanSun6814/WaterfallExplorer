@@ -11,8 +11,11 @@ let alertBlockKeyPress = false;
 let widget;
 let appPath;
 let myMenu;
+let platform;
 
 window.onload = function () {
+  platform = getPlatform();
+  console.log("Platform is " + platform);
   initAppPath();
   myColumns = document.getElementById("myColumns");
   fullPathText = document.getElementById("fullPathText");
