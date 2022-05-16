@@ -24,6 +24,7 @@
     "appId": "org.seansun.waterfallexplorer",
     "productName": "Waterfall Explorer",
     "target": [
+      "NSIS",
       "deb"
     ],
     "extraFiles": [

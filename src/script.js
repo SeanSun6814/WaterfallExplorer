@@ -15,7 +15,6 @@ let platform;
 
 window.onload = function () {
   platform = getPlatform();
-  console.log("Platform is " + platform);
   initAppPath();
   myColumns = document.getElementById("myColumns");
   fullPathText = document.getElementById("fullPathText");

@@ -170,25 +170,17 @@ function getFileStats(path) {
 }
 
 function openFileCommandStr(path, isFolder) {
-  if (platform === "linux") {
-    if (isFolder) {
-      return 'cd "' + path + '" && gnome-terminal';
-    } else {
-      return 'xdg-open "' + path + '"';
-    }
+  if (isFolder) {
+    return config.launchSettings.openFolder.replace(/(\$\{PATH\})/, path);
   } else {
-    return 'start "" "' + path + '"';
+    return config.launchSettings.openFile.replace(/(\$\{PATH\})/, path);
   }
 }
 
 function openWithCodeCommandStr(path) {
-  return 'code "' + path + '"';
+  return config.launchSettings.openInVSCode.replace(/(\$\{PATH\})/, path);
 }
 
 function openWithBrowserCommandStr(path) {
-  if (platform === "linux") {
-    return 'google-chrome "' + path + '"';
-  } else {
-    return 'start chrome "' + path + '"';
-  }
+  return config.launchSettings.openInChrome.replace(/(\$\{PATH\})/, path);
 }

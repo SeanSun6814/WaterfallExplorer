@@ -1,1 +1,15 @@
-{"paths":["/","/home/"],"autoLaunch":true,"colorTheme":"light","defaultSortByIdx":0}
+{
+    "paths": [
+        "C:/",
+        "C:/_Data/OneDrive/"
+    ],
+    "autoLaunch": true,
+    "colorTheme": "light",
+    "defaultSortByIdx": 0,
+    "launchSettings": {
+        "openFile": "start \"\" \"${PATH}\"",
+        "openFolder": "start \"\" \"${PATH}\"",
+        "openInChrome": "start chrome \"${PATH}\"",
+        "openInVSCode": "code \"${PATH}\""
+    }
+}

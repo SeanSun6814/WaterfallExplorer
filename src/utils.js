@@ -21,6 +21,12 @@ function createDefaultConfig() {
       autoLaunch: true,
       colorTheme: "light",
       defaultSortByIdx: 0,
+      launchSettings: {
+        openFile: 'xdg-open "${PATH}"',
+        openFolder: 'cd "${PATH}" && gnome-terminal',
+        openInChrome: 'google-chrome "${PATH}"',
+        openInVSCode: 'code "${PATH}"',
+      },
     };
   } else {
     return {
@@ -28,6 +34,12 @@ function createDefaultConfig() {
       autoLaunch: true,
       colorTheme: "light",
       defaultSortByIdx: 0,
+      launchSettings: {
+        openFile: 'start "" "${PATH}"',
+        openFolder: 'start "" "${PATH}"',
+        openInChrome: 'start chrome "${PATH}"',
+        openInVSCode: 'code "${PATH}"',
+      },
     };
   }
 }
@@ -249,7 +261,9 @@ function sendLog(msg) {
 }
 
 function getPlatform() {
-  return ipcRenderer.sendSync("platform", "");
+  let result = ipcRenderer.sendSync("platform", "");
+  console.log("Platform is " + result);
+  return result;
 }
 
 function isPrintableStr(str) {
