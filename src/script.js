@@ -31,6 +31,9 @@ window.onload = function () {
       openHelpDialogue();
     });
     return;
+  } else if (config === true) {
+    openConfigErrorDialogue();
+    return;
   }
   changeTheme();
   setAutoLaunch(config.autoLaunch);

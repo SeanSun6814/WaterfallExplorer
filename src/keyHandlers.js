@@ -398,6 +398,21 @@ function openWelcomeDialogue(callback) {
   fixSweetAlertAlignmentBug();
 }
 
+function openConfigErrorDialogue() {
+  alertBlockKeyPress = true;
+  Swal.fire(
+    "<big>Error in config file</big>",
+    "<big>Oops... There's an error in the config file.</big><br><br>" +
+      "<big>Please fix it and come back again.</big><br><br>" +
+      "<big>For a fresh start, delete the config file.</big>",
+    "error"
+  ).then((result) => {
+    alertBlockKeyPress = false;
+    quitApp();
+  });
+  fixSweetAlertAlignmentBug();
+}
+
 function openHelpDialogue() {
   alertBlockKeyPress = true;
   Swal.fire(
@@ -619,6 +634,15 @@ function attachGeneralContextMenu(html) {
       events: {
         click: (e) => {
           handleRunOnStartUp();
+        },
+      },
+    },
+    {
+      content: "Quit",
+      divider: "top",
+      events: {
+        click: (e) => {
+          quitApp();
         },
       },
     },

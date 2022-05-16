@@ -143,6 +143,11 @@ if (!app.requestSingleInstanceLock()) {
     event.returnValue = platform;
   });
 
+  ipcMain.on("quit", (event, arg) => {
+    console.log("Quit signal received.");
+    app.quit();
+  });
+
   function setupMenu() {
     Menu.setApplicationMenu(
       Menu.buildFromTemplate([

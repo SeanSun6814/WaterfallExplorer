@@ -14,36 +14,6 @@ function setClipboard(str) {
   clipboard.writeText(str);
 }
 
-function createDefaultConfig() {
-  if (platform === "linux") {
-    return {
-      paths: ["/"],
-      autoLaunch: true,
-      colorTheme: "light",
-      defaultSortByIdx: 0,
-      launchSettings: {
-        openFile: 'xdg-open "${PATH}"',
-        openFolder: 'cd "${PATH}" && gnome-terminal',
-        openInChrome: 'google-chrome "${PATH}"',
-        openInVSCode: 'code "${PATH}"',
-      },
-    };
-  } else {
-    return {
-      paths: ["C:/"],
-      autoLaunch: true,
-      colorTheme: "light",
-      defaultSortByIdx: 0,
-      launchSettings: {
-        openFile: 'start "" "${PATH}"',
-        openFolder: 'start "" "${PATH}"',
-        openInChrome: 'start chrome "${PATH}"',
-        openInVSCode: 'code "${PATH}"',
-      },
-    };
-  }
-}
-
 function changeTheme() {
   if (config.colorTheme === "dark") {
     document.getElementById("colorTheme").innerHTML =
@@ -254,6 +224,10 @@ function setAutoLaunch(enabled) {
 function sendCommand(command) {
   console.log("web app sending command: " + command);
   ipcRenderer.send("run", command);
+}
+
+function quitApp() {
+  ipcRenderer.send("quit", "");
 }
 
 function sendLog(msg) {

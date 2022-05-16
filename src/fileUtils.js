@@ -65,6 +65,7 @@ function readConfigFile() {
   }
   try {
     data = JSON.parse(data);
+    if (!checkConfig(data)) return true;
     return data;
   } catch (err) {
     console.log("Error parsing JSON string:", err);
@@ -183,4 +184,65 @@ function openWithCodeCommandStr(path) {
 
 function openWithBrowserCommandStr(path) {
   return config.launchSettings.openInChrome.replace(/(\$\{PATH\})/, path);
+}
+
+function createDefaultConfig() {
+  if (platform === "linux") {
+    return {
+      paths: ["/"],
+      autoLaunch: true,
+      colorTheme: "light",
+      defaultSortByIdx: 0,
+      launchSettings: {
+        openFile: 'xdg-open "${PATH}"',
+        openFolder: 'cd "${PATH}" && gnome-terminal',
+        openInChrome: 'google-chrome "${PATH}"',
+        openInVSCode: 'code "${PATH}"',
+      },
+    };
+  } else {
+    return {
+      paths: ["C:/"],
+      autoLaunch: true,
+      colorTheme: "light",
+      defaultSortByIdx: 0,
+      launchSettings: {
+        openFile: 'start "" "${PATH}"',
+        openFolder: 'start "" "${PATH}"',
+        openInChrome: 'start chrome "${PATH}"',
+        openInVSCode: 'code "${PATH}"',
+      },
+    };
+  }
+}
+
+function checkConfig(config) {
+  if (config == null) return false;
+  if (config.paths == null || !Array.isArray(config.paths)) return false;
+  config.paths.forEach((element) => {
+    if (typeof element !== "string" || element.trim() === "") return false;
+  });
+
+  if (config.autoLaunch == null || typeof config.autoLaunch !== "boolean") return false;
+  if (config.colorTheme == null || (config.colorTheme !== "light" && config.colorTheme !== "dark"))
+    return false;
+  if (
+    config.defaultSortByIdx == null ||
+    !Number.isInteger(config.defaultSortByIdx) ||
+    config.defaultSortByIdx < 0 ||
+    config.defaultSortByIdx >= sortTypes.length
+  )
+    return false;
+
+  if (config.launchSettings == null) return false;
+  if (config.launchSettings.openFile == null || typeof config.launchSettings.openFile !== "string")
+    return false;
+  if (config.launchSettings.openFolder == null || typeof config.launchSettings.openFolder !== "string")
+    return false;
+  if (config.launchSettings.openInChrome == null || typeof config.launchSettings.openInChrome !== "string")
+    return false;
+  if (config.launchSettings.openInVSCode == null || typeof config.launchSettings.openInVSCode !== "string")
+    return false;
+
+  return true;
 }
