@@ -16,13 +16,19 @@ Once you found the file you want, click to open, right click for more options, o
 
 # Quick start
 
-This app is designed with Electron. It currently only supports `Windows`, but plans to add support for `Mac` and `Linux`.
+## Installation
 
-To get started, [download lastest installer here](https://github.com/SeanSun6814/WaterfallExplorer/tree/main/builds). Run the installer. Enjoy!
+This app is designed with Electron. It currently supports `Windows` (tested on Windows 11) and `Linux` (tested on Ubuntu 20.04). I will add support for `Mac` when I can afford a Macbook :).
+
+To get started on `Windows`, [download lastest installer here](https://drive.google.com/drive/folders/1M8ihFT5b3NCnzNC-W0Ped8mnOT1HPW1w?usp=sharing). Run the installer.
+
+To get started on `Linux`, [download lastest app package here](https://drive.google.com/drive/folders/1M8ihFT5b3NCnzNC-W0Ped8mnOT1HPW1w?usp=sharing). Unzip the package, and run the executable in the terminal `./waterfallexplorer`.
+
+## Getting started
 
 _The app is normally hidden in the background. Use the global hotkey [`Alt + E`] to bring it up!_
 
-To add a folder to the leftmost "shortcuts column", first copy the path to clipboard. Then hit `Ctrl + A` to add. See below for more details.
+Add your commonly used folders to the leftmost shortcuts column! To do that, first copy the path of the folder to clipboard (using `Ctrl + C` in the app). Then hit `Ctrl + A` to add. Alternatively, use the context menu by right clicking on the folder. See below for more details.
 
 For help, hit `Ctrl + H`. Alternatively, use the context menu by right clicking on empty space.
 
@@ -126,6 +132,10 @@ To move a file or folder, first hover over it and hit `Ctrl + C`. Alternatively,
 
 Navigate to the destination folder, hit `Ctrl + M` to move. Alternatively, use the right click context menu.
 
+## Rename item
+
+To rename a file or folder, first hover over it and hit `Ctrl + R`. Alternatively, use the right click context menu. Follow popup to complete the renaming action.
+
 ## Delete item
 
 To move a file or folder, first hover over it and hit `Ctrl + Delete`. Alternatively, use the right click context menu.
@@ -172,3 +182,13 @@ Change the `defaultSortByIdx` integer variable in `config.json`.
 Hit `Ctrl + S`.
 
 Alternatively, use the context menu by right clicking on empty space.
+
+# Change log
+
+## 1.1.0
+
+- Added renaming feature
+- Added support for linux
+- Added custom launch configurations
+- Opening app for the second time shows the first instance
+- Fixed dialogue background alignment bug
