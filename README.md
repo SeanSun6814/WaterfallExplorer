@@ -1,3 +1,14 @@
+```
+ __          __     _                __        _  _      ______               _                         
+ \ \        / /    | |              / _|      | || |    |  ____|             | |                        
+  \ \  /\  / /__ _ | |_  ___  _ __ | |_  __ _ | || |    | |__   __  __ _ __  | |  ___   _ __  ___  _ __ 
+   \ \/  \/ // _` || __|/ _ \| '__||  _|/ _` || || |    |  __|  \ \/ /| '_ \ | | / _ \ | '__|/ _ \| '__|
+    \  /\  /| (_| || |_|  __/| |   | | | (_| || || |    | |____  >  < | |_) || || (_) || |  |  __/| |   
+     \/  \/  \__,_| \__|\___||_|   |_|  \__,_||_||_|    |______|/_/\_\| .__/ |_| \___/ |_|   \___||_|   
+                                                                      | |                               
+                                                                      |_|                                                      
+```
+
 <h1 align="center">Waterfall Explorer: <i>hover to navigate</i></h1>
 
 **Waterfall Explorer** is a tree-style file management system that is _designed_ to navigate all your large and deep folders systems.
