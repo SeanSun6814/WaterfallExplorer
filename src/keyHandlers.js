@@ -253,13 +253,13 @@ function handleRenameFile() {
           playMessage("Rename failed", "error");
         }
       } else {
-        playMessage("Rename cancelled", "info");
+        playMessage("Rename canceled", "info");
       }
     },
   }).then((result) => {
     alertBlockKeyPress = false;
     if (!result.isConfirmed) {
-      playMessage("Rename cancelled", "info");
+      playMessage("Rename canceled", "info");
     }
   });
   fixSweetAlertAlignmentBug();
@@ -301,7 +301,7 @@ function handleMoveFile() {
         playMessage("Move failed", "error");
       }
     } else {
-      playMessage("Move cancelled", "info");
+      playMessage("Move canceled", "info");
     }
   });
   fixSweetAlertAlignmentBug();
@@ -342,7 +342,7 @@ function handleCopyFile() {
         playMessage("Copy failed", "error");
       }
     } else {
-      playMessage("Copy cancelled", "info");
+      playMessage("Copy canceled", "info");
     }
   });
   fixSweetAlertAlignmentBug();
@@ -377,7 +377,7 @@ function handleDeleteFile(operation) {
         playMessage("Delete failed", "error");
       }
     } else {
-      playMessage("Delete cancelled", "info");
+      playMessage("Delete canceled", "info");
     }
   });
   fixSweetAlertAlignmentBug();
