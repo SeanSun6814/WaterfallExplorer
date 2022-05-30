@@ -397,6 +397,9 @@ class Widget {
       let column = this.#data[layer].getData();
       for (let i = 0; i < column.length; i++) {
         let tmpPath = (path + column[i].name).trim();
+        if (tmpPath.charAt(tmpPath.length - 1) === "/") {
+          tmpPath = tmpPath.substring(0, tmpPath.length - 1);
+        }
         // console.log("[" + (tmpPath === targetPath) + "] " + tmpPath);
         if (tmpPath === targetPath) {
           layerIdx = layer;
