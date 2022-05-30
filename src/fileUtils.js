@@ -12,8 +12,26 @@ function renameFile(oldPath, newPath) {
     return false;
   }
 }
+
+function makeFile(path, data) {
+  if (data === undefined) data = "";
+  try {
+    fs.writeFileSync(path, data);
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
 function makeDir(path, dirName) {
-  fse.ensureDirSync(path + dirName);
+  try {
+    fse.ensureDirSync(path + dirName);
+    return true;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
 }
 
 function copyFile(sourcePath, destFolder) {

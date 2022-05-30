@@ -176,8 +176,8 @@ function handleFunctionKeys(event) {
     handleMoveFile();
   } else if (event.ctrlKey && event.key === "Delete") {
     handleDeleteFile();
-    // } else if (event.ctrlKey && event.key === "n") {
-    //   handleMakeDir();
+  } else if (event.ctrlKey && event.key === "n") {
+    handleMakeDir();
   } else if (event.ctrlKey && event.key === "r") {
     handleRenameFile();
   } else if (event.ctrlKey && event.key === "h") {
@@ -193,6 +193,73 @@ function handleFunctionKeys(event) {
   }
   event.preventDefault();
   return true;
+}
+
+function handleMakeDir() {
+  let dest = widget.getFullDirectory();
+  let lastElem = widget.getLastFocusedItem();
+  let str =
+    "'<b>newFile.txt</b>' to create new file<br>" +
+    // "<br>or<br>" +
+    "'<b>newFolder/</b>' to create new folder<br>" +
+    // "<br>or<br>" +
+    "'<b>newFolder/anotherFolder/newFile.txt</b>' to create both";
+
+  alertBlockKeyPress = true;
+  Swal.fire({
+    title: "Create item?",
+    input: "text",
+    icon: "warning",
+    html: str,
+    inputValue: "",
+    showCancelButton: true,
+    reverseButtons: true,
+    confirmButtonText: "Create",
+    confirmButtonColor: "#c6323b",
+    didOpen: (swalElem) => {
+      swalSetIgnoreEnter(swalElem);
+      // let input = document.getElementById("swal2-input");
+      // input.focus();
+    },
+    preConfirm: (value) => {
+      value = value.trim().replaceAll("\\", "/");
+      if (value && value !== "") {
+        let tokens = value.split("/");
+        let createFile = tokens[tokens.length - 1] !== "";
+
+        let pathStr = value.substring(0, value.lastIndexOf("/") + 1);
+        let createPath = pathStr !== "";
+        console.log("create file: " + createFile + ", folder: " + createPath);
+
+        if (createFile && createPath && makeDir(dest, pathStr) && makeFile(dest + value)) {
+          let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
+          let parentElemIdx = parentColumn.getFocusedIdx();
+          widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+          playMessage("Items created", "success");
+        } else if (createPath && makeDir(dest, pathStr)) {
+          let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
+          let parentElemIdx = parentColumn.getFocusedIdx();
+          widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+          playMessage("Folder created", "success");
+        } else if (createFile && makeFile(dest + value)) {
+          let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
+          let parentElemIdx = parentColumn.getFocusedIdx();
+          widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+          playMessage("File created", "success");
+        } else {
+          playMessage("Create failed", "error");
+        }
+      } else {
+        playMessage("Create canceled", "info");
+      }
+    },
+  }).then((result) => {
+    alertBlockKeyPress = false;
+    if (!result.isConfirmed) {
+      playMessage("Create canceled", "info");
+    }
+  });
+  fixSweetAlertAlignmentBug();
 }
 
 function handleColorTheme() {
