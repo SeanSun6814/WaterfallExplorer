@@ -70,7 +70,7 @@ if (!app.requestSingleInstanceLock()) {
     win.setSize(width, height);
     win.center();
     win.loadFile("./src/index.html");
-    // win.webContents.openDevTools();
+    // win.webContents.openDevTools(); // TODO: here
   }
 
   app.whenReady().then(() => {

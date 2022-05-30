@@ -13,7 +13,16 @@ class Item {
   updateSettings() {
     if (this.html == null) return;
     let li = this.html;
-    li.innerText = this.name;
+
+    let colorStyle = config.colorTheme === "dark" ? 'style="color: #dddddd;"' : 'style="color: #606060;"';
+    let iconClass = window.FileIcons.getClass(this.name);
+    if (this.isFolder) {
+      li.innerHTML = "<a class='folder-icon' " + colorStyle + "></a>&nbsp; " + this.name;
+    } else if (iconClass != null) {
+      li.innerHTML = "<a class='" + iconClass + "' " + colorStyle + "></a>&nbsp; " + this.name;
+    } else {
+      li.innerHTML = "<a class='unknown-icon' " + colorStyle + "></a>&nbsp; " + this.name;
+    }
     let argStr = "widget.getItemByIdx(" + this.layerIdx + "," + this.idx + ")";
     li.setAttribute("onmouseenter", "onHover(" + argStr + ")");
     li.setAttribute("onclick", "onClick(" + argStr + ")");

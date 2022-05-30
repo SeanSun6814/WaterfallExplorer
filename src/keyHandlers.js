@@ -218,18 +218,15 @@ function handleMakeDir() {
     confirmButtonColor: "#c6323b",
     didOpen: (swalElem) => {
       swalSetIgnoreEnter(swalElem);
-      // let input = document.getElementById("swal2-input");
-      // input.focus();
     },
     preConfirm: (value) => {
       value = value.trim().replaceAll("\\", "/");
       if (value && value !== "") {
         let tokens = value.split("/");
         let createFile = tokens[tokens.length - 1] !== "";
-
         let pathStr = value.substring(0, value.lastIndexOf("/") + 1);
         let createPath = pathStr !== "";
-        console.log("create file: " + createFile + ", folder: " + createPath);
+        // console.log("create file: " + createFile + ", folder: " + createPath);
 
         if (createFile && createPath && makeDir(dest, pathStr) && makeFile(dest + value)) {
           let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
