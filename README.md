@@ -1,12 +1,12 @@
 ```
- __          __     _                __        _  _      ______               _                         
- \ \        / /    | |              / _|      | || |    |  ____|             | |                        
-  \ \  /\  / /__ _ | |_  ___  _ __ | |_  __ _ | || |    | |__   __  __ _ __  | |  ___   _ __  ___  _ __ 
+ __          __     _                __        _  _      ______               _
+ \ \        / /    | |              / _|      | || |    |  ____|             | |
+  \ \  /\  / /__ _ | |_  ___  _ __ | |_  __ _ | || |    | |__   __  __ _ __  | |  ___   _ __  ___  _ __
    \ \/  \/ // _` || __|/ _ \| '__||  _|/ _` || || |    |  __|  \ \/ /| '_ \ | | / _ \ | '__|/ _ \| '__|
-    \  /\  /| (_| || |_|  __/| |   | | | (_| || || |    | |____  >  < | |_) || || (_) || |  |  __/| |   
-     \/  \/  \__,_| \__|\___||_|   |_|  \__,_||_||_|    |______|/_/\_\| .__/ |_| \___/ |_|   \___||_|   
-                                                                      | |                               
-                                                                      |_|                               
+    \  /\  /| (_| || |_|  __/| |   | | | (_| || || |    | |____  >  < | |_) || || (_) || |  |  __/| |
+     \/  \/  \__,_| \__|\___||_|   |_|  \__,_||_||_|    |______|/_/\_\| .__/ |_| \___/ |_|   \___||_|
+                                                                      | |
+                                                                      |_|
 ```
 
 <h1 align="center">Waterfall Explorer: <i>hover to navigate</i></h1>
@@ -203,3 +203,11 @@ Alternatively, use the context menu by right clicking on empty space.
 - Added custom launch configurations
 - Opening app for the second time shows the first instance
 - Fixed dialogue background alignment bug
+
+## 1.2.0
+
+- Added feature to create new files and folders
+- Added feature to display file icons
+- Added feature to navigate with arrow keys
+- Fixed bug of not refreshing source column when moving _folders_
+- TODO: upload the executables and update the documentation

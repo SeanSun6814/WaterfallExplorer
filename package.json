@@ -4,8 +4,8 @@
   "description": "My Electron application description",
   "keywords": [],
   "main": "./src/main.js",
-  "version": "1.1.0",
-  "author": "Sean",
+  "version": "1.2.0",
+  "author": "Sean Sun",
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder",
