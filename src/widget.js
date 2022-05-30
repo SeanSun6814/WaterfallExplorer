@@ -109,7 +109,9 @@ class Column {
   }
 
   focusItem(idx, sortByIdx) {
-    if (!idxInBounds(idx, this.#data)) return;
+    if (this.#data.length === 0) return;
+    else if (idx < 0) idx = 0;
+    else if (idx >= this.#data.length) idx = this.#data.length - 1;
     this.unfocusItem();
     this.#focusedIdx = idx;
     this.#onFocusCallback(this.#data[this.#focusedIdx], true, sortByIdx);
@@ -164,14 +166,6 @@ class Column {
     }
     let liCount = document.getElementById("liCount-" + this.#layerIdx);
     liCount.innerHTML = this.#generateCountStr();
-  }
-
-  focusPrev() {
-    if (this.#focusedIdx > 0) this.#focusedIdx--;
-  }
-
-  focusNext() {
-    if (this.#focusedIdx < this.#data.length - 1) this.#focusedIdx++;
   }
 
   scrollToView(idx) {
@@ -323,7 +317,8 @@ class Widget {
   }
 
   focusItem(layerIdx, idx, sortByIdx) {
-    if (!idxInBounds(layerIdx, this.#data)) return;
+    if (layerIdx < 0) layerIdx = 0;
+    else if (layerIdx >= this.#data.length) layerIdx = this.#data.length - 1;
     if (sortByIdx === undefined) sortByIdx = config.defaultSortByIdx;
     this.deleteExtraColumns(layerIdx);
     this.#data[layerIdx].focusItem(idx, sortByIdx);

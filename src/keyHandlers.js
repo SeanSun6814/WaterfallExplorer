@@ -6,8 +6,43 @@ document.addEventListener("keydown", function onPress(event) {
   } else if (event.ctrlKey && event.key === "r") {
     event.preventDefault();
     event.stopPropagation();
+  } else if (
+    event.key === "ArrowUp" ||
+    event.key === "ArrowDown" ||
+    event.key === "ArrowLeft" ||
+    event.key === "ArrowRight" ||
+    event.key === "Tab" ||
+    event.key === "Backspace"
+  ) {
+    handleKeyboardNavigation(event.key);
+    event.preventDefault();
+  } else {
+    console.log(event.key);
   }
 });
+
+function handleKeyboardNavigation(direction) {
+  let lastElem = widget.getLastFocusedItem();
+  if (lastElem == null) {
+    widget.focusItem(0, 0);
+  } else if (direction === "ArrowUp") {
+    widget.focusItem(lastElem.layerIdx, lastElem.idx - 1);
+    let newLastElem = widget.getLastFocusedItem();
+    newLastElem.parentColumn.scrollToView(newLastElem.idx);
+  } else if (direction === "ArrowDown") {
+    widget.focusItem(lastElem.layerIdx, lastElem.idx + 1);
+    let newLastElem = widget.getLastFocusedItem();
+    newLastElem.parentColumn.scrollToView(newLastElem.idx);
+  } else if ((direction === "Tab" || direction === "ArrowRight") && lastElem.isFolder) {
+    widget.focusItem(lastElem.layerIdx + 1, 0);
+    onPathHover();
+  } else if ((direction === "Backspace" || direction === "ArrowLeft") && lastElem.layerIdx > 0) {
+    let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
+    let parentElemIdx = parentColumn.getFocusedIdx();
+    widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+    onPathHover();
+  }
+}
 
 document.addEventListener("keyup", function onPress(event) {
   if (alertBlockKeyPress) {
