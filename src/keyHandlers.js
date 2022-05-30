@@ -228,23 +228,25 @@ function handleMakeDir() {
         let createPath = pathStr !== "";
         // console.log("create file: " + createFile + ", folder: " + createPath);
 
+        let createError;
         if (createFile && createPath && makeDir(dest, pathStr) && makeFile(dest + value)) {
-          let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
-          let parentElemIdx = parentColumn.getFocusedIdx();
-          widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+          createError = false;
           playMessage("Items created", "success");
         } else if (createPath && makeDir(dest, pathStr)) {
-          let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
-          let parentElemIdx = parentColumn.getFocusedIdx();
-          widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+          createError = false;
           playMessage("Folder created", "success");
         } else if (createFile && makeFile(dest + value)) {
-          let parentColumn = widget.getColumn(lastElem.layerIdx - 1);
-          let parentElemIdx = parentColumn.getFocusedIdx();
-          widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
+          createError = false;
           playMessage("File created", "success");
         } else {
+          createError = true;
           playMessage("Create failed", "error");
+        }
+
+        if (!createError) {
+          let parentColumn = widget.getColumn(lastElem.layerIdx - (lastElem.isFolder ? 0 : 1));
+          let parentElemIdx = parentColumn.getFocusedIdx();
+          widget.focusItem(parentColumn.getLayerIdx(), parentElemIdx);
         }
       } else {
         playMessage("Create canceled", "info");
@@ -561,6 +563,14 @@ function attachContextMenu(html, isFile, isFolder, isRootColumn) {
       events: {
         click: (e) => {
           handleMoveFile();
+        },
+      },
+    },
+    {
+      content: "Create item",
+      events: {
+        click: (e) => {
+          handleMakeDir();
         },
       },
     },
