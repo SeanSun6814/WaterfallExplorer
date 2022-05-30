@@ -392,10 +392,12 @@ class Widget {
     let path = "";
     let layerIdx = -1;
     let idx = -1;
+    // console.log("TARGET: " + targetPath);
     for (let layer = 0; layer < this.#data.length; layer++) {
       let column = this.#data[layer].getData();
       for (let i = 0; i < column.length; i++) {
         let tmpPath = (path + column[i].name).trim();
+        // console.log("[" + (tmpPath === targetPath) + "] " + tmpPath);
         if (tmpPath === targetPath) {
           layerIdx = layer;
           idx = i;

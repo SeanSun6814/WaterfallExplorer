@@ -13,15 +13,20 @@ function renameFile(oldPath, newPath) {
   }
 }
 
-function makeFile(path, data) {
+function makeFile(filePath, data) {
   if (data === undefined) data = "";
   try {
-    fs.writeFileSync(path, data);
+    if (fileExists(filePath)) return false;
+    fs.writeFileSync(filePath, data);
     return true;
   } catch (err) {
     console.error(err);
     return false;
   }
+}
+
+function fileExists(filePath) {
+  return fs.existsSync(filePath);
 }
 
 function makeDir(path, dirName) {
