@@ -31,9 +31,9 @@ Once you found the file you want, click to open, right click for more options, o
 
 This app is designed with Electron. It currently supports `Windows` (tested on Windows 11) and `Linux` (tested on Ubuntu 20.04). I will add support for `Mac` when I can afford a Macbook :).
 
-To get started on `Windows`, [download lastest installer here](https://drive.google.com/drive/folders/1M8ihFT5b3NCnzNC-W0Ped8mnOT1HPW1w?usp=sharing). Run the installer.
+To get started on `Windows`, [download lastest installer here](https://github.com/SeanSun6814/WaterfallExplorer/releases/tag/release). Run the installer.
 
-To get started on `Linux`, [download lastest app package here](https://drive.google.com/drive/folders/1M8ihFT5b3NCnzNC-W0Ped8mnOT1HPW1w?usp=sharing). Unzip the package, and run the executable in the terminal `./waterfallexplorer`.
+To get started on `Linux`, [download lastest app package here](https://github.com/SeanSun6814/WaterfallExplorer/releases/tag/release). Unzip the package, and run the executable in the terminal `./waterfallexplorer`.
 
 ## Getting started
 
@@ -44,6 +44,10 @@ Add your commonly used folders to the leftmost shortcuts column! To do that, fir
 For help, hit `Ctrl + H`. Alternatively, use the context menu by right clicking on empty space.
 
 # Features
+
+## Navigation
+
+Use mouse to hover items to traverse file system. Alternatively, use arrow buttons to navigate.
 
 ## Opening options
 
@@ -153,6 +157,12 @@ To move a file or folder, first hover over it and hit `Ctrl + Delete`. Alternati
 
 **Warning:** this permanently deletes the item. It does NOT go to the recycle bin.
 
+## Create item
+
+To move a file or folder, first hover over a directory or a file in that directory. Then hit `Ctrl + N`. Alternatively, use the right click context menu. Follow popup to complete the renaming action.
+
+If the new item ends with a `/`, it will be created as a directory. Otherwise it will be created as a file. 
+
 ## Delayed launch
 
 Files and folders will not be opened immediately in this mode.
@@ -210,4 +220,4 @@ Alternatively, use the context menu by right clicking on empty space.
 - Added feature to display file icons
 - Added feature to navigate with arrow keys
 - Fixed bug of not refreshing source column when moving _folders_
-- TODO: upload the executables and update the documentation
+- TODO: Update the demo
