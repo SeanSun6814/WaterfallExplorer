@@ -159,7 +159,7 @@ To move a file or folder, first hover over it and hit `Ctrl + Delete`. Alternati
 
 ## Create item
 
-To move a file or folder, first hover over a directory or a file in that directory. Then hit `Ctrl + N`. Alternatively, use the right click context menu. Follow popup to complete the renaming action.
+To create a file or folder, first hover over a directory or a file in that directory. Then hit `Ctrl + N`. Alternatively, use the right click context menu. Follow popup to complete the renaming action.
 
 If the new item ends with a `/`, it will be created as a directory. Otherwise it will be created as a file. 
 
@@ -170,7 +170,7 @@ Files and folders will not be opened immediately in this mode.
 1. Hit `Ctrl + D` to turn on delayed launch
 2. Open a file or folder as usual (but it won't immediately open)
 3. Open more files or folders as you wish
-4. Hit `Ctrl + D`. Now everything will launch at once.
+4. Hit `Ctrl + D` again. Now everything will launch at once.
 
 ## Quit
 
@@ -190,7 +190,7 @@ Alternatively, use the context menu by right clicking on empty space.
 
 ## Toggle autorun on system start up
 
-Hit `Ctrl + R`.
+Hit `Ctrl + L`.
 
 Alternatively, use the context menu by right clicking on empty space.
 
@@ -200,7 +200,7 @@ Change the `defaultSortByIdx` integer variable in `config.json`.
 
 ## Open `config.json`
 
-Hit `Ctrl + S`.
+Hit `Ctrl + ,`.
 
 Alternatively, use the context menu by right clicking on empty space.
 
