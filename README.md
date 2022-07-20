@@ -204,6 +204,23 @@ Hit `Ctrl + ,`.
 
 Alternatively, use the context menu by right clicking on empty space.
 
+# Compiling and building
+
+## Windows
+
+```
+npm i electron-builder
+npm run dist
+```
+
+## Linux
+
+```
+npm i electron-builder
+npm run dist:linux
+./dist/linux-unpacked/waterfallexplorer
+```
+
 # Change log
 
 ## 1.1.0
