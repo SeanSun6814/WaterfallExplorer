@@ -221,7 +221,7 @@ npm run dist:linux
 ./dist/linux-unpacked/waterfallexplorer
 ```
 
-# Support & Warrenty
+# Support & Warranty
 
 lmao
 
