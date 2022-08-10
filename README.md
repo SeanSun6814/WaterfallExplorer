@@ -221,6 +221,10 @@ npm run dist:linux
 ./dist/linux-unpacked/waterfallexplorer
 ```
 
+# Support & Warrenty
+
+lmao
+
 # Change log
 
 ## 1.1.0
