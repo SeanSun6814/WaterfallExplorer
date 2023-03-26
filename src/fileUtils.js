@@ -98,7 +98,7 @@ function readConfigFile() {
 }
 
 function writeConfig() {
-  let json = JSON.stringify(config);
+  let json = JSON.stringify(config, null, 4);
   fs.writeFileSync(appPath + "config.json", json);
 }
 
@@ -147,7 +147,7 @@ function sortDirBy(arr, method) {
 
         let cmp = cmpName({ name: aExt }, { name: bExt });
         if (cmp !== 0) return cmp;
-      } catch (e) {}
+      } catch (e) { }
       return cmpName(a, b);
     };
   } else if (method === "size") {
@@ -159,7 +159,7 @@ function sortDirBy(arr, method) {
       try {
         if (a.stats.size < b.stats.size) return 1; // b on top
         else if (a.stats.size > b.stats.size) return -1; // a on top
-      } catch (e) {}
+      } catch (e) { }
       return cmpName(a, b);
     };
   } else if (method === "time") {
@@ -167,7 +167,7 @@ function sortDirBy(arr, method) {
       try {
         if (a.stats.mtimeMs < b.stats.mtimeMs) return 1; // b on top
         else if (a.stats.mtimeMs > b.stats.mtimeMs) return -1; // a on top
-      } catch (e) {}
+      } catch (e) { }
       return cmpName(a, b);
     };
   } else if (method === "name") {

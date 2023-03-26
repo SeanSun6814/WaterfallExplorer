@@ -189,7 +189,7 @@ function createStatElem(item) {
   statElem.classList.add("liStats");
   statElem.setAttribute("id", "statElem");
   statElem.innerHTML = str;
-  myColumns.appendChild(statElem);
+  document.body.appendChild(statElem);
   updateStatElemPos(item.html, statElem);
 }
 
@@ -197,8 +197,7 @@ function updateStatElemPos(elem, statElem) {
   let top = elem.getBoundingClientRect().top;
   top += elem.getBoundingClientRect().height / 2.0;
   top -= statElem.getBoundingClientRect().height / 2.0;
-  top -= 100;
-  let left = elem.getBoundingClientRect().left + myColumns.scrollLeft + elem.getBoundingClientRect().width + 10;
+  let left = elem.getBoundingClientRect().left + elem.getBoundingClientRect().width + 10;
   statElem.style.position = "absolute";
   statElem.style.top = top + "px";
   statElem.style.left = left + "px";

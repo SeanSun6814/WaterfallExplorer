@@ -68,6 +68,7 @@ body {
 }
 
 .liStats {
+    z-index: 1000;
     color: grey;
     font-size: small;
     text-align: left;
