@@ -35,6 +35,11 @@ To get started on `Windows`, [download lastest installer here](https://github.co
 
 To get started on `Linux`, [download lastest app package here](https://github.com/SeanSun6814/WaterfallExplorer/releases/tag/release). Unzip the package, and run the executable in the terminal `./waterfallexplorer`.
 
+## Compile from source
+
+- Windows: `npm i && npm run dist`
+- Linux: `npm i && npm run dist_linux`
+
 ## Getting started
 
 _The app is normally hidden in the background. Use the global hotkey [`Alt + E`] to bring it up!_

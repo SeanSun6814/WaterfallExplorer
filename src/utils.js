@@ -197,6 +197,7 @@ function updateStatElemPos(elem, statElem) {
   let top = elem.getBoundingClientRect().top;
   top += elem.getBoundingClientRect().height / 2.0;
   top -= statElem.getBoundingClientRect().height / 2.0;
+  top -= 100;
   let left = elem.getBoundingClientRect().left + elem.getBoundingClientRect().width + 10;
   statElem.style.position = "absolute";
   statElem.style.top = top + "px";

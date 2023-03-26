@@ -11,6 +11,8 @@ document.addEventListener("keydown", function onPress(event) {
     event.key === "ArrowDown" ||
     event.key === "ArrowLeft" ||
     event.key === "ArrowRight" ||
+    event.key === "Home" ||
+    event.key === "End" ||
     event.key === "Tab" ||
     event.key === "Backspace"
   ) {
@@ -31,6 +33,14 @@ function handleKeyboardNavigation(direction) {
     newLastElem.parentColumn.scrollToView(newLastElem.idx);
   } else if (direction === "ArrowDown") {
     widget.focusItem(lastElem.layerIdx, lastElem.idx + 1);
+    let newLastElem = widget.getLastFocusedItem();
+    newLastElem.parentColumn.scrollToView(newLastElem.idx);
+  } else if (direction === "Home") {
+    widget.focusItem(lastElem.layerIdx, 0);
+    let newLastElem = widget.getLastFocusedItem();
+    newLastElem.parentColumn.scrollToView(newLastElem.idx);
+  } else if (direction === "End") {
+    widget.focusItem(lastElem.layerIdx, widget.getData()[lastElem.layerIdx].getData().length - 1);
     let newLastElem = widget.getLastFocusedItem();
     newLastElem.parentColumn.scrollToView(newLastElem.idx);
   } else if ((direction === "Tab" || direction === "ArrowRight") && lastElem.isFolder) {
@@ -489,8 +499,8 @@ function openWelcomeDialogue(callback) {
   Swal.fire(
     "<big>Welcome</big>",
     "<big>Waterfall Explorer has been successfully installed and is set to autorun on system startup.</big><br><br>" +
-      "<big>At Waterfall Explorer, we strive to make finding files an easy and enjoyable experience.</big><br><br>" +
-      "<big>Here are a few hints to get you started...</big>",
+    "<big>At Waterfall Explorer, we strive to make finding files an easy and enjoyable experience.</big><br><br>" +
+    "<big>Here are a few hints to get you started...</big>",
     "success"
   ).then((result) => {
     alertBlockKeyPress = false;
@@ -504,8 +514,8 @@ function openConfigErrorDialogue() {
   Swal.fire(
     "<big>Error in config file</big>",
     "<big>Oops... There's an error in the config file.</big><br><br>" +
-      "<big>Please fix it and come back again.</big><br><br>" +
-      "<big>For a fresh start, delete the config file.</big>",
+    "<big>Please fix it and come back again.</big><br><br>" +
+    "<big>For a fresh start, delete the config file.</big>",
     "error"
   ).then((result) => {
     alertBlockKeyPress = false;
@@ -519,27 +529,27 @@ function openHelpDialogue() {
   Swal.fire(
     "Help",
     "<b>Show this page:</b> Ctrl + H<br>" +
-      "<b>Show app:</b> Alt + E<br>" +
-      "<b>Hide app:</b> Esc<br>" +
-      "<b>Quit app:</b> Ctrl + Q<br>" +
-      "<b>Fullscreen:</b> Ctrl + F<br>" +
-      "<b>Open:</b> Click, Space<br>" +
-      "<b>Open in Chrome:</b> Enter<br>" +
-      "<b>Open in VS Code:</b> Ctrl + Enter<br>" +
-      "<b>Copy path:</b> Ctrl + C<br>" +
-      "<b>Sort:</b> Ctrl + [S, 1, 2, 3, 4, 5]<br>" +
-      "<b>Add to root paths:</b> Ctrl + C then Ctrl + A<br>" +
-      "<b>Remove from root paths:</b> Delete<br>" +
-      "<b>Copy file:</b> Ctrl + C then Ctrl + V<br>" +
-      "<b>Move file:</b> Ctrl + C then Ctrl + M<br>" +
-      "<b>Rename file:</b> Ctrl + R<br>" +
-      "<b>Delete file:</b> Ctrl + Delete <br>" +
-      "<b>Goto:</b> [any char]<br>" +
-      "<b>Delayed open mode:</b> Ctrl + D<br>" +
-      "<b>Auto scroll:</b> mouse hover over path<br>" +
-      "<b>Settings:</b> Ctrl + ,<br>" +
-      "<b>Change color theme:</b> Ctrl + T<br>" +
-      "<b>Run on startup:</b> Ctrl + L",
+    "<b>Show app:</b> Alt + E<br>" +
+    "<b>Hide app:</b> Esc<br>" +
+    "<b>Quit app:</b> Ctrl + Q<br>" +
+    "<b>Fullscreen:</b> Ctrl + F<br>" +
+    "<b>Open:</b> Click, Space<br>" +
+    "<b>Open in Chrome:</b> Enter<br>" +
+    "<b>Open in VS Code:</b> Ctrl + Enter<br>" +
+    "<b>Copy path:</b> Ctrl + C<br>" +
+    "<b>Sort:</b> Ctrl + [S, 1, 2, 3, 4, 5]<br>" +
+    "<b>Add to root paths:</b> Ctrl + C then Ctrl + A<br>" +
+    "<b>Remove from root paths:</b> Delete<br>" +
+    "<b>Copy file:</b> Ctrl + C then Ctrl + V<br>" +
+    "<b>Move file:</b> Ctrl + C then Ctrl + M<br>" +
+    "<b>Rename file:</b> Ctrl + R<br>" +
+    "<b>Delete file:</b> Ctrl + Delete <br>" +
+    "<b>Goto:</b> [any char]<br>" +
+    "<b>Delayed open mode:</b> Ctrl + D<br>" +
+    "<b>Auto scroll:</b> mouse hover over path<br>" +
+    "<b>Settings:</b> Ctrl + ,<br>" +
+    "<b>Change color theme:</b> Ctrl + T<br>" +
+    "<b>Run on startup:</b> Ctrl + L",
     "question"
   ).then((result) => {
     alertBlockKeyPress = false;

@@ -1,86 +1,86 @@
 * {
-  /* font-family: sans-serif; */
-  font-family: 'Source Sans Pro', sans-serif;
-  scroll-behavior: smooth;
+    /* font-family: sans-serif; */
+    font-family: "Source Sans Pro", sans-serif;
+    scroll-behavior: smooth;
 }
 
 html {
-  overflow: hidden;
-  height:100%;
-  width: 97%;
+    overflow: hidden;
+    height: 100%;
+    width: 97%;
 }
 
 body {
-  overflow: hidden;
-  height: 100%;
-  width: 100%;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
 }
 
-.myUlDiv{
-  height:calc(100% - 100px); 
-  width:auto;
-  overflow:hidden; 
-  overflow-y: scroll;
-  padding: 0px;
-  margin: 0px;
-  display: inline-block;
+.myUlDiv {
+    height: 100%;
+    width: auto;
+    overflow: hidden;
+    overflow-y: scroll;
+    padding: 0px;
+    margin: 0px;
+    display: inline-block;
 }
 
 .myUl {
-  list-style-type: none;
-  width: fit-content;
-  height:fit-content;
-  padding: 0px;
-  padding-left: 5px;
-  margin: 0px;
+    list-style-type: none;
+    width: fit-content;
+    height: fit-content;
+    padding: 0px;
+    padding-left: 5px;
+    margin: 0px;
 }
 
-div::-webkit-scrollbar {
-  display: none;
+.myUlDiv::-webkit-scrollbar {
+    display: none;
 }
 
 .myLi {
-  padding: 10px;
-  border: solid;
-  border-radius: 5px;
-  border-width: 2px;
-  border-color: transparent;
-  margin: 0px;
-  max-width: 200px;
-  overflow: hidden;
-  overflow-wrap: break-word;
-  user-select: none;
-  white-space: initial;
+    padding: 10px;
+    border: solid;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: transparent;
+    margin: 0px;
+    max-width: 200px;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    user-select: none;
+    white-space: initial;
 }
 
 .liFolder {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 [class*="liCount"] {
-  color: grey;
-  font-size: small;
-  text-align: center;
+    color: grey;
+    font-size: small;
+    text-align: center;
 }
 
 .liEndPadding {
-  width: 90vw;
+    width: 90vw;
 }
 
 .liStats {
-  color: grey;
-  font-size: small;
-  text-align: left;
-  position: absolute;
-  min-width: fit-content;
-  height: fit-content;
+    color: grey;
+    font-size: small;
+    text-align: left;
+    position: absolute;
+    min-width: fit-content;
+    height: fit-content;
 }
 
 [class*="liFocused"] {
-  border-radius: 5px;
-  border-width: 2px;
-  border-color: black;
-  border: solid;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: black;
+    border: solid;
 }
 
 #fullPathText {
@@ -88,10 +88,10 @@ div::-webkit-scrollbar {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    direction:rtl;
+    direction: rtl;
     text-align: left;
     font-size: xx-large;
-  }
+}
 
 #fullPathText:after {
     content: "\200E‎";
@@ -101,105 +101,131 @@ div::-webkit-scrollbar {
     content: "\200E‎";
 }
 
-#myColumns{
-  height: 100%;
-  width: 100%;
-  overflow-x: scroll;
-  display: inline-block;
-  white-space: nowrap;
+#myColumns {
+    top: 100px;
+    left: 0px;
+    position: absolute;
+    height: calc(100% - 100px);
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    display: inline-block;
+    white-space: nowrap;
 }
 
+::-webkit-scrollbar {
+    width: 21px;
+    height: 21px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #9c9c9c;
+    border-radius: 21px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #696969;
+}
 
 .liClicked {
-  animation: color-change 1s forwards;
+    animation: color-change 1s forwards;
 }
 
 @keyframes color-change {
-  0% {color: red; }
-  100% {color: black; }
+    0% {
+        color: red;
+    }
+    100% {
+        color: black;
+    }
 }
 
 .Absolute-Center {
-  margin: auto;
-  width: fit-content;
-  white-space: nowrap;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  z-index: -1;
-  overflow: hidden;
-  text-overflow: clip;
+    margin: auto;
+    width: fit-content;
+    white-space: nowrap;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    overflow: hidden;
+    text-overflow: clip;
 }
 
 .messageAnimation {
-  animation: fade-out 1s forwards ease-out;
+    animation: fade-out 1s forwards ease-out;
 }
 
-body.swal2-shown>[aria-hidden="true"] {
-  transition: 0.1s filter;
-  filter: blur(10px);
+body.swal2-shown > [aria-hidden="true"] {
+    transition: 0.1s filter;
+    filter: blur(10px);
 }
 
 @keyframes fade-out {
-  0% {
-    color: #4d4d4d;
-    font-size: 3vw;
-    opacity: 100%;
-    z-index: -1;
-  }
+    0% {
+        color: #4d4d4d;
+        font-size: 3vw;
+        opacity: 100%;
+        z-index: -1;
+    }
 
-  0% {
-    color: #4d4d4d;
-    font-size: 3vw;
-    opacity: 100%;
-    z-index: 100;
-  }
+    0% {
+        color: #4d4d4d;
+        font-size: 3vw;
+        opacity: 100%;
+        z-index: 100;
+    }
 
-  99% {
-    color: grey;
-    font-size: 7vw;
-    opacity: 0%;
-    z-index: 100;
-  }
+    99% {
+        color: grey;
+        font-size: 7vw;
+        opacity: 0%;
+        z-index: 100;
+    }
 
-  100% {
-    color: grey;
-    font-size: 7vw;
-    opacity: 0%;
-    z-index: -1;
-  }
+    100% {
+        color: grey;
+        font-size: 7vw;
+        opacity: 0%;
+        z-index: -1;
+    }
 }
 
-
 .colored-toast.swal2-icon-success {
-  background-color: #18a00a !important;
+    background-color: #18a00a !important;
 }
 
 .colored-toast.swal2-icon-error {
-  background-color: #ec4345 !important;
+    background-color: #ec4345 !important;
 }
 
 .colored-toast.swal2-icon-warning {
-  background-color: #f8bb86 !important;
+    background-color: #f8bb86 !important;
 }
 
 .colored-toast.swal2-icon-info {
-  background-color: #3f8bee !important;
+    background-color: #3f8bee !important;
 }
 
 .colored-toast.swal2-icon-question {
-  background-color: #87adbd !important;
+    background-color: #87adbd !important;
 }
 
 .colored-toast .swal2-title {
-  color: white;
+    color: white;
 }
 
 .colored-toast .swal2-close {
-  color: white;
+    color: white;
 }
 
 .colored-toast .swal2-html-container {
-  color: white;
+    color: white;
 }
