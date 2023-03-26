@@ -18,8 +18,6 @@ document.addEventListener("keydown", function onPress(event) {
   ) {
     handleKeyboardNavigation(event.key);
     event.preventDefault();
-  } else {
-    console.log(event.key);
   }
 });
 
