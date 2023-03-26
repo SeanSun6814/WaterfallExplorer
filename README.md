@@ -31,9 +31,9 @@ Once you found the file you want, click to open, right click for more options, o
 
 This app is designed with Electron. It currently supports `Windows` (tested on Windows 11) and `Linux` (tested on Ubuntu 20.04). I will add support for `Mac` when I can afford a Macbook :).
 
-To get started on `Windows`, [download lastest installer here](https://github.com/SeanSun6814/WaterfallExplorer/releases/tag/release). Run the installer.
+To get started on `Windows`, [download lastest installer here](https://github.com/SeanSun6814/WaterfallExplorer/releases/tag/v1.3.0). Run the installer.
 
-To get started on `Linux`, [download lastest 'unpacked' app package here](https://github.com/SeanSun6814/WaterfallExplorer/releases/tag/release). Unzip the package, and run the executable in the terminal `./waterfallexplorer`.
+To get started on `Linux`, [download lastest 'unpacked' app package here](https://github.com/SeanSun6814/WaterfallExplorer/releases/tag/v1.3.0). Unzip the package, and run the executable in the terminal `./waterfallexplorer`.
 
 ## Compile from source
 
