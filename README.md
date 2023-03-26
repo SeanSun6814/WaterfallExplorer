@@ -33,7 +33,7 @@ This app is designed with Electron. It currently supports `Windows` (tested on W
 
 To get started on `Windows`, [download lastest installer here](https://github.com/SeanSun6814/WaterfallExplorer/releases/tag/release). Run the installer.
 
-To get started on `Linux`, [download lastest app package here](https://github.com/SeanSun6814/WaterfallExplorer/releases/tag/release). Unzip the package, and run the executable in the terminal `./waterfallexplorer`.
+To get started on `Linux`, [download lastest app package here](https://github.com/SeanSun6814/WaterfallExplorer/releases/tag/release). Unzip the package, and run the executable in the terminal `cd linux-unpacked && ./waterfallexplorer`.
 
 ## Compile from source
 
