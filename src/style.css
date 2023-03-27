@@ -103,9 +103,10 @@ body {
 }
 
 #myColumns {
-    top: 100px;
+    top: 85px;
     left: 0px;
     position: absolute;
+    padding-top: 15px;
     height: calc(100% - 100px);
     width: 100%;
     overflow-x: scroll;

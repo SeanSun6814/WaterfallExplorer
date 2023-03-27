@@ -189,7 +189,7 @@ function createStatElem(item) {
   statElem.classList.add("liStats");
   statElem.setAttribute("id", "statElem");
   statElem.innerHTML = str;
-  document.body.appendChild(statElem);
+  myColumns.appendChild(statElem);
   updateStatElemPos(item.html, statElem);
 }
 
@@ -197,7 +197,9 @@ function updateStatElemPos(elem, statElem) {
   let top = elem.getBoundingClientRect().top;
   top += elem.getBoundingClientRect().height / 2.0;
   top -= statElem.getBoundingClientRect().height / 2.0;
-  let left = elem.getBoundingClientRect().left + elem.getBoundingClientRect().width + 10;
+  top -= 85; // subtract the "top" of #myColumns
+  let left = elem.getBoundingClientRect().left + myColumns.scrollLeft + elem.getBoundingClientRect().width + 10;
+  // add myColumns.scrollLeft since the statElem is a child of myColumns, not body
   statElem.style.position = "absolute";
   statElem.style.top = top + "px";
   statElem.style.left = left + "px";
