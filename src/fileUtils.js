@@ -40,25 +40,19 @@ function makeDir(path, dirName) {
 }
 
 function copyFile(sourcePath, destFolder) {
-  try {
-    let fileName = getFileName(sourcePath);
-    fse.copySync(sourcePath, destFolder + fileName);
-    return true;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
+  showLoading("Copying...");
+  let fileName = getFileName(sourcePath);
+  return fse.copy(sourcePath, destFolder + fileName).then(() => {
+    hideLoading();
+  });
 }
 
 function moveFile(sourcePath, destFolder) {
-  try {
-    let fileName = getFileName(sourcePath);
-    fse.moveSync(sourcePath, destFolder + fileName);
-    return true;
-  } catch (err) {
-    console.error(err);
-    return false;
-  }
+  showLoading("Moving...");
+  let fileName = getFileName(sourcePath);
+  return fse.move(sourcePath, destFolder + fileName).then(() => {
+    hideLoading();
+  });
 }
 
 function deleteFile(sourcePath) {

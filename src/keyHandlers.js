@@ -396,7 +396,7 @@ function handleMoveFile() {
   }).then((result) => {
     alertBlockKeyPress = false;
     if (result.isDenied) {
-      if (moveFile(source, dest)) {
+      moveFile(source, dest).then(() => {
         if (lastElem.isFolder) {
           widget.focusItem(lastElem.layerIdx, lastElem.idx);
         } else {
@@ -406,9 +406,9 @@ function handleMoveFile() {
         }
         widget.removeItemByPath(source);
         playMessage("Item moved", "success");
-      } else {
+      }).catch(() => {
         playMessage("Move failed", "error");
-      }
+      });
     } else {
       playMessage("Move canceled", "info");
     }
@@ -438,7 +438,7 @@ function handleCopyFile() {
   }).then((result) => {
     alertBlockKeyPress = false;
     if (result.isDenied) {
-      if (copyFile(source, dest)) {
+      copyFile(source, dest).then(() => {
         if (lastElem.isFolder) {
           widget.focusItem(lastElem.layerIdx, lastElem.idx);
         } else {
@@ -447,9 +447,9 @@ function handleCopyFile() {
           widget.focusItem(lastElem.layerIdx - 1, parentElemIdx);
         }
         playMessage("Item copied", "success");
-      } else {
+      }).catch((err) => {
         playMessage("Copy failed", "error");
-      }
+      });
     } else {
       playMessage("Copy canceled", "info");
     }
@@ -773,10 +773,6 @@ function attachGeneralContextMenu(html) {
   menu.init();
   myMenu = menu;
   return menu;
-}
-
-function fixSweetAlertAlignmentBug() {
-  document.body.classList.remove("swal2-height-auto");
 }
 
 let swalSetIgnoreEnter = (swalElem) => {

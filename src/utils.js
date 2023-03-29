@@ -268,3 +268,24 @@ function launchDelayedLaunch() {
 function addDelayedLaunchAction(fn) {
   delayedLaunchActions.push(fn);
 }
+
+function fixSweetAlertAlignmentBug() {
+  document.body.classList.remove("swal2-height-auto");
+}
+
+function showLoading(title, callback) {
+  Swal.fire({
+    title: title,
+    html: "",
+    allowEscapeKey: false,
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  }).then((result) => { if (callback) callback(); });
+  fixSweetAlertAlignmentBug();
+}
+
+function hideLoading() {
+  Swal.close();
+}
